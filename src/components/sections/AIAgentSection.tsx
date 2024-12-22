@@ -1,5 +1,6 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef, useEffect } from 'react';
+import agentVideo from '../../assets/agent.mp4';
 
 const AIAgentSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -80,29 +81,9 @@ const AIAgentSection = () => {
               loop
               muted
               playsInline
-              preload="auto"
-              disablePictureInPicture
-              disableRemotePlayback
-              className="w-full h-full object-cover relative z-0"
-              style={{ 
-                filter: 'brightness(1.1) contrast(1.1)',
-                boxShadow: '0 0 50px rgba(59, 130, 246, 0.3)'
-              }}
-              onContextMenu={(e) => e.preventDefault()}
-              onLoadStart={(e) => {
-                const video = e.target as HTMLVideoElement;
-                video.play().catch(console.log);
-              }}
-              onLoadedData={(e) => {
-                const video = e.target as HTMLVideoElement;
-                video.play().catch(console.log);
-              }}
-              onPause={(e) => {
-                const video = e.target as HTMLVideoElement;
-                video.play().catch(console.log);
-              }}
+              className="w-full h-full object-cover rounded-2xl shadow-2xl"
+              src={agentVideo}
             >
-              <source src="/src/assets/agent.mp4" type="video/mp4" />
             </video>
           </div>
         </div>

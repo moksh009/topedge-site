@@ -3,17 +3,17 @@ import React from 'react';
 
 const images = [
   {
-    src: '/ai-images/ai-brain.webp',
+    src: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&auto=format&fit=crop',
     alt: 'Digital AI Brain',
     color: '#4ade80'
   },
   {
-    src: '/ai-images/futuristic-ai.webp',
+    src: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&auto=format&fit=crop',
     alt: 'Futuristic AI Interface',
     color: '#60a5fa'
   },
   {
-    src: '/ai-images/robot-hand.webp',
+    src: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&auto=format&fit=crop',
     alt: 'Robot Hand',
     color: '#f472b6'
   },
@@ -23,13 +23,13 @@ const images = [
     color: '#818cf8'
   },
   {
-    src: '/ai-images/ai-art.webp',
+    src: 'https://images.unsplash.com/photo-1672600830594-ae4ccc159578?w=800&auto=format&fit=crop',
     alt: 'AI Generated Art',
     color: '#fb923c'
   },
   {
     src: 'https://images.unsplash.com/photo-1544256718-3bcf237f3974?w=800&auto=format&fit=crop',
-    alt: 'Neural Network',
+    alt: 'AI Technology',
     color: '#f43f5e'
   }
 ];

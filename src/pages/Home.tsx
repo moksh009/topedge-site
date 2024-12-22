@@ -10,6 +10,7 @@ import ProductShowcase from '../components/sections/ProductShowcase';
 import DevelopmentProcess from '../components/sections/DevelopmentProcess';
 import InfiniteIconsSection from '../components/sections/InfiniteIconsSection';
 import Footer from '../components/Footer';
+import heroImage from '../assets/1.png';
 
 const ScrollingText = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -170,7 +171,7 @@ const InvisibleApproachSection = () => {
           <div 
             className="w-full h-full bg-contain bg-center bg-no-repeat"
             style={{ 
-              backgroundImage: "url('src/assets/1.png')",
+              backgroundImage: `url(${heroImage})`,
               filter: 'drop-shadow(0 0 20px rgba(59, 130, 246, 0.2)) sm:drop-shadow(0 0 25px rgba(59, 130, 246, 0.25)) md:drop-shadow(0 0 30px rgba(59, 130, 246, 0.3))'
             }}
           />

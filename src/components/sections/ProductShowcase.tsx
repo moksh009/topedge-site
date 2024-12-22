@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
+import showcaseImage from '../../assets/image.png';
 
 const features = [
   {
@@ -183,9 +184,13 @@ const ProductShowcase = () => {
           <div className="aspect-[16/9] rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-3xl overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
             <motion.img
-              src="/src/assets/image.png"
-              alt="Product showcase"
-              className="w-full h-full object-cover"
+              src={showcaseImage}
+              alt="Product Showcase"
+              className="w-full h-full object-cover rounded-2xl"
+              style={{
+                filter: 'brightness(1.1) contrast(1.1)',
+                boxShadow: '0 0 30px rgba(59, 130, 246, 0.2)'
+              }}
               initial={{ scale: 1.1 }}
               whileInView={{ scale: 1 }}
               transition={{ duration: 1.5 }}

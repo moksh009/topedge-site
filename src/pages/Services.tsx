@@ -5,6 +5,7 @@ import ServiceProcess from '../components/sections/services/ServiceProcess';
 import ServiceTechnology from '../components/sections/services/ServiceTechnology';
 import ServiceCTA from '../components/sections/services/ServiceCTA';
 import ScrollIndicator from '../components/ui/ScrollIndicator';
+import servicesVideo from '../assets/3.mp4';
 
 const Services = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -55,11 +56,9 @@ const Services = () => {
             muted
             playsInline
             preload="auto"
-            disablePictureInPicture
-            disableRemotePlayback
             className="w-full h-full object-cover"
+            src={servicesVideo}
           >
-            <source src="/src/assets/3.mp4" type="video/mp4" />
           </video>
         </div>
 

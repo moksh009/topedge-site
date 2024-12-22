@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 interface TeamMemberProps {
   name: string;
   role: string;
-  image: string;
+  image: any;
   index: number;
 }
 
@@ -92,12 +92,12 @@ const AboutTeam: React.FC = () => {
     {
       name: 'Moksh Patel',
       role: 'CEO & Founder',
-      image: '/src/assets/453644406_2194050937623549_2266230142543551148_n.jpg'
+      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&auto=format&fit=crop'
     },
     {
       name: 'Smit Tilva',
       role: 'CEO & Founder',
-      image: '/team/sarah.jpg'
+      image: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=800&auto=format&fit=crop'
     }
   ];
 
