@@ -39,13 +39,36 @@ const steps = ['Select Service', 'Choose Date & Time', 'Personal Info'];
 
 const ProgressBar = ({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) => {
   return (
-    <div className="relative w-full h-1 bg-gray-800 rounded-full overflow-hidden">
-      <motion.div
-        className="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-500 via-blue-400 to-blue-500"
-        initial={{ width: '0%' }}
-        animate={{ width: `${(currentStep / (totalSteps - 1)) * 100}%` }}
-        transition={{ duration: 0.5, ease: "easeInOut" }}
-      />
+    <div className="absolute top-1/2 left-[7%] right-[7%] w-[86%] h-1 -translate-y-1/2 -z-10">
+      <div className="relative w-full h-full">
+        {/* Background line */}
+        <div className="absolute inset-0 bg-gray-800/50 rounded-full overflow-hidden" />
+        
+        {/* Animated progress */}
+        <motion.div
+          className="absolute h-full rounded-full bg-gradient-to-r from-purple-600 via-violet-500 to-purple-600"
+          initial={{ width: '0%' }}
+          animate={{ width: `${(currentStep / (totalSteps - 1)) * 100}%` }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+        />
+        
+        {/* Glowing effect */}
+        <motion.div
+          className="absolute top-0 h-full rounded-full opacity-50 overflow-hidden"
+          style={{
+            width: `${(currentStep / (totalSteps - 1)) * 100}%`,
+            background: 'linear-gradient(90deg, transparent, rgba(147, 51, 234, 0.5), transparent)',
+          }}
+          animate={{
+            x: ['-100%', '100%']
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+        />
+      </div>
     </div>
   );
 };
@@ -62,8 +85,12 @@ const StepIndicator = ({ step, index, currentStep }: { step: string; index: numb
       transition={{ duration: 0.2 }}
     >
       <motion.div
-        className={`w-12 h-12 rounded-full flex items-center justify-center ${
-          isCompleted ? 'bg-blue-500' : isActive ? 'bg-blue-600' : 'bg-gray-800'
+        className={`w-14 h-14 rounded-full flex items-center justify-center ${
+          isCompleted 
+            ? 'bg-gradient-to-r from-purple-600 via-pink-500 to-violet-600' 
+            : isActive 
+              ? 'bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 ring-4 ring-purple-500/20' 
+              : 'bg-gray-800/80'
         } shadow-lg relative z-10`}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -78,23 +105,44 @@ const StepIndicator = ({ step, index, currentStep }: { step: string; index: numb
           </motion.div>
         ) : (
           <motion.span
-            className={`text-lg ${isActive ? 'text-white' : 'text-gray-400'}`}
+            className={`text-lg font-semibold ${isActive ? 'text-white' : 'text-gray-400'}`}
             initial={false}
             animate={{ scale: isActive ? 1.2 : 1 }}
           >
             {index + 1}
           </motion.span>
         )}
+
+        {/* Add gradient glow effect */}
+        {isActive && (
+          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 opacity-30 blur-md -z-10" />
+        )}
       </motion.div>
       <motion.span
-        className={`mt-2 text-sm font-medium ${
+        className={`mt-3 text-sm font-medium ${
           isActive ? 'text-white' : 'text-gray-400'
         }`}
         initial={false}
-        animate={{ y: isActive ? -4 : 0 }}
+        animate={{ 
+          y: isActive ? -4 : 0,
+          scale: isActive ? 1.1 : 1
+        }}
       >
         {step}
       </motion.span>
+      
+      {/* Active step indicator dot */}
+      {isActive && (
+        <motion.div
+          className="absolute -bottom-1 w-2 h-2 rounded-full bg-gradient-to-r from-purple-500 to-fuchsia-500"
+          layoutId="activeStep"
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 30
+          }}
+        />
+      )}
     </motion.div>
   );
 };
@@ -306,19 +354,76 @@ const Booking = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8">
-      {/* Animated Background */}
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(14,165,233,0.05),rgba(0,0,0,0))]" />
-        {Array.from({ length: 20 }).map((_, i) => (
-          <FloatingParticle key={i} delay={i * 0.2} />
+    <div className="min-h-screen bg-black/95 pt-24 pb-16 relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {/* Gradient Orbs */}
+        <motion.div
+          className="absolute top-1/4 -left-32 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3],
+            x: [-20, 20, -20],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 -right-32 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
+          animate={{
+            scale: [1.2, 1, 1.2],
+            opacity: [0.2, 0.4, 0.2],
+            x: [20, -20, 20],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        
+        {/* Floating Particles */}
+        {[...Array(20)].map((_, i) => (
+          <FloatingParticle key={i} delay={i * 0.5} />
         ))}
+
+        {/* Grid Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
       </div>
 
-      <div className="container mx-auto px-4 py-8 relative z-10">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-12"
+        >
+          <motion.h1 
+            className="text-4xl md:text-5xl font-bold mb-4"
+            style={{
+              background: 'linear-gradient(to right, #fff, #666)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}
+          >
+            Book a Consultation
+          </motion.h1>
+          <motion.p 
+            className="text-gray-400 text-lg max-w-2xl mx-auto"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+          >
+            Schedule a personalized session with our AI experts to discuss your project needs
+          </motion.p>
+        </motion.div>
+
         {/* Progress Steps */}
-        <div className="max-w-3xl mx-auto mb-12">
-          <div className="flex justify-between items-center mb-8">
+        <div className="mb-12">
+          <div className="flex justify-between items-center max-w-2xl mx-auto mb-8 relative">
             {steps.map((step, index) => (
               <StepIndicator
                 key={step}
@@ -327,256 +432,228 @@ const Booking = () => {
                 currentStep={currentStep}
               />
             ))}
+            <ProgressBar currentStep={currentStep} totalSteps={steps.length} />
           </div>
-          <ProgressBar currentStep={currentStep} totalSteps={steps.length} />
         </div>
 
         {/* Main Content */}
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            className="bg-gray-900/50 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-2xl border border-gray-800"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            <AnimatePresence mode="wait">
+        <motion.div
+          className="max-w-4xl mx-auto"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentStep}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+              className="bg-gray-900/50 backdrop-blur-xl rounded-2xl p-6 md:p-8 shadow-2xl border border-gray-800/50"
+            >
               {currentStep === 0 && (
-                <motion.div
-                  key="step1"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6"
-                >
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {services.map((service) => (
                     <motion.div
                       key={service.id}
-                      onClick={() => setSelectedService(service.id)}
-                      className={`relative p-6 rounded-xl cursor-pointer ${
-                        selectedService === service.id
-                          ? 'bg-blue-600 shadow-lg shadow-blue-500/20'
-                          : 'bg-gray-800/50 hover:bg-gray-800'
-                      } transition-all duration-300`}
-                      whileHover={{ scale: 1.02, y: -5 }}
+                      whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
+                      className={`p-6 rounded-xl cursor-pointer transition-all duration-200 ${
+                        selectedService === service.id
+                          ? 'bg-purple-600/20 border-2 border-purple-500/50'
+                          : 'bg-gray-800/50 border-2 border-gray-700/50 hover:border-purple-600/50'
+                      }`}
+                      onClick={() => setSelectedService(service.id)}
                     >
                       <div className="text-3xl mb-4">{service.icon}</div>
                       <h3 className="text-xl font-semibold mb-2">{service.name}</h3>
-                      <p className="text-sm text-gray-400 mb-4">{service.description}</p>
+                      <p className="text-gray-400 text-sm mb-4">{service.description}</p>
                       <div className="flex justify-between items-center text-sm">
                         <span className="text-gray-400">{service.duration}</span>
-                        <span className="font-bold text-blue-400">{service.price}</span>
+                        <span className="text-blue-400">{service.price}</span>
                       </div>
-                      {selectedService === service.id && (
-                        <motion.div
-                          className="absolute -top-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center"
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          transition={{ type: "spring", stiffness: 500, damping: 25 }}
-                        >
-                          <CheckCircle className="w-4 h-4 text-white" />
-                        </motion.div>
-                      )}
                     </motion.div>
                   ))}
-                </motion.div>
+                </div>
               )}
 
               {currentStep === 1 && (
-                <motion.div
-                  key="step2"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  className="space-y-8"
-                >
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className="space-y-4">
-                      <h3 className="text-xl font-semibold flex items-center gap-2">
-                        <CalendarIcon className="w-5 h-5" />
-                        Select Date
-                      </h3>
+                <div className="grid md:grid-cols-2 gap-8">
+                  <div className="space-y-4">
+                    <h3 className="text-xl font-semibold mb-4">Select Date</h3>
+                    <div className="bg-gray-800/50 rounded-xl p-4">
                       <DayPicker
                         mode="single"
                         selected={selected}
                         onSelect={handleDateSelect}
-                        className="bg-gray-800/50 rounded-lg p-3"
+                        disabled={{ before: new Date() }}
                         modifiers={{
-                          disabled: { before: new Date() },
+                          booked: (date) => {
+                            const dateStr = format(date, 'yyyy-MM-dd');
+                            return bookedSlots.some(slot => slot.date === dateStr);
+                          }
                         }}
                         modifiersStyles={{
-                          disabled: { color: 'gray' },
+                          booked: { color: '#ef4444' }
+                        }}
+                        className="!bg-transparent"
+                        classNames={{
+                          day: 'text-gray-300 hover:bg-purple-500/20 rounded-lg transition-colors',
+                          selected: '!bg-purple-600 !text-white hover:!bg-purple-700',
+                          today: 'text-purple-400 font-bold',
+                          disabled: '!text-gray-600 hover:!bg-transparent cursor-not-allowed'
                         }}
                       />
                     </div>
-                    <div className="space-y-4">
-                      <h3 className="text-xl font-semibold flex items-center gap-2">
-                        <Clock className="w-5 h-5" />
-                        Select Time
-                      </h3>
-                      {selected ? (
-                        availableTimeSlots.length > 0 ? (
-                          <div className="grid grid-cols-2 gap-4">
-                            {availableTimeSlots.map((slot) => (
-                              <button
-                                key={slot}
-                                onClick={() => setTimeSlot(slot)}
-                                className={`p-3 rounded-lg transition-all duration-200 ${
-                                  timeSlot === slot
-                                    ? 'bg-blue-600 text-white'
-                                    : 'bg-gray-800/50 hover:bg-gray-800'
-                                }`}
-                              >
-                                {slot}
-                              </button>
-                            ))}
-                          </div>
-                        ) : (
-                          <div className="text-center p-4 bg-gray-800/50 rounded-lg">
-                            <p>No available time slots for this date</p>
-                          </div>
-                        )
-                      ) : (
-                        <div className="text-center p-4 bg-gray-800/50 rounded-lg">
-                          <p>Please select a date first</p>
-                        </div>
-                      )}
+                  </div>
+                  <div className="space-y-4">
+                    <h3 className="text-xl font-semibold mb-4">Select Time</h3>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      {availableTimeSlots.map((slot) => (
+                        <motion.button
+                          key={slot}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          className={`p-3 rounded-lg text-sm font-medium transition-colors ${
+                            timeSlot === slot
+                              ? 'bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500'
+                              : 'bg-gray-800/50 text-gray-300 hover:bg-purple-700/50'
+                          }`}
+                          onClick={() => setTimeSlot(slot)}
+                        >
+                          {slot}
+                        </motion.button>
+                      ))}
                     </div>
                   </div>
-                </motion.div>
+                </div>
               )}
 
               {currentStep === 2 && (
-                <motion.div
-                  key="step3"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  className="space-y-6"
-                >
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <div>
-                        <label className="flex items-center text-sm font-medium mb-1">
-                          <User className="w-4 h-4 mr-2" />
-                          Name
-                        </label>
+                <div className="space-y-6">
+                  <div className="grid gap-6 md:grid-cols-2">
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.1 }}
+                    >
+                      <label className="block text-sm font-medium text-gray-400 mb-2">
+                        Name
+                      </label>
+                      <div className="relative">
+                        <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-5 w-5" />
                         <input
                           type="text"
-                          name="name"
                           value={formData.name}
-                          onChange={handleChange}
-                          className="w-full bg-gray-800/50 rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
-                          placeholder="Your name"
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          className="w-full bg-gray-800/50 border border-purple-900/50 rounded-lg py-2 px-10 text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                          placeholder="Your full name"
                         />
                       </div>
-                      <div>
-                        <label className="flex items-center text-sm font-medium mb-1">
-                          <Mail className="w-4 h-4 mr-2" />
-                          Email
-                        </label>
+                    </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 }}
+                    >
+                      <label className="block text-sm font-medium text-gray-400 mb-2">
+                        Email
+                      </label>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-5 w-5" />
                         <input
                           type="email"
-                          name="email"
                           value={formData.email}
-                          onChange={handleChange}
-                          className="w-full bg-gray-800/50 rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
+                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                          className="w-full bg-gray-800/50 border border-purple-900/50 rounded-lg py-2 px-10 text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                           placeholder="your@email.com"
                         />
                       </div>
-                    </div>
-                    <div className="space-y-4">
-                      <div>
-                        <label className="flex items-center text-sm font-medium mb-1">
-                          <Building2 className="w-4 h-4 mr-2" />
-                          Company (Optional)
-                        </label>
-                        <input
-                          type="text"
-                          name="company"
-                          value={formData.company}
-                          onChange={handleChange}
-                          className="w-full bg-gray-800/50 rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
-                          placeholder="Your company"
-                        />
-                      </div>
-                      <div>
-                        <label className="flex items-center text-sm font-medium mb-1">
-                          <MessageSquare className="w-4 h-4 mr-2" />
-                          Message (Optional)
-                        </label>
-                        <textarea
-                          name="message"
-                          value={formData.message}
-                          onChange={handleChange}
-                          className="w-full bg-gray-800/50 rounded-lg p-3 focus:ring-2 focus:ring-blue-500"
-                          placeholder="Any additional information..."
-                          rows={4}
-                        />
-                      </div>
-                    </div>
+                    </motion.div>
                   </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Navigation Buttons */}
-            <div className="flex justify-between mt-8">
-              {currentStep > 0 && (
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handlePrevStep}
-                  className="px-6 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 transition-colors"
-                >
-                  Previous
-                </motion.button>
-              )}
-              {currentStep < steps.length - 1 ? (
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleNextStep}
-                  className="px-6 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 transition-colors ml-auto flex items-center"
-                >
-                  Next
                   <motion.div
-                    animate={{ x: [0, 4, 0] }}
-                    transition={{ duration: 1, repeat: Infinity }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
                   >
-                    →
+                    <label className="block text-sm font-medium text-gray-400 mb-2">
+                      Company
+                    </label>
+                    <div className="relative">
+                      <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-5 w-5" />
+                      <input
+                        type="text"
+                        value={formData.company}
+                        onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                        className="w-full bg-gray-800/50 border border-purple-900/50 rounded-lg py-2 px-10 text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                        placeholder="Your company name"
+                      />
+                    </div>
                   </motion.div>
-                </motion.button>
-              ) : (
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleSubmit}
-                  disabled={isSubmitting}
-                  className="px-6 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 transition-colors ml-auto flex items-center"
-                >
-                  {isSubmitting ? (
-                    <span className="flex items-center">
-                      Processing
-                      <motion.div
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                        className="ml-2"
-                      >
-                        ⚡
-                      </motion.div>
-                    </span>
-                  ) : (
-                    <span className="flex items-center">
-                      Book Meeting
-                      <Send className="w-4 h-4 ml-2" />
-                    </span>
-                  )}
-                </motion.button>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    <label className="block text-sm font-medium text-gray-400 mb-2">
+                      Message
+                    </label>
+                    <div className="relative">
+                      <MessageSquare className="absolute left-3 top-3 text-gray-500 h-5 w-5" />
+                      <textarea
+                        value={formData.message}
+                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                        className="w-full bg-gray-800/50 border border-purple-900/50 rounded-lg py-2 px-10 text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500 focus:border-transparent min-h-[100px]"
+                        placeholder="Tell us about your project"
+                      />
+                    </div>
+                  </motion.div>
+                </div>
               )}
-            </div>
-          </motion.div>
-        </div>
+
+              {/* Navigation Buttons */}
+              <div className="flex justify-between mt-8">
+                {currentStep > 0 && (
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="px-6 py-2 rounded-lg relative group overflow-hidden bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 hover:from-gray-700 hover:via-gray-600 hover:to-gray-700"
+                    onClick={() => setCurrentStep(currentStep - 1)}
+                  >
+                    <span className="relative z-10">Back</span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </motion.button>
+                )}
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`px-6 py-2 rounded-lg transition-colors ml-auto relative group overflow-hidden ${
+                    isSubmitting
+                      ? 'bg-gray-700 cursor-not-allowed'
+                      : currentStep === steps.length - 1
+                      ? 'bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 hover:from-violet-500 hover:via-purple-400 hover:to-fuchsia-400'
+                      : 'bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 hover:from-violet-500 hover:via-purple-400 hover:to-fuchsia-400'
+                  }`}
+                  onClick={handleNextStep}
+                  disabled={isSubmitting}
+                >
+                  <span className="relative z-10 flex items-center">
+                    {currentStep === steps.length - 1 ? (
+                      <>
+                        {isSubmitting ? 'Booking...' : 'Complete Booking'}
+                        <Send className="ml-2 h-4 w-4" />
+                      </>
+                    ) : (
+                      'Next'
+                    )}
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-violet-500 via-purple-400 to-fuchsia-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </motion.button>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </motion.div>
       </div>
     </div>
   );
