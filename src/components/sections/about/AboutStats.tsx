@@ -1,80 +1,199 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import CountUp from 'react-countup';
 
-interface StatItemProps {
+interface StatCardProps {
   number: number;
   label: string;
-  suffix?: string;
   index: number;
 }
 
-const StatItem: React.FC<StatItemProps> = ({ number, label, suffix = '', index }) => {
+const StatCard: React.FC<StatCardProps> = ({ number, label, index }) => {
+  const cardRef = useRef(null);
+  const isInView = useInView(cardRef, { once: false, margin: "-100px" });
+
+  const variants = {
+    hidden: { 
+      opacity: 0,
+      y: 50,
+      scale: 0.9,
+      filter: "blur(10px)"
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      filter: "blur(0px)",
+      transition: {
+        type: "spring",
+        damping: 15,
+        stiffness: 100,
+        delay: index * 0.15
+      }
+    }
+  };
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="backdrop-blur-xl bg-gradient-to-br from-white/[0.01] via-purple-500/[0.02] to-blue-500/[0.01] rounded-2xl p-6 sm:p-8 border border-white/[0.05] hover:bg-white/[0.05] transition-all duration-300 group"
+      ref={cardRef}
+      variants={variants}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      className="relative group"
     >
-      <div className="relative z-10">
-        <div className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2 sm:mb-3 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-transparent bg-clip-text group-hover:from-blue-300 group-hover:to-pink-300 transition-all duration-300">
-          <CountUp end={number} duration={2.5} suffix={suffix} />
-        </div>
-        <div className="text-gray-400 text-base sm:text-lg group-hover:text-gray-300 transition-colors duration-300">
-          {label}
+      <div className="relative">
+        {/* Glass Card */}
+        <div className="relative backdrop-blur-xl bg-gradient-to-br from-black/40 to-black/20 rounded-3xl p-8 border border-white/[0.08] overflow-hidden">
+          {/* Animated Highlight */}
+          <motion.div
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+            animate={{
+              background: [
+                "radial-gradient(circle at 0% 0%, rgba(255,255,255,0.1) 0%, transparent 50%)",
+                "radial-gradient(circle at 100% 100%, rgba(255,255,255,0.1) 0%, transparent 50%)",
+                "radial-gradient(circle at 0% 0%, rgba(255,255,255,0.1) 0%, transparent 50%)"
+              ],
+            }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          />
+
+          {/* Content */}
+          <div className="relative z-10 text-center">
+            <motion.div
+              className="text-5xl sm:text-6xl font-semibold mb-4"
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={isInView ? {
+                scale: 1,
+                opacity: 1,
+                transition: {
+                  type: "spring",
+                  damping: 20,
+                  stiffness: 100,
+                  delay: index * 0.2
+                }
+              } : {
+                scale: 0.5,
+                opacity: 0
+              }}
+            >
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-pink-600">
+                {isInView && (
+                  <CountUp
+                    end={number}
+                    duration={2.5}
+                    separator=","
+                    useEasing={true}
+                    start={number * 0.5}
+                  />
+                )}
+                {label === "%" && "%"}
+              </span>
+            </motion.div>
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={isInView ? {
+                opacity: 1,
+                y: 0,
+                transition: {
+                  delay: index * 0.3,
+                  duration: 0.5
+                }
+              } : {
+                opacity: 0,
+                y: 10
+              }}
+              className="text-lg text-white/60 font-light"
+              style={{ fontFamily: "SF Pro Text, system-ui, -apple-system, BlinkMacSystemFont, sans-serif" }}
+            >
+              {label !== "%" && label}
+            </motion.p>
+          </div>
+
+          {/* Animated Border */}
+          <motion.div
+            className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+            style={{
+              background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)",
+            }}
+            animate={{
+              x: ["100%", "-100%"],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          />
         </div>
       </div>
-      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
     </motion.div>
   );
 };
 
 const AboutStats: React.FC = () => {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
   const stats = [
-    { number: 95, label: 'Client Satisfaction Rate', suffix: '%' },
-    { number: 50, label: 'Global Partners', suffix: '+' },
-    { number: 1000, label: 'Projects Completed', suffix: '+' },
-    { number: 24, label: 'Industry Awards', suffix: '' }
+    { number: 98, label: "%" },
+    { number: 250, label: "Projects Completed" },
+    { number: 15, label: "Countries Served" },
+    { number: 99.9, label: "%" }
   ];
 
   return (
-    <section className="relative py-16 sm:py-24 md:py-32 bg-black overflow-hidden">
-      {/* Background elements */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900 to-black opacity-50" />
-        <div className="absolute inset-0" style={{
-          background: 'radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)'
-        }} />
-      </div>
+    <section ref={containerRef} className="relative py-32 bg-black overflow-hidden">
+      {/* Background Effects */}
+      <motion.div 
+        className="absolute inset-0"
+        style={{
+          background: `radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0%, transparent 70%)`,
+          scale: useTransform(scrollYProgress, [0, 0.5, 1], [0.5, 1, 0.5]),
+          opacity: useTransform(scrollYProgress, [0, 0.5, 1], [0, 0.8, 0])
+        }}
+      />
+      <motion.div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: `linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.02) 50%, transparent 100%)`,
+          rotate: useTransform(scrollYProgress, [0, 1], [0, 360])
+        }}
+      />
 
-      {/* Content */}
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16 sm:mb-24"
+          viewport={{ once: false, margin: "-100px" }}
+          transition={{ duration: 1 }}
+          className="text-center mb-20"
         >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
-            <span className="text-white">Our</span>{' '}
-            <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 text-transparent bg-clip-text">Impact</span>
+          <h2 className="text-5xl sm:text-6xl font-semibold tracking-tight mb-6">
+            <span className="bg-clip-text text-transparent bg-gradient-to-b from-violet-500 via-purple-500 to-indigo-500">
+              By the Numbers
+            </span>
           </h2>
-          <p className="text-lg sm:text-xl text-gray-400 max-w-3xl mx-auto">
-            Measurable results that showcase our commitment to excellence
+          <p className="text-xl text-white/60 max-w-3xl mx-auto font-light"
+            style={{ fontFamily: "SF Pro Text, system-ui, -apple-system, BlinkMacSystemFont, sans-serif" }}>
+            Our impact in numbers, showcasing our commitment to excellence and growth
           </p>
         </motion.div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {stats.map((stat, index) => (
-            <StatItem
-              key={stat.label}
+            <StatCard
+              key={index}
               number={stat.number}
               label={stat.label}
-              suffix={stat.suffix}
               index={index}
             />
           ))}

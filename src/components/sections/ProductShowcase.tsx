@@ -1,203 +1,223 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import Image from 'next/image';
+import { useNavigate } from 'react-router-dom';
 import showcaseImage from '../../assets/image.png';
+import { GlowingOrbs } from '../ui/GlowingOrbs';
 
-const features = [
+// Icons as inline SVG components for better control
+const CheckIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+  </svg>
+);
+
+const ArrowRightIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+  </svg>
+);
+
+const products = [
   {
-    title: "Smart Suggestions",
-    description: "Get intelligent code suggestions powered by advanced AI algorithms. Our system learns from millions of code patterns to provide context-aware recommendations.",
-    icon: "",
-    color: "from-blue-500 to-purple-500",
-    delay: 0.2
+    title: "AI Caller",
+    description: "Experience seamless communication with our advanced AI calling system. Perfect for businesses looking to automate customer interactions while maintaining a personal touch.",
+    image: showcaseImage,
+    features: [
+      "Natural voice interactions",
+      "Real-time response generation",
+      "Multi-language support",
+      "Custom voice and personality"
+    ],
+    link: "/services/ai-agent",
+    gradient: "from-violet-600 via-indigo-500 to-purple-500"
   },
   {
-    title: "Code Analysis",
-    description: "Deep understanding of your codebase with real-time semantic analysis. Identify patterns, potential issues, and optimization opportunities instantly.",
-    icon: "",
-    color: "from-purple-500 to-pink-500",
-    delay: 0.4
-  },
-  {
-    title: "Auto Complete",
-    description: "Lightning-fast code completion that understands your context. Save time with intelligent suggestions that help you write better code faster.",
-    icon: "",
-    color: "from-pink-500 to-red-500",
-    delay: 0.6
+    title: "Advanced Chatbot",
+    description: "Elevate your customer service with our intelligent chatbot solution. Powered by cutting-edge AI to handle complex conversations and tasks.",
+    image: showcaseImage,
+    features: [
+      "Context-aware responses",
+      "Multi-platform integration",
+      "24/7 availability",
+      "Learning capabilities"
+    ],
+    link: "/services/chatbot",
+    gradient: "from-blue-600 via-cyan-500 to-teal-500"
   }
 ];
 
 const ProductShowcase = () => {
+  const navigate = useNavigate();
   const sectionRef = useRef<HTMLDivElement>(null);
+  
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"]
   });
 
-  const scale = useTransform(scrollYProgress, [0, 0.5], [0.8, 1]);
-  const opacity = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
-  const y = useTransform(scrollYProgress, [0, 0.5], [100, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.8]);
+  const y = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [100, 0, 0, -100]);
+
+  const handleProductClick = (link: string) => {
+    if (link === '/services/ai-agent') {
+      navigate('/services/AIAgentInteraction');
+    } else if (link === '/services/chatbot') {
+      navigate('/services/ChatbotShowcase');
+    }
+  };
 
   return (
     <section 
       ref={sectionRef}
-      className="relative min-h-[80vh] sm:min-h-[90vh] md:min-h-screen py-16 sm:py-20 md:py-24 lg:py-32 overflow-hidden sf-pro-display bg-black"
+      className="relative bg-black min-h-screen py-20 overflow-hidden"
     >
+      {/* Animated background elements */}
+      <GlowingOrbs count={3} intensity="low" color="rgba(139,92,246,0.3)" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black via-black/95 to-black/90 backdrop-blur-sm" />
+
       {/* Content Container */}
       <motion.div 
-        className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full"
+        className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20"
         style={{ scale, opacity, y }}
       >
-        {/* Header */}
-        <div className="text-center mb-12 sm:mb-16 md:mb-20">
+        {/* Section Title with animated underline */}
+        <div className="text-center mb-16 sm:mb-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
             viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative inline-block"
           >
-            <motion.div 
-              className="inline-flex items-center mb-4 sm:mb-6"
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.3 }}
-            >
-              <div className="relative px-4 py-2 rounded-full border border-purple-500/30 bg-purple-500/10">
-                <motion.span 
-                  className="relative text-sm sm:text-base text-purple-300 font-medium"
-                  animate={{
-                    opacity: [0.5, 1, 0.5],
-                    scale: [0.98, 1.02, 0.98],
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                >
-                  Experience the Future
-                </motion.span>
-              </div>
-            </motion.div>
-            
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4 sm:mb-6 bg-gradient-to-r from-white to-white/80 text-transparent bg-clip-text">
-              Revolutionize Your Development
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent mb-6">
+              Our Solutions
             </h2>
-            <p className="max-w-2xl mx-auto text-gray-400 text-lg sm:text-xl">
-              Experience seamless AI integration with our cutting-edge development platform
-            </p>
-          </motion.div>
-        </div>
-
-   
-         
-
-          {/* Feature Highlights - Mobile Optimized */}
-          <div className="mt-8 sm:mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-            {[
-              { title: "AI-Powered", description: "Smart code suggestions" },
-              { title: "Real-time", description: "Instant collaboration" },
-              { title: "Secure", description: "Enterprise-grade security" }
-            ].map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                className="relative p-4 sm:p-6 rounded-xl bg-black/50 border border-purple-500/20 backdrop-blur-sm"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                whileHover={{ scale: 1.02, backgroundColor: "rgba(0,0,0,0.6)" }}
-              >
-                <h3 className="text-lg sm:text-xl font-semibold bg-gradient-to-r from-purple-400 to-pink-400 text-transparent bg-clip-text mb-2">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-400 text-sm sm:text-base">
-                  {feature.description}
-                </p>
-              </motion.div>
-            ))}
-        </div>
-
-        {/* Product Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mt-8 sm:mt-12 md:mt-16">
-          {features.map((feature, index) => (
             <motion.div
-              key={index}
+              className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-blue-500"
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            />
+          </motion.div>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="text-lg sm:text-xl md:text-2xl text-white/70 max-w-3xl mx-auto mt-6"
+          >
+            Transform your business with our cutting-edge AI solutions
+          </motion.p>
+        </div>
+
+        {/* Product Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 md:gap-12 lg:gap-16">
+          {products.map((product, index) => (
+            <motion.div
+              key={product.title}
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ 
-                duration: 0.8, 
-                delay: feature.delay,
-                type: "spring",
-                stiffness: 100
-              }}
-              whileHover={{ y: -5, scale: 1.02 }}
-              className="relative group"
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: index * 0.2 }}
+              className="group relative"
             >
+              {/* Product Card */}
               <div 
-                className="absolute -inset-0.5 bg-gradient-to-r opacity-50 sm:opacity-75 group-hover:opacity-100 transition-all duration-500 blur-md sm:blur-lg"
-                style={{
-                  backgroundImage: `linear-gradient(to right, ${feature.color.split(' ')[1]}, ${feature.color.split(' ')[3]})`
-                }}
-              />
-              <div className="relative p-4 sm:p-6 md:p-8 bg-gray-900/80 backdrop-blur-xl rounded-lg sm:rounded-xl md:rounded-2xl border border-gray-700/50 h-full transform transition-all duration-300 group-hover:bg-gray-800/80">
-                <div className="flex items-center mb-4 sm:mb-6">
-                  <div className="text-3xl sm:text-4xl md:text-5xl mr-3 sm:mr-4 transform group-hover:scale-110 transition-transform duration-300">
-                    {feature.icon}
-                  </div>
-                  <h3 className="text-lg sm:text-xl md:text-2xl font-semibold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                    {feature.title}
-                  </h3>
-                </div>
-                <p className="text-sm sm:text-base text-gray-400/90 leading-relaxed">
-                  {feature.description}
-                </p>
-                <motion.div
-                  className="absolute bottom-3 sm:bottom-4 right-3 sm:right-4 w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-all duration-300"
-                  whileHover={{ scale: 1.2 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <svg
-                    className="w-6 h-6 sm:w-8 sm:h-8 p-1.5 sm:p-2 text-white"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+                className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900 to-black border border-white/10 hover:border-purple-500/50 transition-all duration-500"
+                style={{ transformStyle: 'preserve-3d' }}
+              >
+                {/* Image Container with Parallax Effect */}
+                <div className="relative aspect-[16/9] overflow-hidden">
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.6 }}
+                    className="absolute inset-0"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-60 z-10" />
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      className="absolute inset-0 w-full h-full object-cover"
                     />
-                  </svg>
-                </motion.div>
+                  </motion.div>
+                  
+                  {/* Floating gradient overlay */}
+                  <div className={`absolute inset-0 bg-gradient-to-r ${product.gradient} opacity-20 mix-blend-overlay`} />
+                </div>
+
+                {/* Content Container */}
+                <div className="relative z-20 p-6 sm:p-8">
+                  {/* Animated gradient orb */}
+                  <div className={`absolute -top-20 right-0 w-40 h-40 rounded-full blur-3xl opacity-0 group-hover:opacity-30 transition-opacity duration-700 bg-gradient-to-r ${product.gradient}`} />
+                  
+                  <motion.h3 
+                    className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4"
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                  >
+                    {product.title}
+                  </motion.h3>
+                  
+                  <motion.p 
+                    className="text-base sm:text-lg text-white/70 mb-6"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                  >
+                    {product.description}
+                  </motion.p>
+                  
+                  {/* Features List with staggered animation */}
+                  <motion.ul 
+                    className="space-y-3 mb-8"
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true }}
+                    variants={{
+                      visible: {
+                        transition: {
+                          staggerChildren: 0.1
+                        }
+                      }
+                    }}
+                  >
+                    {product.features.map((feature, idx) => (
+                      <motion.li 
+                        key={idx}
+                        variants={{
+                          hidden: { opacity: 0, x: -20 },
+                          visible: { opacity: 1, x: 0 }
+                        }}
+                        className="flex items-center gap-3"
+                      >
+                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 flex items-center justify-center">
+                          <CheckIcon className="w-3 h-3 text-white" />
+                        </div>
+                        <span className="text-sm sm:text-base text-white/80">{feature}</span>
+                      </motion.li>
+                    ))}
+                  </motion.ul>
+
+                  {/* CTA Button */}
+                  <motion.button
+                    onClick={() => handleProductClick(product.link)}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="group relative inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full text-white transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/25"
+                  >
+                    <span className="text-sm sm:text-base font-medium">Learn More</span>
+                    <ArrowRightIcon className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+                  </motion.button>
+                </div>
               </div>
             </motion.div>
           ))}
         </div>
-
-        {/* Bottom Parallax Image */}
-        <motion.div
-          style={{
-            y: useTransform(scrollYProgress, [0, 1], [0, 150]),
-          }}
-          className="mt-16 sm:mt-20 md:mt-24 lg:mt-32 relative"
-        >
-          <div className="aspect-[16/9] rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-3xl overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
-            <motion.img
-              src={showcaseImage}
-              alt="Product Showcase"
-              className="w-full h-full object-cover rounded-2xl"
-              style={{
-                filter: 'brightness(1.1) contrast(1.1)',
-                boxShadow: '0 0 30px rgba(59, 130, 246, 0.2)'
-              }}
-              initial={{ scale: 1.1 }}
-              whileInView={{ scale: 1 }}
-              transition={{ duration: 1.5 }}
-              loading="lazy"
-            />
-          </div>
-        </motion.div>
       </motion.div>
     </section>
   );

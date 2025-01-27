@@ -16,19 +16,19 @@ export const ScrollingTextSection = () => {
   return (
     <motion.section
       ref={containerRef}
-      className="relative bg-black h-[60vh] flex flex-col items-center justify-center overflow-hidden py-20"
+      className="relative bg-black h-[30vh] sm:h-[40vh] md:h-[60vh] flex flex-col items-center justify-center overflow-hidden py-4 sm:py-8 md:py-20 -mt-12 sm:mt-0"
       style={{ opacity, scale }}
     >
       {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:5rem_5rem] pointer-events-none z-10" />
+      <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:2rem_2rem] sm:bg-[size:3rem_3rem] md:bg-[size:5rem_5rem] pointer-events-none z-10" />
       
       {/* First line */}
-      <div className="w-full mb-4 translate-x-[10%]">
+      <div className="w-full mb-2 sm:mb-4 translate-x-[10%]">
         <motion.div
           className="whitespace-nowrap will-change-transform"
           style={{ x: x1 }}
         >
-          <h2 className="text-[80px] md:text-[130px] font-semibold tracking-tight text-white/20"
+          <h2 className="text-[40px] sm:text-[60px] md:text-[80px] lg:text-[130px] font-semibold tracking-tight text-white/20"
               style={{ 
                 fontFamily: "-apple-system, 'SF Pro Display', sans-serif",
                 fontFeatureSettings: '"ss01" on, "ss02" on'
@@ -44,7 +44,7 @@ export const ScrollingTextSection = () => {
           className="whitespace-nowrap will-change-transform"
           style={{ x: x2 }}
         >
-          <h2 className="text-[80px] md:text-[130px] font-semibold tracking-tight text-white/20"
+          <h2 className="text-[40px] sm:text-[60px] md:text-[80px] lg:text-[130px] font-semibold tracking-tight text-white/20"
               style={{ 
                 fontFamily: "-apple-system, 'SF Pro Display', sans-serif",
                 fontFeatureSettings: '"ss01" on, "ss02" on'

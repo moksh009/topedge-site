@@ -3,9 +3,8 @@ import { motion } from 'framer-motion';
 import PricingHero from '../components/sections/pricing/PricingHero';
 import PricingBenefits from '../components/sections/pricing/PricingBenefits';
 import PricingPlans from '../components/sections/pricing/PricingPlans';
-import PricingTestimonials from '../components/sections/pricing/PricingTestimonials';
 import PricingFAQ from '../components/sections/pricing/PricingFAQ';
-import PricingCTA from '../components/sections/pricing/PricingCTA';
+import { PricingCTA } from '../components/sections/pricing/PricingCTA';
 
 const Pricing = () => {
   const containerRef = useRef<HTMLDivElement>(null);

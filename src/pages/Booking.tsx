@@ -1,661 +1,697 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar as CalendarIcon, Clock, Send, CheckCircle, Building2, MessageSquare, User, Mail, Sparkles } from 'lucide-react';
-import { DayPicker } from 'react-day-picker';
-import { format, addHours, isBefore, startOfToday, endOfMonth } from 'date-fns';
-import toast from 'react-hot-toast';
+import { AnimatePresence, motion, useMotionValue, useTransform, LayoutGroup } from 'framer-motion';
+import { Bot, Send, CheckCircle, Calendar as CalendarIcon, Star, Clock, Mail, ArrowRight, ArrowLeft } from 'lucide-react';
+import { format } from 'date-fns';
+import { useEffect, useRef, useState } from 'react';
+import { toast } from 'react-hot-toast';
+import useSound from 'use-sound';
+import { emailService } from '../services/emailService';
+import { DayPicker, SelectSingleEventHandler } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
-import { createMeeting, getBookedSlots } from '../lib/calendar';
-import { sendConfirmationEmail } from '../lib/emailjs';
 
-const services = [
-  {
-    id: "1",
-    name: 'AI Consultation',
-    description: 'Expert guidance on implementing AI solutions',
-    duration: '1 hour',
-    price: '$150',
-    icon: '🤖'
+interface Service {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+  icon: string;
+  rating: string;
+  duration: string;
+}
+
+const services: Service[] = [
+  { 
+    id: 1, 
+    name: 'Website Development', 
+    price: 999, 
+    description: 'Custom responsive websites built with modern technologies',
+    icon: '🌐',
+    rating: '4.9',
+    duration: '1 hour'
   },
-  {
-    id: "2",
-    name: 'Machine Learning Strategy',
-    description: 'Custom ML strategy for your business needs',
-    duration: '1 hour',
-    price: '$200',
-    icon: '🧠'
+  { 
+    id: 2, 
+    name: 'Mobile App Development', 
+    price: 1499, 
+    description: 'Native iOS and Android apps with seamless UX',
+    icon: '📱',
+    rating: '4.8',
+    duration: '1 hour'
   },
-  {
-    id: "3",
-    name: 'Data Analysis',
-    description: 'In-depth analysis of your data infrastructure',
-    duration: '1 hour',
-    price: '$175',
-    icon: '📊'
+  { 
+    id: 3, 
+    name: 'UI/UX Design', 
+    price: 799, 
+    description: 'User-centered design with modern aesthetics',
+    icon: '🎨',
+    rating: '4.7',
+    duration: '1 hour'
   }
 ];
 
-const steps = ['Select Service', 'Choose Date & Time', 'Personal Info'];
+const availableTimes = [
+  '09:00 AM', '10:00 AM', '11:00 AM',
+  '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM'
+];
 
-const ProgressBar = ({ currentStep, totalSteps }: { currentStep: number; totalSteps: number }) => {
-  return (
-    <div className="absolute top-1/2 left-[7%] right-[7%] w-[86%] h-1 -translate-y-1/2 -z-10">
-      <div className="relative w-full h-full">
-        {/* Background line */}
-        <div className="absolute inset-0 bg-gray-800/50 rounded-full overflow-hidden" />
-        
-        {/* Animated progress */}
-        <motion.div
-          className="absolute h-full rounded-full bg-gradient-to-r from-purple-600 via-violet-500 to-purple-600"
-          initial={{ width: '0%' }}
-          animate={{ width: `${(currentStep / (totalSteps - 1)) * 100}%` }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-        />
-        
-        {/* Glowing effect */}
-        <motion.div
-          className="absolute top-0 h-full rounded-full opacity-50 overflow-hidden"
-          style={{
-            width: `${(currentStep / (totalSteps - 1)) * 100}%`,
-            background: 'linear-gradient(90deg, transparent, rgba(147, 51, 234, 0.5), transparent)',
-          }}
-          animate={{
-            x: ['-100%', '100%']
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
-      </div>
-    </div>
-  );
+interface Message {
+  id: string;
+  type: 'user' | 'bot';
+  content: React.ReactNode;
+  expectsResponse?: boolean;
+  options?: {
+    type: string;
+    data?: any;
+  };
+}
+
+const TypewriterEffect = ({ text, delay = 50, onComplete }: { text: string; delay?: number; onComplete?: () => void }) => {
+  const [currentText, setCurrentText] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (currentIndex < text.length) {
+      const timeout = setTimeout(() => {
+        setCurrentText(prev => prev + text[currentIndex]);
+        setCurrentIndex(prev => prev + 1);
+      }, delay);
+
+      return () => clearTimeout(timeout);
+    } else if (onComplete) {
+      onComplete();
+    }
+  }, [currentIndex, delay, text, onComplete]);
+
+  return <span>{currentText}</span>;
 };
 
-const StepIndicator = ({ step, index, currentStep }: { step: string; index: number; currentStep: number }) => {
-  const isActive = index === currentStep;
-  const isCompleted = index < currentStep;
-
+const MessageBubble = ({ children, type }: { children: React.ReactNode; type: 'user' | 'bot' }) => {
   return (
     <motion.div
-      className="flex flex-col items-center relative"
-      initial={false}
-      animate={{ scale: isActive ? 1.1 : 1 }}
+      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.2 }}
+      className={`
+        flex ${type === 'user' ? 'justify-end' : 'justify-start'}
+        w-full mb-4
+      `}
     >
-      <motion.div
-        className={`w-14 h-14 rounded-full flex items-center justify-center ${
-          isCompleted 
-            ? 'bg-gradient-to-r from-purple-600 via-pink-500 to-violet-600' 
-            : isActive 
-              ? 'bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 ring-4 ring-purple-500/20' 
-              : 'bg-gray-800/80'
-        } shadow-lg relative z-10`}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        {isCompleted ? (
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          >
-            <CheckCircle className="w-6 h-6 text-white" />
-          </motion.div>
-        ) : (
-          <motion.span
-            className={`text-lg font-semibold ${isActive ? 'text-white' : 'text-gray-400'}`}
-            initial={false}
-            animate={{ scale: isActive ? 1.2 : 1 }}
-          >
-            {index + 1}
-          </motion.span>
-        )}
-
-        {/* Add gradient glow effect */}
-        {isActive && (
-          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 opacity-30 blur-md -z-10" />
-        )}
-      </motion.div>
-      <motion.span
-        className={`mt-3 text-sm font-medium ${
-          isActive ? 'text-white' : 'text-gray-400'
-        }`}
-        initial={false}
-        animate={{ 
-          y: isActive ? -4 : 0,
-          scale: isActive ? 1.1 : 1
-        }}
-      >
-        {step}
-      </motion.span>
-      
-      {/* Active step indicator dot */}
-      {isActive && (
-        <motion.div
-          className="absolute -bottom-1 w-2 h-2 rounded-full bg-gradient-to-r from-purple-500 to-fuchsia-500"
-          layoutId="activeStep"
-          transition={{
-            type: "spring",
-            stiffness: 300,
-            damping: 30
-          }}
-        />
-      )}
+      <div className={`
+        max-w-[80%] rounded-2xl p-4
+        ${type === 'user' 
+          ? 'bg-blue-600 text-white ml-auto'
+          : 'bg-gray-800 text-gray-100'
+        }
+      `}>
+        {children}
+      </div>
     </motion.div>
   );
 };
 
-const FloatingParticle = ({ delay }: { delay: number }) => {
+const TypingIndicator = () => {
   return (
-    <motion.div
-      className="absolute w-1 h-1 bg-blue-400/20 rounded-full"
-      initial={{ 
-        x: Math.random() * window.innerWidth,
-        y: Math.random() * window.innerHeight,
-        scale: 0
-      }}
-      animate={{ 
-        y: [0, -20, 0],
-        scale: [0, 1, 0],
-        opacity: [0, 0.8, 0]
-      }}
-      transition={{
-        duration: 3,
-        delay,
-        repeat: Infinity,
-        ease: "easeInOut"
-      }}
-    />
+    <div className="flex items-center space-x-2 p-4 max-w-[100px] bg-gray-800 rounded-2xl">
+      <motion.div
+        initial={{ scale: 0.8 }}
+        animate={{ scale: [0.8, 1.2, 0.8] }}
+        transition={{ duration: 1, repeat: Infinity }}
+        className="w-2 h-2 bg-gray-400 rounded-full"
+      />
+      <motion.div
+        initial={{ scale: 0.8 }}
+        animate={{ scale: [0.8, 1.2, 0.8] }}
+        transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
+        className="w-2 h-2 bg-gray-400 rounded-full"
+      />
+      <motion.div
+        initial={{ scale: 0.8 }}
+        animate={{ scale: [0.8, 1.2, 0.8] }}
+        transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
+        className="w-2 h-2 bg-gray-400 rounded-full"
+      />
+    </div>
   );
 };
 
-const generateTimeSlots = (selectedDate?: Date) => {
-  const slots = [];
-  const now = new Date();
-  const isToday = selectedDate && 
-    selectedDate.getDate() === now.getDate() &&
-    selectedDate.getMonth() === now.getMonth() &&
-    selectedDate.getFullYear() === now.getFullYear();
+const ServiceCard = ({ service, isSelected, onSelect }: { service: Service; isSelected: boolean; onSelect: () => void }) => {
+  const scale = useMotionValue(1);
+  const boxShadow = useTransform(
+    scale,
+    [1, 1.02],
+    ['0 0 0 rgba(147, 51, 234, 0)', '0 20px 40px rgba(147, 51, 234, 0.2)']
+  );
 
-  for (let hour = 9; hour <= 16; hour++) {
-    for (let minute of [0, 30]) {
-      const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-      const time = new Date(selectedDate || now);
-      time.setHours(hour, minute, 0);
+  return (
+    <motion.div
+      style={{ scale, boxShadow }}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      onClick={onSelect}
+      className={`
+        relative p-6 rounded-2xl cursor-pointer
+        transition-all duration-300 group
+        ${isSelected
+          ? 'bg-gradient-to-br from-purple-600/20 to-blue-600/20 border-2 border-purple-500/50'
+          : 'bg-[#0a0a0a] border border-[#1a1a1a] hover:border-purple-500/30'
+        }
+        backdrop-blur-xl overflow-hidden
+      `}
+    >
+      {/* Selection Indicator */}
+      <AnimatePresence>
+        {isSelected && (
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            className="absolute top-4 right-4 w-6 h-6 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full
+              flex items-center justify-center"
+          >
+            <CheckCircle className="w-4 h-4 text-white" />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      // Skip slots that have passed if it's today
-      if (isToday && time <= now) {
-        continue;
-      }
+      {/* Service Icon */}
+      <motion.div
+        initial={false}
+        animate={{
+          scale: isSelected ? 1.1 : 1,
+          y: isSelected ? -5 : 0
+        }}
+        className="text-4xl mb-4"
+      >
+        {service.icon}
+      </motion.div>
 
-      const formattedTime = format(time, 'h:mm a');
-      slots.push(formattedTime);
-    }
-  }
+      {/* Service Info */}
+      <motion.div
+        initial={false}
+        animate={{
+          y: isSelected ? -5 : 0
+        }}
+      >
+        <h3 className="text-xl font-bold text-white mb-2 group-hover:text-transparent
+          group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-purple-400 group-hover:to-blue-400
+          transition-all duration-300"
+        >
+          {service.name}
+        </h3>
+        <p className="text-gray-400 mb-4 text-sm">{service.description}</p>
+        
+        <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center gap-1 text-purple-400">
+            <Clock className="w-4 h-4" />
+            <span>{service.duration}</span>
+          </div>
+          <div className="flex items-center gap-1 text-blue-400">
+            <Star className="w-4 h-4" />
+            <span>{service.rating}</span>
+          </div>
+        </div>
 
-  return slots;
+        <div className="mt-4 flex items-center justify-between">
+          <span className="text-white font-bold">${service.price}</span>
+          <motion.div
+            initial={false}
+            animate={{
+              x: isSelected ? 0 : -10,
+              opacity: isSelected ? 1 : 0
+            }}
+            className="text-purple-400 flex items-center gap-1 text-sm"
+          >
+            <span>Selected</span>
+            <CheckCircle className="w-4 h-4" />
+          </motion.div>
+        </div>
+      </motion.div>
+
+      {/* Background Gradient Animation */}
+      <motion.div
+        className="absolute inset-0 -z-10"
+        initial={false}
+        animate={{
+          background: isSelected
+            ? [
+                'radial-gradient(circle at 0% 0%, rgba(147, 51, 234, 0.15) 0%, transparent 50%)',
+                'radial-gradient(circle at 100% 100%, rgba(147, 51, 234, 0.15) 0%, transparent 50%)',
+                'radial-gradient(circle at 0% 100%, rgba(147, 51, 234, 0.15) 0%, transparent 50%)',
+                'radial-gradient(circle at 100% 0%, rgba(147, 51, 234, 0.15) 0%, transparent 50%)',
+              ]
+            : 'none'
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+      />
+    </motion.div>
+  );
+};
+
+const FormInput = ({ label, value, onChange, type = 'text', placeholder, required = false }: { label: string; value: string; onChange: (value: string) => void; type?: string; placeholder?: string; required?: boolean }) => (
+  <div className="space-y-2">
+    <label className="block text-sm font-medium text-gray-300">{label}</label>
+    <motion.div
+      whileFocus={{ scale: 1.02 }}
+      className="relative"
+    >
+      <input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        required={required}
+        className={`
+          w-full px-4 py-3 rounded-lg
+          bg-[#0a0a0a] border border-[#1a1a1a]
+          text-white placeholder-gray-500
+          focus:outline-none focus:ring-2 focus:ring-purple-500/50
+          transition-all duration-300
+        `}
+      />
+      <motion.div
+        className="absolute inset-0 -z-10 opacity-0 group-hover:opacity-100"
+        style={{
+          background: 'radial-gradient(circle at center, rgba(147, 51, 234, 0.15) 0%, transparent 70%)',
+        }}
+      />
+    </motion.div>
+  </div>
+);
+
+const Calendar = ({ selectedDate, onSelect }: { selectedDate: Date | undefined; onSelect: SelectSingleEventHandler }) => {
+  return (
+    <div className="calendar-wrapper p-4 bg-[#0a0a0a] rounded-lg">
+      <DayPicker
+        mode="single"
+        selected={selectedDate}
+        onSelect={onSelect}
+        modifiers={{
+          selected: selectedDate,
+        }}
+        modifiersStyles={{
+          selected: {
+            backgroundColor: '#7c3aed',
+            color: 'white',
+            borderRadius: '0.5rem',
+          },
+        }}
+        styles={{
+          caption: { color: 'white' },
+          head_cell: { color: '#9ca3af' },
+          cell: { 
+            margin: '0.2rem',
+            color: 'white',
+          },
+          day: {
+            margin: '0.2rem',
+            borderRadius: '0.5rem',
+            transition: 'all 0.2s',
+          },
+          nav_button: { 
+            color: 'white',
+          },
+          day_selected: {
+            backgroundColor: '#7c3aed !important',
+            color: 'white !important',
+          },
+          day_today: {
+            color: '#7c3aed !important',
+            fontWeight: 'bold',
+          }
+        }}
+        fromDate={new Date()}
+        className="p-0"
+      />
+    </div>
+  );
 };
 
 const Booking = () => {
-  const [selected, setSelected] = useState<Date>();
-  const [timeSlot, setTimeSlot] = useState('');
-  const [selectedService, setSelectedService] = useState('');
-  const [currentStep, setCurrentStep] = useState(0);
+  const [selectedServices, setSelectedServices] = useState<Service[]>([]);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [selectedTime, setSelectedTime] = useState<string>('');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [companyName, setCompanyName] = useState('');
+  const [additionalInfo, setAdditionalInfo] = useState('');
+  const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [bookedSlots, setBookedSlots] = useState<{ date: string; timeSlot: string; }[]>([]);
-  const [availableTimeSlots, setAvailableTimeSlots] = useState<string[]>([]);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    company: '',
-    message: '',
-  });
+  const [isSuccess, setIsSuccess] = useState(false);
+  const progressBarRef = useRef<HTMLDivElement>(null);
 
-  const updateAvailableTimeSlots = async (selectedDate: Date) => {
-    try {
-      // Get all booked slots for the month
-      const startDate = startOfToday();
-      const endDate = endOfMonth(selectedDate);
-      const slots = await getBookedSlots(startDate, endDate);
-      setBookedSlots(slots);
-
-      // Filter out booked slots for the selected date
-      const selectedDateStr = format(selectedDate, 'yyyy-MM-dd');
-      const bookedSlotsForDate = slots
-        .filter(slot => slot.date === selectedDateStr)
-        .map(slot => slot.timeSlot);
-
-      // Generate available time slots
-      const allSlots = generateTimeSlots(selectedDate);
-      const availableSlots = allSlots.filter(slot => !bookedSlotsForDate.includes(slot));
-      
-      setAvailableTimeSlots(availableSlots);
-    } catch (error) {
-      console.error('Error updating time slots:', error);
-      toast.error('Failed to load available time slots');
-      setAvailableTimeSlots(generateTimeSlots(selectedDate));
+  useEffect(() => {
+    if (progressBarRef.current) {
+      const progress = ((currentStep - 1) / 2) * 100;
+      progressBarRef.current.style.width = `${progress}%`;
     }
+  }, [currentStep]);
+
+  const handleServiceSelect = (service: Service) => {
+    setSelectedServices(prev => {
+      const isSelected = prev.some(s => s.id === service.id);
+      if (isSelected) {
+        return prev.filter(s => s.id !== service.id);
+      } else {
+        return [...prev, service];
+      }
+    });
   };
 
   const handleDateSelect = (date: Date | undefined) => {
-    setSelected(date);
-    setTimeSlot('');
-    if (date) {
-      updateAvailableTimeSlots(date);
-    } else {
-      setAvailableTimeSlots([]);
-    }
+    setSelectedDate(date);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selected || !timeSlot || !selectedService || !formData.name || !formData.email) {
-      toast.error('Please complete all required fields');
+  const handleTimeSelect = (time: string) => {
+    setSelectedTime(time);
+  };
+
+  const isFormValid = () => {
+    return (
+      selectedServices.length > 0 &&
+      name &&
+      email &&
+      phone &&
+      selectedDate &&
+      selectedTime
+    );
+  };
+
+  const handleSubmit = async () => {
+    if (!isFormValid()) {
+      toast.error('Please fill in all required fields');
       return;
     }
 
     setIsSubmitting(true);
+
     try {
-      const service = services.find(s => s.id === selectedService);
-      const startTime = new Date(selected);
-      const [hours, minutes] = timeSlot.match(/\d+/g)?.map(Number) || [];
-      if (timeSlot.includes('PM') && hours !== 12) {
-        startTime.setHours(hours + 12, minutes || 0);
-      } else {
-        startTime.setHours(hours, minutes || 0);
-      }
-      const endTime = addHours(startTime, 1);
+      if (!selectedDate) return;
 
-      // Create Zoom meeting and calendar event
-      const result = await createMeeting(
-        startTime.toISOString(),
-        endTime.toISOString(),
-        `${service?.name} with ${formData.name}`,
-        `${formData.message}\n\nCompany: ${formData.company || 'N/A'}`,
-        formData.email
-      );
+      const totalDuration = selectedServices.reduce((total, service) => {
+        const duration = parseInt(service.duration);
+        return total + (isNaN(duration) ? 0 : duration);
+      }, 0);
 
-      if (!result.success) {
-        throw new Error(result.error || 'Failed to create meeting');
-      }
-
-      // Send confirmation emails
-      const emailResult = await sendConfirmationEmail({
-        userEmail: formData.email,
-        userName: formData.name,
-        serviceName: service?.name || '',
-        dateTime: `${format(startTime, 'MMMM d, yyyy')} at ${timeSlot}`,
-        company: formData.company,
-        message: formData.message,
-        zoomLink: result.zoomMeetingUrl
+      await emailService.sendBookingEmails({
+        name,
+        email,
+        phone,
+        companyName,
+        additionalInfo,
+        services: selectedServices.map(service => ({
+          name: service.name,
+          description: service.description,
+          duration: service.duration,
+          price: service.price
+        })),
+        date: selectedDate,
+        time: selectedTime,
+        duration: `${totalDuration} hour${totalDuration > 1 ? 's' : ''}`,
+        notes: `Selected Services: ${selectedServices.map(s => s.name).join(', ')}`
       });
 
-      if (!emailResult.success) {
-        throw new Error(emailResult.error || 'Failed to send confirmation email');
-      }
-
-      // Update booked slots after successful booking
-      await updateAvailableTimeSlots(selected);
-
-      toast.custom(() => (
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -50 }}
-          className="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-4 rounded-lg shadow-lg flex items-center space-x-3"
-        >
-          <Sparkles className="w-6 h-6" />
-          <div>
-            <p className="font-medium">Booking confirmed!</p>
-            <p className="text-sm opacity-90">Check your email for meeting details</p>
-          </div>
-        </motion.div>
-      ), { duration: 4000 });
-
-      // Reset form
-      setCurrentStep(0);
-      setSelected(undefined);
-      setTimeSlot('');
-      setSelectedService('');
-      setFormData({
-        name: '',
-        email: '',
-        company: '',
-        message: '',
-      });
+      setIsSuccess(true);
+      toast.success('Booking confirmed! Check your email for details.');
     } catch (error) {
       console.error('Booking error:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to book appointment. Please try again.');
+      toast.error('Failed to send confirmation email. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const resetForm = () => {
+    setSelectedServices([]);
+    setSelectedDate(undefined);
+    setSelectedTime('');
+    setName('');
+    setEmail('');
+    setPhone('');
+    setCompanyName('');
+    setAdditionalInfo('');
+    setCurrentStep(1);
+    setIsSuccess(false);
   };
 
-  const handleNextStep = () => {
-    if (currentStep === 0 && !selectedService) {
-      toast.error('Please select a service');
+  const nextStep = () => {
+    if (currentStep === 1 && selectedServices.length === 0) {
+      toast.error('Please select at least one service');
       return;
     }
-    if (currentStep === 1 && (!selected || !timeSlot)) {
+    if (currentStep === 2 && (!selectedDate || !selectedTime)) {
       toast.error('Please select date and time');
       return;
     }
-    setCurrentStep(prev => Math.min(prev + 1, steps.length - 1));
+    setCurrentStep(prev => prev + 1);
   };
 
-  const handlePrevStep = () => {
-    setCurrentStep(prev => Math.max(prev - 1, 0));
+  const prevStep = () => {
+    setCurrentStep(prev => prev - 1);
   };
+
+  if (isSuccess) {
+    return (
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="min-h-screen bg-black flex items-center justify-center"
+      >
+        <div className="max-w-2xl mx-auto px-4 py-16 text-center">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-[#0a0a0a] rounded-2xl p-8 border border-[#1a1a1a] backdrop-blur-xl relative"
+          >
+            <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-6" />
+            <h2 className="text-3xl font-bold text-white mb-4">Booking Confirmed!</h2>
+            <p className="text-gray-400 mb-8">
+              Thank you for booking with us! We've sent a confirmation email with all the details.
+              Our team will be in touch with you shortly.
+            </p>
+            <div className="space-y-4">
+              <h3 className="text-xl font-semibold text-white mb-4">Booking Details</h3>
+              <div className="space-y-2 text-left bg-[#0f0f0f] p-6 rounded-xl">
+                <p className="text-gray-400">
+                  <span className="font-medium text-white">Services:</span>{' '}
+                  {selectedServices.map(s => s.name).join(', ')}
+                </p>
+                <p className="text-gray-400">
+                  <span className="font-medium text-white">Date:</span>{' '}
+                  {selectedDate ? format(selectedDate, 'MMMM d, yyyy') : ''}
+                </p>
+                <p className="text-gray-400">
+                  <span className="font-medium text-white">Time:</span>{' '}
+                  {selectedTime}
+                </p>
+              </div>
+            </div>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={resetForm}
+              className="mt-8 px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium"
+            >
+              Book Another Service
+            </motion.button>
+          </motion.div>
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-black/95 pt-24 pb-16 relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Gradient Orbs */}
-        <motion.div
-          className="absolute top-1/4 -left-32 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
-            x: [-20, 20, -20],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        <motion.div
-          className="absolute bottom-1/4 -right-32 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
-          animate={{
-            scale: [1.2, 1, 1.2],
-            opacity: [0.2, 0.4, 0.2],
-            x: [20, -20, 20],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-        
-        {/* Floating Particles */}
-        {[...Array(20)].map((_, i) => (
-          <FloatingParticle key={i} delay={i * 0.5} />
-        ))}
-
-        {/* Grid Pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]" />
-      </div>
-
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
-        >
-          <motion.h1 
-            className="text-4xl md:text-5xl font-bold mb-4"
-            style={{
-              background: 'linear-gradient(to right, #fff, #666)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}
-          >
-            Book a Consultation
-          </motion.h1>
-          <motion.p 
-            className="text-gray-400 text-lg max-w-2xl mx-auto"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-          >
-            Schedule a personalized session with our AI experts to discuss your project needs
-          </motion.p>
-        </motion.div>
-
-        {/* Progress Steps */}
-        <div className="mb-12">
-          <div className="flex justify-between items-center max-w-2xl mx-auto mb-8 relative">
-            {steps.map((step, index) => (
-              <StepIndicator
-                key={step}
-                step={step}
-                index={index}
-                currentStep={currentStep}
-              />
-            ))}
-            <ProgressBar currentStep={currentStep} totalSteps={steps.length} />
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <motion.div
-          className="max-w-4xl mx-auto"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentStep}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-              className="bg-gray-900/50 backdrop-blur-xl rounded-2xl p-6 md:p-8 shadow-2xl border border-gray-800/50"
+    <LayoutGroup>
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="min-h-screen bg-[#111111] pt-20 md:pt-24 pb-12 px-4 sm:px-6"
+      >
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-8 md:mb-12">
+            <motion.h1 
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4"
             >
-              {currentStep === 0 && (
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              Book Your Consultation
+            </motion.h1>
+            <motion.p 
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto"
+            >
+              Choose your services and schedule a time that works best for you
+            </motion.p>
+          </div>
+
+          <div className="relative">
+            {/* Progress bar */}
+            <div className="h-1 bg-[#2a2a2a] rounded-full mb-8 mt-4">
+              <div
+                ref={progressBarRef}
+                className="h-full bg-gradient-to-r from-purple-600 to-blue-600 rounded-full transition-all duration-300 ease-out"
+              />
+            </div>
+
+            {/* Steps indicator */}
+            <div className="flex justify-center mb-8 space-x-4 md:space-x-8">
+              {[1, 2, 3].map((step) => (
+                <div
+                  key={step}
+                  className={`flex items-center ${
+                    currentStep >= step ? 'text-white' : 'text-gray-500'
+                  }`}
+                >
+                  <span className={`
+                    w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium
+                    ${currentStep >= step ? 'bg-gradient-to-r from-purple-600 to-blue-600' : 'bg-[#2a2a2a]'}
+                  `}>
+                    {step}
+                  </span>
+                  <span className="ml-2 text-sm hidden md:inline">
+                    {step === 1 ? 'Services' : step === 2 ? 'Schedule' : 'Details'}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div className="bg-[#1a1a1a] rounded-2xl p-4 md:p-8">
+              {currentStep === 1 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {services.map((service) => (
-                    <motion.div
+                    <ServiceCard
                       key={service.id}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className={`p-6 rounded-xl cursor-pointer transition-all duration-200 ${
-                        selectedService === service.id
-                          ? 'bg-purple-600/20 border-2 border-purple-500/50'
-                          : 'bg-gray-800/50 border-2 border-gray-700/50 hover:border-purple-600/50'
-                      }`}
-                      onClick={() => setSelectedService(service.id)}
-                    >
-                      <div className="text-3xl mb-4">{service.icon}</div>
-                      <h3 className="text-xl font-semibold mb-2">{service.name}</h3>
-                      <p className="text-gray-400 text-sm mb-4">{service.description}</p>
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-gray-400">{service.duration}</span>
-                        <span className="text-blue-400">{service.price}</span>
-                      </div>
-                    </motion.div>
+                      service={service}
+                      isSelected={selectedServices.some((s) => s.id === service.id)}
+                      onSelect={() => handleServiceSelect(service)}
+                    />
                   ))}
                 </div>
               )}
 
-              {currentStep === 1 && (
-                <div className="grid md:grid-cols-2 gap-8">
-                  <div className="space-y-4">
-                    <h3 className="text-xl font-semibold mb-4">Select Date</h3>
-                    <div className="bg-gray-800/50 rounded-xl p-4">
-                      <DayPicker
-                        mode="single"
-                        selected={selected}
-                        onSelect={handleDateSelect}
-                        disabled={{ before: new Date() }}
-                        modifiers={{
-                          booked: (date) => {
-                            const dateStr = format(date, 'yyyy-MM-dd');
-                            return bookedSlots.some(slot => slot.date === dateStr);
-                          }
-                        }}
-                        modifiersStyles={{
-                          booked: { color: '#ef4444' }
-                        }}
-                        className="!bg-transparent"
-                        classNames={{
-                          day: 'text-gray-300 hover:bg-purple-500/20 rounded-lg transition-colors',
-                          selected: '!bg-purple-600 !text-white hover:!bg-purple-700',
-                          today: 'text-purple-400 font-bold',
-                          disabled: '!text-gray-600 hover:!bg-transparent cursor-not-allowed'
-                        }}
-                      />
-                    </div>
+              {currentStep === 2 && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div>
+                    <h3 className="text-white text-xl font-semibold mb-4">Select Date</h3>
+                    <Calendar selectedDate={selectedDate} onSelect={(date) => setSelectedDate(date)} />
                   </div>
-                  <div className="space-y-4">
-                    <h3 className="text-xl font-semibold mb-4">Select Time</h3>
+                  <div>
+                    <h3 className="text-white text-xl font-semibold mb-4">Select Time</h3>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                      {availableTimeSlots.map((slot) => (
-                        <motion.button
-                          key={slot}
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          className={`p-3 rounded-lg text-sm font-medium transition-colors ${
-                            timeSlot === slot
-                              ? 'bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500'
-                              : 'bg-gray-800/50 text-gray-300 hover:bg-purple-700/50'
+                      {availableTimes.map((time) => (
+                        <button
+                          key={time}
+                          onClick={() => handleTimeSelect(time)}
+                          className={`p-3 rounded-lg text-sm transition-all ${
+                            selectedTime === time
+                              ? 'bg-purple-600 text-white'
+                              : 'bg-[#1a1a1a] text-gray-300 hover:bg-[#2a2a2a]'
                           }`}
-                          onClick={() => setTimeSlot(slot)}
                         >
-                          {slot}
-                        </motion.button>
+                          {time}
+                        </button>
                       ))}
                     </div>
                   </div>
                 </div>
               )}
 
-              {currentStep === 2 && (
+              {currentStep === 3 && (
                 <div className="space-y-6">
-                  <div className="grid gap-6 md:grid-cols-2">
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.1 }}
-                    >
-                      <label className="block text-sm font-medium text-gray-400 mb-2">
-                        Name
-                      </label>
-                      <div className="relative">
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-5 w-5" />
-                        <input
-                          type="text"
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          className="w-full bg-gray-800/50 border border-purple-900/50 rounded-lg py-2 px-10 text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                          placeholder="Your full name"
-                        />
-                      </div>
-                    </motion.div>
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2 }}
-                    >
-                      <label className="block text-sm font-medium text-gray-400 mb-2">
-                        Email
-                      </label>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-5 w-5" />
-                        <input
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          className="w-full bg-gray-800/50 border border-purple-900/50 rounded-lg py-2 px-10 text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                          placeholder="your@email.com"
-                        />
-                      </div>
-                    </motion.div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormInput
+                      label="Name"
+                      value={name}
+                      onChange={setName}
+                      placeholder="Your full name"
+                      required
+                    />
+                    <FormInput
+                      label="Email"
+                      value={email}
+                      onChange={setEmail}
+                      type="email"
+                      placeholder="Your email address"
+                      required
+                    />
                   </div>
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                  >
-                    <label className="block text-sm font-medium text-gray-400 mb-2">
-                      Company
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormInput
+                      label="Phone"
+                      value={phone}
+                      onChange={setPhone}
+                      type="tel"
+                      placeholder="Your phone number"
+                      required
+                    />
+                    <FormInput
+                      label="Company Name"
+                      value={companyName}
+                      onChange={setCompanyName}
+                      placeholder="Your company name (optional)"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-white text-sm font-medium mb-2">
+                      Additional Information
                     </label>
-                    <div className="relative">
-                      <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-5 w-5" />
-                      <input
-                        type="text"
-                        value={formData.company}
-                        onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                        className="w-full bg-gray-800/50 border border-purple-900/50 rounded-lg py-2 px-10 text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                        placeholder="Your company name"
-                      />
-                    </div>
-                  </motion.div>
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 }}
-                  >
-                    <label className="block text-sm font-medium text-gray-400 mb-2">
-                      Message
-                    </label>
-                    <div className="relative">
-                      <MessageSquare className="absolute left-3 top-3 text-gray-500 h-5 w-5" />
-                      <textarea
-                        value={formData.message}
-                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        className="w-full bg-gray-800/50 border border-purple-900/50 rounded-lg py-2 px-10 text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500 focus:border-transparent min-h-[100px]"
-                        placeholder="Tell us about your project"
-                      />
-                    </div>
-                  </motion.div>
+                    <textarea
+                      value={additionalInfo}
+                      onChange={(e) => setAdditionalInfo(e.target.value)}
+                      placeholder="Any additional details or requirements"
+                      className="w-full px-4 py-3 bg-[#1a1a1a] text-white rounded-lg border border-[#2a2a2a] focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors resize-vertical min-h-[100px]"
+                    />
+                  </div>
                 </div>
               )}
 
-              {/* Navigation Buttons */}
               <div className="flex justify-between mt-8">
-                {currentStep > 0 && (
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="px-6 py-2 rounded-lg relative group overflow-hidden bg-gradient-to-r from-gray-800 via-gray-700 to-gray-800 hover:from-gray-700 hover:via-gray-600 hover:to-gray-700"
-                    onClick={() => setCurrentStep(currentStep - 1)}
+                {currentStep > 1 && (
+                  <button
+                    onClick={prevStep}
+                    className="flex items-center px-6 py-3 text-gray-300 hover:text-white transition-colors"
+                    disabled={isSubmitting}
                   >
-                    <span className="relative z-10">Back</span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  </motion.button>
+                    <ArrowLeft className="w-4 h-4 mr-2" />
+                    Back
+                  </button>
                 )}
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className={`px-6 py-2 rounded-lg transition-colors ml-auto relative group overflow-hidden ${
-                    isSubmitting
-                      ? 'bg-gray-700 cursor-not-allowed'
-                      : currentStep === steps.length - 1
-                      ? 'bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 hover:from-violet-500 hover:via-purple-400 hover:to-fuchsia-400'
-                      : 'bg-gradient-to-r from-violet-600 via-purple-500 to-fuchsia-500 hover:from-violet-500 hover:via-purple-400 hover:to-fuchsia-400'
-                  }`}
-                  onClick={handleNextStep}
+                <button
+                  onClick={currentStep === 3 ? handleSubmit : nextStep}
                   disabled={isSubmitting}
+                  className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all ${
+                    isSubmitting
+                      ? 'bg-gray-600 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-purple-600 to-blue-600 hover:opacity-90'
+                  } text-white ml-auto`}
                 >
-                  <span className="relative z-10 flex items-center">
-                    {currentStep === steps.length - 1 ? (
-                      <>
-                        {isSubmitting ? 'Booking...' : 'Complete Booking'}
-                        <Send className="ml-2 h-4 w-4" />
-                      </>
-                    ) : (
-                      'Next'
-                    )}
-                  </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-violet-500 via-purple-400 to-fuchsia-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </motion.button>
+                  {isSubmitting ? (
+                    'Processing...'
+                  ) : currentStep === 3 ? (
+                    <>
+                      Confirm Booking
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </>
+                  ) : (
+                    <>
+                      Next Step
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </>
+                  )}
+                </button>
               </div>
-            </motion.div>
-          </AnimatePresence>
-        </motion.div>
-      </div>
-    </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </LayoutGroup>
   );
 };
 

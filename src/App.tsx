@@ -17,17 +17,17 @@ function App() {
       <div className="min-h-screen bg-black text-white">
         <Navbar />
         <main className="flex-grow">
+          <Toaster position="bottom-right" />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
             <Route path="/services" element={<Services />} />
-            <Route path="/pricing" element={<Pricing />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/booking" element={<Booking />} />
+            <Route path="/pricing" element={<Pricing />} />
           </Routes>
         </main>
         <Footer />
-        <Toaster position="bottom-right" />
       </div>
     </Router>
   );

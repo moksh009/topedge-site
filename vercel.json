@@ -5,7 +5,12 @@
   "installCommand": "npm install",
   "outputDirectory": "dist",
   "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
     { "handle": "filesystem" },
     { "src": "/[^.]+", "dest": "/", "status": 200 }
-  ]
+  ],
+  "env": {
+    "NEXT_PUBLIC_EMAIL_USER": "@next_public_email_user",
+    "EMAIL_PASSWORD": "@email_password"
+  }
 }

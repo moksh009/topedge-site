@@ -1,8 +1,8 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
-import { FileSearch, Code, Zap, Rocket } from 'lucide-react';
+import { FileSearch, Code, Zap, Rocket, Bot, Phone } from 'lucide-react';
 
-const ServiceProcess = () => {
+export const ServiceProcess = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -15,26 +15,26 @@ const ServiceProcess = () => {
   const steps = [
     {
       number: "01",
-      title: "Define",
-      description: "Understand your requirements and goals for AI integration",
+      title: "Voice Design",
+      description: "Design natural voice interactions and conversation flows",
       color: "from-blue-500/80 to-cyan-500/80"
     },
     {
       number: "02",
-      title: "Design",
-      description: "Craft a customized AI solution for your needs",
+      title: "AI Training",
+      description: "Train the AI with domain knowledge and responses",
       color: "from-purple-500/80 to-pink-500/80"
     },
     {
       number: "03",
-      title: "Train",
-      description: "Prepare your AI for excellence and performance",
+      title: "Voice Integration",
+      description: "Integrate voice capabilities and real-time processing",
       color: "from-orange-500/80 to-red-500/80"
     },
     {
       number: "04",
-      title: "Deploy",
-      description: "Seamlessly integrate into your business workflow",
+      title: "Launch",
+      description: "Deploy your AI agent for seamless voice interactions",
       color: "from-emerald-500/80 to-teal-500/80"
     }
   ];
@@ -57,7 +57,7 @@ const ServiceProcess = () => {
             transition={{ duration: 0.8 }}
             className="text-6xl md:text-8xl font-bold tracking-tight gradient-text"
           >
-            The Process
+            AI Agent Process
           </motion.h2>
         </div>
 
@@ -118,5 +118,3 @@ const ServiceProcess = () => {
     </section>
   );
 };
-
-export default ServiceProcess;

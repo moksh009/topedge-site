@@ -1,200 +1,214 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { Sparkles, ArrowRight, Play } from 'lucide-react';
+import { motion, useInView } from 'framer-motion';
+import { ArrowRight, CreditCard, DollarSign } from 'lucide-react';
 import { useRef } from 'react';
 
 const PricingCTA = () => {
-  const navigate = useNavigate();
-  const containerRef = useRef<HTMLDivElement>(null);
-  
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  });
-
-  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 0.8]);
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
   return (
     <motion.section
-      ref={containerRef}
+      ref={sectionRef}
       className="relative py-32 overflow-hidden"
-      style={{
-        opacity,
-        scale,
-      }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
     >
-      {/* Background Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-900/10 to-black" />
-        
-        {/* Animated Grid */}
-        <motion.div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `
-              linear-gradient(to right, rgba(124, 58, 237, 0.05) 1px, transparent 1px),
-              linear-gradient(to bottom, rgba(124, 58, 237, 0.05) 1px, transparent 1px)
-            `,
-            backgroundSize: '60px 60px',
-          }}
-          animate={{
-            y: [0, -60],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-        />
-
-        {/* Radial Gradient */}
-        <motion.div
-          className="absolute inset-0"
-          style={{
-            background: "radial-gradient(circle at 50% 50%, rgba(124, 58, 237, 0.1), transparent 70%)",
-          }}
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3]
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            repeatType: "reverse"
-          }}
-        />
+      {/* Animated background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black via-emerald-950/20 to-black">
+        <div className="absolute inset-0">
+          {[...Array(50)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-emerald-300/20 rounded-full"
+              animate={{
+                y: [Math.random() * 1000, -10],
+                opacity: [0, 1, 0],
+                scale: [0, 1.5, 0]
+              }}
+              transition={{
+                duration: Math.random() * 3 + 2,
+                repeat: Infinity,
+                repeatType: "loop",
+                ease: "linear",
+                delay: Math.random() * 2
+              }}
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`
+              }}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* Content Container */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative container mx-auto px-4">
         <motion.div
-          className="text-center"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          className="max-w-4xl mx-auto text-center"
+          initial={{ opacity: 0, y: 50 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.2 }}
         >
-          {/* Title */}
-          <motion.h2 
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
+          <motion.h2
+            className="text-5xl md:text-6xl font-bold mb-8"
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <span className="bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
-              Ready to Transform Your Business?
+            <span className="inline-block bg-gradient-to-r from-emerald-400 via-green-500 to-emerald-400 text-transparent bg-clip-text animate-gradient">
+              Choose the Perfect
+            </span>
+            <br />
+            <span className="inline-block bg-gradient-to-r from-green-400 via-emerald-400 to-green-400 text-transparent bg-clip-text animate-gradient">
+              Plan for You
             </span>
           </motion.h2>
 
-          {/* Subtitle */}
           <motion.p
-            className="text-xl text-gray-400 mb-12 max-w-3xl mx-auto"
+            className="text-xl text-gray-400 mb-12 leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.6 }}
           >
-            Experience the power of AI-driven automation firsthand. Schedule a personalized demo today.
+            Flexible pricing options to match your business needs. Start with our free trial today.
           </motion.p>
 
-          {/* CTA Button */}
           <motion.div
+            className="flex flex-col sm:flex-row gap-6 justify-center items-center"
             initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="inline-block group"
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.8 }}
           >
-            <div className="relative">
-              {/* Button Glow */}
+            <motion.a
+              href="/pricing"
+              className="group relative inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-emerald-600 to-green-600 rounded-full text-white font-semibold text-lg hover:from-emerald-500 hover:to-green-500 transition-all duration-300 shadow-xl hover:shadow-2xl"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              View Plans
               <motion.div
-                className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl blur-lg group-hover:opacity-100 opacity-75 transition duration-300"
+                className="relative"
+                animate={{
+                  x: [0, 5, 0],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              >
+                <ArrowRight className="w-5 h-5" />
+              </motion.div>
+              <motion.div
+                className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-600/50 to-green-600/50 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                initial={false}
                 animate={{
                   scale: [1, 1.1, 1],
                 }}
                 transition={{
                   duration: 2,
                   repeat: Infinity,
-                  repeatType: "reverse"
+                  ease: "easeInOut",
                 }}
               />
+            </motion.a>
 
-              {/* Main Button */}
-              <motion.button
-                onClick={() => navigate('/book')}
-                className="relative px-8 py-4 bg-gradient-to-r from-purple-600/90 to-blue-600/90 rounded-xl text-white font-medium text-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-black"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+            <motion.a
+              href="/contact"
+              className="group relative inline-flex items-center gap-2 px-8 py-4 bg-transparent border border-emerald-500/30 rounded-full text-emerald-300 font-semibold text-lg hover:bg-emerald-500/10 transition-all duration-300"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Contact Sales
+              <motion.div
+                animate={{
+                  rotate: [0, 360],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
               >
-                <span className="relative z-10 flex items-center gap-2">
-                  <Play className="w-5 h-5" />
-                  Show Demo
-                  <motion.span
-                    className="inline-block"
-                    animate={{
-                      x: [0, 4, 0]
-                    }}
-                    transition={{
-                      duration: 1.5,
-                      repeat: Infinity,
-                      repeatType: "reverse"
-                    }}
-                  >
-                    <ArrowRight className="w-5 h-5" />
-                  </motion.span>
-                </span>
-
-                {/* Floating Elements */}
-                <motion.div
-                  className="absolute -top-8 -right-8 text-purple-300"
-                  animate={{
-                    y: [0, -8, 0],
-                    rotate: [0, 15, 0]
-                  }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    repeatType: "reverse"
-                  }}
-                >
-                  <Sparkles className="w-6 h-6" />
-                </motion.div>
-              </motion.button>
-            </div>
+                <CreditCard className="w-5 h-5" />
+              </motion.div>
+            </motion.a>
           </motion.div>
         </motion.div>
-      </div>
 
-      {/* Decorative Circles */}
-      <motion.div
-        className="absolute left-1/4 top-1/4 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl"
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.3, 0.5, 0.3],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          repeatType: "reverse"
-        }}
-      />
-      <motion.div
-        className="absolute right-1/4 bottom-1/4 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl"
-        animate={{
-          scale: [1.2, 1, 1.2],
-          opacity: [0.3, 0.5, 0.3],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          repeatType: "reverse",
-          delay: 1
-        }}
-      />
+        {/* Floating icons */}
+        <motion.div
+          className="absolute left-10 top-1/3 text-emerald-500/20"
+          animate={{
+            y: [-20, 20, -20],
+            rotate: [0, 360],
+          }}
+          transition={{
+            y: {
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut",
+            },
+            rotate: {
+              duration: 8,
+              repeat: Infinity,
+              ease: "linear",
+            },
+          }}
+        >
+          <DollarSign className="w-16 h-16" />
+        </motion.div>
+
+        <motion.div
+          className="absolute right-10 top-2/3 text-green-500/20"
+          animate={{
+            y: [20, -20, 20],
+            rotate: [360, 0],
+          }}
+          transition={{
+            y: {
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut",
+            },
+            rotate: {
+              duration: 8,
+              repeat: Infinity,
+              ease: "linear",
+            },
+          }}
+        >
+          <CreditCard className="w-16 h-16" />
+        </motion.div>
+
+        {/* Decorative elements */}
+        <motion.div
+          className="absolute left-0 top-1/2 -translate-y-1/2 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        <motion.div
+          className="absolute right-0 top-1/2 -translate-y-1/2 w-64 h-64 bg-green-500/10 rounded-full blur-3xl"
+          animate={{
+            scale: [1.2, 1, 1.2],
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+      </div>
     </motion.section>
   );
 };
 
-export default PricingCTA;
+export { PricingCTA };

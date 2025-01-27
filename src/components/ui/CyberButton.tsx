@@ -7,9 +7,18 @@ interface CyberButtonProps {
   to: string;
   primary?: boolean;
   icon?: React.ReactNode;
+  size?: 'small' | 'medium' | 'large';
+  variant?: 'default' | 'navbar';
 }
 
-export const CyberButton: React.FC<CyberButtonProps> = ({ children, to, primary = false, icon }) => {
+export const CyberButton: React.FC<CyberButtonProps> = ({ 
+  children, 
+  to, 
+  primary = false, 
+  icon,
+  size = 'medium',
+  variant = 'default'
+}) => {
   const [isHovered, setIsHovered] = useState(false);
   const buttonRef = useRef<HTMLDivElement>(null);
 
@@ -22,6 +31,17 @@ export const CyberButton: React.FC<CyberButtonProps> = ({ children, to, primary 
     buttonRef.current.style.setProperty("--mouse-y", `${y}px`);
   };
 
+  const sizeClasses = {
+    small: 'px-3 py-2 text-sm',
+    medium: 'px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 text-sm sm:text-base',
+    large: 'px-6 sm:px-8 md:px-10 py-3 sm:py-4 md:py-5 text-base sm:text-lg'
+  };
+
+  const variantClasses = {
+    default: primary ? 'bg-blue-500/10' : 'bg-gray-800/50',
+    navbar: 'bg-blue-900/30 backdrop-blur-sm'
+  };
+
   return (
     <Link to={to}>
       <motion.div
@@ -32,10 +52,9 @@ export const CyberButton: React.FC<CyberButtonProps> = ({ children, to, primary 
         whileTap={{ scale: 0.95 }}
         className={`
           relative overflow-hidden rounded-lg 
-          px-4 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 
-          text-sm sm:text-base
+          ${sizeClasses[size]}
+          ${variantClasses[variant]}
           cursor-pointer
-          ${primary ? 'bg-blue-500/10' : 'bg-gray-800/50'}
           border border-blue-500/30
           hover:border-blue-500/60 transition-all duration-300
           hover:shadow-[0_0_30px_rgba(59,130,246,0.5)]

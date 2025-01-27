@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronRight, Brain } from 'lucide-react';
+import { CyberButton } from '../ui/CyberButton';
 import Logo from './Logo';
 
 const Navbar = () => {
@@ -119,7 +120,7 @@ const Navbar = () => {
             <Link to="/" className="relative group md:block hidden">
               <Logo />
             </Link>
-            
+
             {/* Mobile Logo Text */}
             <Link to="/" className="md:hidden block">
               <span className="text-xl font-bold text-white">TopEdge</span>
@@ -157,25 +158,16 @@ const Navbar = () => {
                   </Link>
                 </motion.div>
               ))}
-              
               {/* Book Appointment Button */}
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+              <CyberButton 
+                to="/booking" 
+                primary 
+                // icon={<ChevronRight className="w-4 h-4" />}
+                size="small"
+                variant="navbar"
               >
-                <Link
-                  to="/booking"
-                  className="relative inline-flex items-center px-6 py-2.5 rounded-lg
-                    bg-white/10 backdrop-blur-sm border border-white/20
-                    hover:bg-white/15 hover:border-white/30
-                    text-white font-medium
-                    transition-all duration-300
-                    group"
-                >
-                  <span className="relative z-10">Book Appointment</span>
-                  <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-                </Link>
-              </motion.div>
+                Book Appointment
+              </CyberButton>
             </div>
 
             {/* Mobile Menu Button */}
@@ -291,28 +283,15 @@ const Navbar = () => {
                   variants={menuItemVariants}
                   className="pt-4"
                 >
-                  <Link
-                    to="/booking"
-                    className="relative group block"
-                    onClick={() => setIsOpen(false)}
+                  <CyberButton 
+                    to="/booking" 
+                    primary 
+                    icon={<ChevronRight className="w-4 h-4" />}
+                    size="small"
+                    variant="navbar"
                   >
-                    <div className="absolute -inset-0.5 bg-gradient-to-r from-violet-600 to-indigo-600 rounded-lg opacity-70 blur group-hover:opacity-100 transition duration-300" />
-                    <div className="relative p-4 bg-black rounded-lg flex items-center justify-between border border-white/10 group-hover:border-white/20">
-                      <span className="text-white">Book Appointment</span>
-                      <motion.div
-                        animate={{
-                          x: [0, 5, 0],
-                        }}
-                        transition={{
-                          duration: 1.5,
-                          repeat: Infinity,
-                          ease: "easeInOut"
-                        }}
-                      >
-                        <ChevronRight className="w-5 h-5 text-white" />
-                      </motion.div>
-                    </div>
-                  </Link>
+                    Book Appointment
+                  </CyberButton>
                 </motion.div>
               </div>
 
@@ -336,4 +315,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

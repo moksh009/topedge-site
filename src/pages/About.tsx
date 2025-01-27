@@ -6,8 +6,6 @@ import AboutValues from '../components/sections/about/AboutValues';
 import AboutTimeline from '../components/sections/about/AboutTimeline';
 import AboutStats from '../components/sections/about/AboutStats';
 import AboutTeam from '../components/sections/about/AboutTeam';
-import AboutAwards from '../components/sections/about/AboutAwards';
-import AboutLocations from '../components/sections/about/AboutLocations';
 
 const About: React.FC = () => {
   useEffect(() => {

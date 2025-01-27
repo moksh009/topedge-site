@@ -1,7 +1,8 @@
-import { motion, useScroll, useTransform, cubicBezier } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useRef } from 'react';
-import { ChevronRight, Coins, CreditCard, Gem, Crown, Wallet } from 'lucide-react';
+import { ChevronRight, Coins, CreditCard, Gem, Crown, Wallet, Sparkles, Star } from 'lucide-react';
+import { CyberButton } from '../../ui/CyberButton';
 
 const PricingHero = () => {
   const navigate = useNavigate();
@@ -9,34 +10,22 @@ const PricingHero = () => {
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end start"],
+    offset: ["start end", "end start"]
   });
 
-  // Custom easing curve for ultra-smooth animations
-  const smoothEasing = cubicBezier(0.4, 0.0, 0.2, 1);
+  // Use spring physics for smoother animations
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
-  // Optimized transform values for smoother animations
-  const y = useTransform(scrollYProgress, 
-    [0, 0.6], 
-    ["0%", "30%"], 
-    { ease: smoothEasing }
-  );
-
-  const opacity = useTransform(scrollYProgress, 
-    [0, 0.4], 
-    [1, 0], 
-    { ease: smoothEasing }
-  );
-
-  const scale = useTransform(scrollYProgress, 
-    [0, 0.4], 
-    [1, 0.95], 
-    { ease: smoothEasing }
-  );
+  const y = useTransform(smoothProgress, [0, 1], ["0%", "25%"]);
+  const opacity = useTransform(smoothProgress, [0, 0.5, 0.8], [1, 1, 0]);
+  const scale = useTransform(smoothProgress, [0, 0.5, 1], [1, 0.98, 0.95]);
 
   // Background icons configuration with optimized animations
   const backgroundIcons = [
-    // Extra large crown in background
     { 
       Icon: Crown, 
       size: 96, 
@@ -49,7 +38,6 @@ const PricingHero = () => {
       duration: 8,
       scale: 1
     },
-    // Large gem in top-right
     { 
       Icon: Gem, 
       size: 84, 
@@ -62,7 +50,6 @@ const PricingHero = () => {
       duration: 7.5,
       scale: 0.9
     },
-    // Medium coins
     { 
       Icon: Coins, 
       size: 64, 
@@ -75,7 +62,6 @@ const PricingHero = () => {
       duration: 7,
       scale: 1
     },
-    // Small wallet
     { 
       Icon: Wallet, 
       size: 48, 
@@ -88,7 +74,6 @@ const PricingHero = () => {
       duration: 6.5,
       scale: 1
     },
-    // Medium crown
     { 
       Icon: Crown, 
       size: 60, 
@@ -109,26 +94,98 @@ const PricingHero = () => {
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-black"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 1, ease: smoothEasing }}
+      transition={{ duration: 1 }}
       style={{ opacity, scale }}
     >
-      {/* Background Elements */}
-      <div className="absolute inset-0">
-        <motion.div 
-          className="absolute top-0 right-0 w-[600px] h-[600px] bg-purple-900/20 rounded-full blur-[150px]"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 0.2, scale: 1 }}
-          transition={{ duration: 2, ease: smoothEasing }}
+      {/* Animated gradient orbs */}
+      <motion.div 
+        className="absolute top-0 right-0 w-[800px] h-[800px] rounded-full"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 2 }}
+        style={{
+          background: 'radial-gradient(circle at center, rgba(139,92,246,0.2) 0%, rgba(0,0,0,0) 70%)',
+          filter: 'blur(80px)',
+        }}
+      >
+        <motion.div
+          className="absolute inset-0"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.2, 0.3, 0.2],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
         />
-        <motion.div 
-          className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-900/20 rounded-full blur-[120px]"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 0.15, scale: 1 }}
-          transition={{ duration: 2, delay: 0.5, ease: smoothEasing }}
-        />
-      </div>
+      </motion.div>
 
-      {/* Background Icons */}
+      <motion.div 
+        className="absolute bottom-0 left-0 w-[600px] h-[600px] rounded-full"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 2, delay: 0.5 }}
+        style={{
+          background: 'radial-gradient(circle at center, rgba(91,33,182,0.2) 0%, rgba(0,0,0,0) 70%)',
+          filter: 'blur(60px)',
+        }}
+      >
+        <motion.div
+          className="absolute inset-0"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.15, 0.25, 0.15],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1,
+          }}
+        />
+      </motion.div>
+
+      {/* Animated grid background */}
+      <div 
+        className="absolute inset-0 opacity-20"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, rgba(139,92,246,0.1) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(139,92,246,0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: '40px 40px',
+          maskImage: 'radial-gradient(circle at center, black 30%, transparent 80%)',
+        }}
+      />
+
+      {/* Floating sparkles */}
+      {[...Array(50)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-1 h-1 bg-purple-300/40 rounded-full"
+          animate={{
+            y: [Math.random() * 1000, -10],
+            opacity: [0, 1, 0],
+            scale: [0, 2, 0]
+          }}
+          transition={{
+            duration: Math.random() * 3 + 2,
+            repeat: Infinity,
+            repeatType: "loop",
+            ease: "linear",
+            delay: Math.random() * 2
+          }}
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            filter: 'blur(0.5px)'
+          }}
+        />
+      ))}
+
+      {/* Background Icons with enhanced animations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {backgroundIcons.map((item, i) => (
           <motion.div
@@ -153,19 +210,19 @@ const PricingHero = () => {
             transition={{
               duration: 1.2,
               delay: item.delay,
-              ease: smoothEasing
+              ease: "easeOut",
             }}
           >
             <motion.div
               animate={{
                 y: [-item.floatRange/2, item.floatRange/2, -item.floatRange/2],
                 rotate: [item.rotation - 5, item.rotation + 5, item.rotation - 5],
-                scale: [1, 1.02, 1]
+                scale: [1, 1.05, 1]
               }}
               transition={{
                 duration: item.duration,
                 repeat: Infinity,
-                ease: "linear",
+                ease: "easeInOut",
                 times: [0, 0.5, 1]
               }}
               style={{
@@ -179,6 +236,22 @@ const PricingHero = () => {
                   color: item.color,
                 }}
               />
+              {/* Glow effect */}
+              <motion.div
+                className="absolute inset-0"
+                animate={{
+                  opacity: [0.3, 0.6, 0.3],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+                style={{
+                  background: `radial-gradient(circle at center, ${item.color}20 0%, transparent 70%)`,
+                  filter: 'blur(10px)',
+                }}
+              />
             </motion.div>
           </motion.div>
         ))}
@@ -186,154 +259,156 @@ const PricingHero = () => {
 
       {/* Content Container */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        {/* Main Heading */}
-        <motion.h1 
-          className="text-6xl md:text-7xl font-bold mb-8 leading-tight"
+        {/* Main Heading with enhanced animation */}
+        <motion.div
+          className="relative inline-block mb-8"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          style={{ y, opacity }}
         >
-          <span className="inline-block bg-gradient-to-r from-white via-purple-200 to-yellow-200 bg-clip-text text-transparent">
-            Pricing Plans for Every Business
-          </span>
-        </motion.h1>
+          <motion.h1 
+            className="text-6xl md:text-7xl font-bold leading-tight relative z-10"
+            style={{ y, opacity }}
+          >
+            <motion.span 
+              className="inline-block bg-gradient-to-r from-white via-purple-200 to-purple-400 bg-clip-text text-transparent"
+              animate={{
+                backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+              }}
+              transition={{
+                duration: 8,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+              style={{
+                backgroundSize: '200% auto',
+              }}
+            >
+              Pricing Plans
+            </motion.span>
+            <br />
+            <motion.span
+              className="inline-block bg-gradient-to-r from-purple-400 via-yellow-200 to-white bg-clip-text text-transparent"
+              animate={{
+                backgroundPosition: ['100% 50%', '0% 50%', '100% 50%'],
+              }}
+              transition={{
+                duration: 8,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+              style={{
+                backgroundSize: '200% auto',
+              }}
+            >
+              for Every Business
+            </motion.span>
+          </motion.h1>
+          
+          {/* Animated underline */}
+          <motion.div
+            className="absolute bottom-0 left-1/2 -translate-x-1/2 h-1 w-32 bg-gradient-to-r from-transparent via-purple-500 to-transparent"
+            animate={{
+              opacity: [0.3, 0.6, 0.3],
+              width: ['60%', '80%', '60%'],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            style={{
+              filter: 'blur(2px)',
+            }}
+          />
+        </motion.div>
 
         <motion.p 
-          className="text-gray-400 text-xl max-w-3xl mx-auto mb-12"
+          className="text-gray-300 text-xl max-w-3xl mx-auto mb-12"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5 }}
           style={{ y, opacity }}
         >
-          Transform your business with our AI-powered solutions. Choose the perfect plan that scales with your needs.
+          <motion.span
+            animate={{
+              color: ['rgb(209,213,219)', 'rgb(243,244,246)', 'rgb(209,213,219)'],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          >
+            Transform your business with our AI-powered solutions. 
+            Choose the perfect plan that scales with your needs.
+          </motion.span>
         </motion.p>
 
-        {/* CTA Buttons */}
+        {/* CTA Buttons with enhanced animations */}
         <motion.div 
           className="flex flex-col sm:flex-row items-center justify-center gap-8"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.7 }}
-          style={{ y, opacity }}
         >
-          {/* Get Started Button */}
+          {/* View Plans Button */}
           <motion.button
-            onClick={() => navigate('/book')}
-            className="relative group px-10 py-5 rounded-xl text-white font-medium text-lg overflow-hidden"
+            className="group relative rounded-full px-8 py-4 bg-purple-600 text-white font-semibold text-lg overflow-hidden"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            onClick={() => navigate('/pricing')}
           >
-            {/* Button Background with Enhanced Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-600/90 via-purple-700/90 to-purple-800/90 rounded-xl" />
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 via-yellow-500/30 to-purple-500/30 opacity-0 group-hover:opacity-100 transition-all duration-500" />
-            
-            {/* Button Content */}
-            <span className="relative z-10 flex items-center gap-3">
-              Get Started Today
-              <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-            </span>
-
-            {/* Circular Explosion Animation on Hover */}
-            <div className="absolute inset-0 pointer-events-none">
-              {[...Array(8)].map((_, i) => {
-                const angle = (i / 8) * Math.PI * 2;
-                const radius = 100;
-                const x = Math.cos(angle) * radius;
-                const y = Math.sin(angle) * radius;
-                
-                return (
-                  <motion.div
-                    key={i}
-                    className="absolute left-1/2 top-1/2"
-                    initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
-                    whileHover={{
-                      opacity: [0, 1, 0],
-                      scale: [0.5, 1.5, 0],
-                      x: [0, x],
-                      y: [0, y],
-                    }}
-                    transition={{
-                      duration: 1,
-                      delay: i * 0.05,
-                      repeat: Infinity,
-                    }}
-                  >
-                    <Gem className="w-6 h-6 text-yellow-400" />
-                  </motion.div>
-                );
-              })}
-            </div>
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-600"
+              animate={{
+                x: ['-100%', '100%'],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+              style={{
+                opacity: 0.5,
+              }}
+            />
+            <motion.div
+              className="relative z-10 flex items-center gap-2"
+              animate={{
+                x: [0, 5, 0],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            >
+              View Plans
+              <ChevronRight className="w-5 h-5" />
+            </motion.div>
           </motion.button>
 
-          {/* View Pricing Button */}
-          <div className="relative">
-            {/* Save Badge */}
+          {/* Contact Sales Button */}
+          <motion.button
+            className="group relative rounded-full px-8 py-4 bg-transparent text-white font-semibold text-lg border border-purple-500/30"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate('/contact')}
+          >
             <motion.div
-              className="absolute -top-8 right-0 bg-gradient-to-r from-green-500 to-emerald-500 px-4 py-1 rounded-full text-sm font-medium text-white flex items-center gap-1 shadow-lg"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9 }}
-            >
-              <Gem className="w-4 h-4" />
-              Save 20%
-            </motion.div>
-            
-            <motion.button
-              onClick={() => {
-                const pricingSection = document.getElementById('pricing-plans');
-                if (pricingSection) {
-                  pricingSection.scrollIntoView({ behavior: 'smooth' });
-                }
+              className="absolute inset-0 bg-gradient-to-r from-purple-600/0 via-purple-500/10 to-purple-600/0"
+              animate={{
+                opacity: [0, 0.5, 0],
               }}
-              className="relative group px-10 py-5 rounded-xl text-white font-medium text-lg overflow-hidden"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {/* Enhanced Button Border Gradient */}
-              <div className="absolute inset-0 rounded-xl p-[1px]">
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500/30 via-yellow-500/30 to-purple-500/30 opacity-0 group-hover:opacity-100 transition-all duration-500" />
-                <div className="absolute inset-[1px] rounded-[10px] bg-black group-hover:bg-purple-950/20 transition-colors duration-500" />
-              </div>
-
-              {/* Button Content */}
-              <span className="relative z-10 flex items-center gap-3">
-                View Pricing
-                <CreditCard className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
-              </span>
-
-              {/* Circular Explosion Animation on Hover */}
-              <div className="absolute inset-0 pointer-events-none">
-                {[...Array(8)].map((_, i) => {
-                  const angle = (i / 8) * Math.PI * 2;
-                  const radius = 80;
-                  const x = Math.cos(angle) * radius;
-                  const y = Math.sin(angle) * radius;
-                  
-                  return (
-                    <motion.div
-                      key={i}
-                      className="absolute left-1/2 top-1/2"
-                      initial={{ opacity: 0, scale: 0, x: 0, y: 0 }}
-                      whileHover={{
-                        opacity: [0, 1, 0],
-                        scale: [0.5, 1.2, 0],
-                        x: [0, x],
-                        y: [0, y],
-                      }}
-                      transition={{
-                        duration: 0.8,
-                        delay: i * 0.05,
-                        repeat: Infinity,
-                      }}
-                    >
-                      <Coins className="w-5 h-5 text-purple-400" />
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </motion.button>
-          </div>
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+            <span className="relative z-10">Contact Sales</span>
+          </motion.button>
         </motion.div>
       </div>
     </motion.section>

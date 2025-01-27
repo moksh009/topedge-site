@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Facebook, Instagram, Twitter, Linkedin, Mail, Phone, MapPin, ExternalLink } from 'lucide-react';
+import { Facebook, Instagram, Twitter, Linkedin, Mail, Phone, MapPin, ExternalLink, ArrowRight, Globe } from 'lucide-react';
 
 export default function Footer() {
   const quickLinks = [
@@ -17,10 +17,10 @@ export default function Footer() {
   ];
 
   const socialLinks = [
-    { icon: Facebook, href: '#', label: 'Facebook' },
-    { icon: Instagram, href: '#', label: 'Instagram' },
-    { icon: Twitter, href: '#', label: 'Twitter' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
+    { icon: Facebook, href: '#', label: 'Facebook', color: 'hover:text-[#1877F2]' },
+    { icon: Instagram, href: '#', label: 'Instagram', color: 'hover:text-[#E4405F]' },
+    { icon: Twitter, href: '#', label: 'Twitter', color: 'hover:text-[#1DA1F2]' },
+    { icon: Linkedin, href: '#', label: 'LinkedIn', color: 'hover:text-[#0A66C2]' },
   ];
 
   const contactInfo = [
@@ -30,34 +30,38 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="relative border-t border-gray-800 bg-black/90">
-      {/* Main Content */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-12">
+    <footer className="relative bg-black">
+   
+    
+
+      {/* Main Footer Content */}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Company Info */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="space-y-4 sm:space-y-6"
+            className="space-y-6"
           >
-            <h3 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
-              NeuralFlow AI
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+              TopEdge
             </h3>
-            <p className="text-gray-400 text-sm sm:text-base leading-relaxed">
+            <p className="text-gray-400 leading-relaxed">
               Pioneering the future of artificial intelligence with cutting-edge solutions and innovative technologies.
             </p>
-            <div className="flex space-x-3 sm:space-x-4">
+            <div className="flex items-center gap-4">
               {socialLinks.map((social) => (
                 <motion.a
                   key={social.label}
                   href={social.href}
-                  whileHover={{ scale: 1.1 }}
+                  whileHover={{ scale: 1.1, y: -2 }}
                   whileTap={{ scale: 0.95 }}
-                  className="text-gray-400 hover:text-white transition-colors p-1 sm:p-0"
+                  className={`text-gray-400 ${social.color} transition-colors p-2 hover:bg-white/5 rounded-full`}
                   aria-label={social.label}
                 >
-                  <social.icon className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <social.icon className="w-5 h-5" />
                 </motion.a>
               ))}
             </div>
@@ -66,21 +70,22 @@ export default function Footer() {
           {/* Quick Links */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="space-y-4 sm:space-y-6"
+            className="space-y-6"
           >
-            <h4 className="text-base sm:text-lg font-semibold text-white">Quick Links</h4>
-            <ul className="space-y-2 sm:space-y-3">
+            <h4 className="text-lg font-semibold text-white">Quick Links</h4>
+            <ul className="space-y-4">
               {quickLinks.map((link) => (
                 <motion.li key={link.name}>
                   <motion.a
                     href={link.href}
-                    className="text-gray-400 hover:text-white flex items-center space-x-1 group transition-colors text-sm sm:text-base"
-                    whileHover={{ x: 5 }}
+                    className="text-gray-400 hover:text-white flex items-center space-x-2 group transition-all"
+                    whileHover={{ x: 4 }}
                   >
                     <span>{link.name}</span>
-                    <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                   </motion.a>
                 </motion.li>
               ))}
@@ -90,19 +95,21 @@ export default function Footer() {
           {/* Services */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="space-y-4 sm:space-y-6"
+            className="space-y-6"
           >
-            <h4 className="text-base sm:text-lg font-semibold text-white">Services</h4>
-            <ul className="space-y-2 sm:space-y-3">
+            <h4 className="text-lg font-semibold text-white">Services</h4>
+            <ul className="space-y-4">
               {services.map((service) => (
                 <motion.li 
                   key={service}
-                  className="text-gray-400 hover:text-white cursor-pointer text-sm sm:text-base"
-                  whileHover={{ x: 5 }}
+                  className="text-gray-400 hover:text-white transition-colors cursor-pointer flex items-center space-x-2 group"
+                  whileHover={{ x: 4 }}
                 >
-                  {service}
+                  <span>{service}</span>
+                  <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                 </motion.li>
               ))}
             </ul>
@@ -111,20 +118,21 @@ export default function Footer() {
           {/* Contact Info */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="space-y-4 sm:space-y-6"
+            className="space-y-6"
           >
-            <h4 className="text-base sm:text-lg font-semibold text-white">Contact Us</h4>
-            <ul className="space-y-3 sm:space-y-4">
+            <h4 className="text-lg font-semibold text-white">Contact Us</h4>
+            <ul className="space-y-4">
               {contactInfo.map((item) => (
                 <motion.li key={item.text}>
                   <motion.a
                     href={item.href}
-                    className="flex items-center space-x-2 sm:space-x-3 text-gray-400 hover:text-white group transition-colors text-sm sm:text-base"
-                    whileHover={{ x: 5 }}
+                    className="text-gray-400 hover:text-white flex items-center space-x-3 group transition-colors"
+                    whileHover={{ x: 4 }}
                   >
-                    <item.icon className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <item.icon className="w-5 h-5 text-gray-500 group-hover:text-purple-400 transition-colors" />
                     <span>{item.text}</span>
                   </motion.a>
                 </motion.li>
@@ -133,17 +141,30 @@ export default function Footer() {
           </motion.div>
         </div>
 
-        {/* Copyright */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="mt-8 sm:mt-10 md:mt-12 pt-6 sm:pt-8 border-t border-gray-800"
-        >
-          <p className="text-center text-gray-400 text-xs sm:text-sm">
-            &copy; {new Date().getFullYear()} NeuralFlow AI. All rights reserved.
-          </p>
-        </motion.div>
+        {/* Bottom Bar */}
+        <div className="mt-16 pt-8 border-t border-gray-800">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="text-gray-400 text-sm">
+              &copy; {new Date().getFullYear()} NeuralFlow AI. All rights reserved.
+            </div>
+            <div className="flex items-center gap-6">
+              <a href="/privacy" className="text-gray-400 hover:text-white text-sm transition-colors">
+                Privacy Policy
+              </a>
+              <a href="/terms" className="text-gray-400 hover:text-white text-sm transition-colors">
+                Terms of Service
+              </a>
+              <div className="flex items-center gap-2 text-gray-400">
+                <Globe className="w-4 h-4" />
+                <select className="bg-transparent text-sm focus:outline-none focus:ring-0 cursor-pointer">
+                  <option value="en">English</option>
+                  <option value="es">Español</option>
+                  <option value="fr">Français</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </footer>
   );

@@ -1,173 +1,274 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform, useInView, useSpring } from 'framer-motion';
 
-interface TeamMemberProps {
-  name: string;
-  role: string;
-  image: any;
-  index: number;
-}
-
-const TeamMember: React.FC<TeamMemberProps> = ({ name, role, image, index }) => {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.8, delay: index * 0.2 }}
-      className="relative group"
-    >
-      <div className="relative overflow-hidden rounded-3xl backdrop-blur-xl bg-gradient-to-br from-white/[0.02] via-purple-500/[0.03] to-blue-500/[0.02] border border-white/[0.05] transition-all duration-500 hover:border-white/[0.2] hover:shadow-2xl hover:shadow-purple-500/10">
-        {/* Image Container */}
-        <div className="relative aspect-[3/4] overflow-hidden">
-          <motion.div
-            initial={{ scale: 1.2 }}
-            whileInView={{ scale: 1 }}
-            transition={{ duration: 1.5, ease: "easeOut" }}
-            className="absolute inset-0"
-          >
-            <img
-              src={image}
-              alt={name}
-              className="w-full h-full object-cover object-center transform group-hover:scale-110 transition-transform duration-700"
-            />
-          </motion.div>
-          
-          {/* Gradient Overlays */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/0 to-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/0 to-black/0 opacity-100 group-hover:opacity-0 transition-opacity duration-500" />
-          
-          {/* Animated Border */}
-          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            <div className="absolute inset-0 border-[2px] border-white/20 rounded-3xl" />
-            <motion.div
-              className="absolute -inset-[100%] bg-gradient-conic from-purple-500/20 via-blue-500/20 to-purple-500/20"
-              animate={{
-                rotate: [0, 360]
-              }}
-              transition={{
-                duration: 10,
-                repeat: Infinity,
-                ease: "linear"
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Content */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="absolute bottom-0 left-0 right-0 p-8 transform translate-y-6 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500"
-        >
-          <div className="relative z-10">
-            <motion.h3
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="text-2xl sm:text-3xl font-bold mb-2"
-            >
-              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 text-transparent bg-clip-text">
-                {name}
-              </span>
-            </motion.h3>
-            <motion.p
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="text-gray-400 text-lg group-hover:text-gray-300 transition-colors duration-500"
-            >
-              {role}
-            </motion.p>
-          </div>
-        </motion.div>
-      </div>
-    </motion.div>
-  );
-};
+const teamMembers = [
+  {
+    name: 'John Doe',
+    role: 'CEO & Founder',
+    image: '/team/john.jpg',
+    bio: 'Visionary leader with 15+ years in AI and technology innovation.'
+  },
+  {
+    name: 'Jane Smith',
+    role: 'CTO',
+    image: '/team/jane.jpg',
+    bio: 'AI researcher and tech pioneer with multiple patents.'
+  },
+  // Add more team members as needed
+];
 
 const AboutTeam: React.FC = () => {
-  const teamMembers = [
-    {
-      name: 'Moksh Patel',
-      role: 'CEO & Founder',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&auto=format&fit=crop'
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const isInView = useInView(containerRef, { 
+    once: false, 
+    amount: 0.2,
+    margin: "-10% 0px -10% 0px"
+  });
+
+  // Title animation
+  const titleVariants = {
+    hidden: {
+      opacity: 0,
+      y: 20,
+      scale: 0.98
     },
-    {
-      name: 'Smit Tilva',
-      role: 'CEO & Founder',
-      image: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=800&auto=format&fit=crop'
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.5,
+        ease: [0.25, 0.1, 0.25, 1],
+      }
     }
-  ];
+  };
+
+  // Smooth spring animations
+  const opacity = useSpring(
+    useTransform(
+      scrollYProgress,
+      [0, 0.1, 0.4, 0.9, 1],
+      [0, 1, 1, 1, 0]
+    ),
+    { stiffness: 100, damping: 30 }
+  );
+
+  const scale = useSpring(
+    useTransform(
+      scrollYProgress,
+      [0, 0.2, 0.4, 0.8, 1],
+      [0.98, 1, 1, 1, 0.98]
+    ),
+    { stiffness: 100, damping: 30 }
+  );
+
+  // Card animation variants with smoother transitions
+  const cardVariants = {
+    hidden: (i: number) => ({
+      opacity: 0,
+      y: 20,
+      scale: 0.98,
+      transition: {
+        duration: 0.3,
+        delay: i * 0.1,
+        ease: [0.25, 0.1, 0.25, 1],
+      },
+    }),
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.3,
+        delay: i * 0.1,
+        ease: [0.25, 0.1, 0.25, 1],
+      },
+    }),
+  };
 
   return (
-    <section className="relative py-16 sm:py-24 md:py-32 bg-black overflow-hidden">
-      {/* Background elements */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900 to-black opacity-50" />
-        <div className="absolute inset-0" style={{
-          background: 'radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)'
-        }} />
-      </div>
+    <motion.section
+      ref={containerRef}
+      className="relative min-h-screen bg-black overflow-hidden py-24"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      style={{ 
+        opacity,
+        scale
+      }}
+    >
+      {/* Background Effects */}
+      <motion.div 
+        className="absolute inset-0"
+        style={{
+          opacity: useSpring(
+            useTransform(
+              scrollYProgress,
+              [0, 0.1, 0.4, 0.9, 1],
+              [0.3, 1, 1, 1, 0.3]
+            ),
+            { stiffness: 100, damping: 30 }
+          )
+        }}
+      >
+        <div className="absolute inset-0">
+          <motion.div
+            className="absolute inset-0"
+            style={{
+              background: 'radial-gradient(circle at 30% 30%, rgba(120, 120, 120, 0.05) 0%, transparent 60%)',
+            }}
+          />
+          
+          {/* Animated grid */}
+          <svg className="absolute inset-0 w-full h-full opacity-[0.02]">
+            <defs>
+              <pattern id="team-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5"/>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#team-grid)" />
+          </svg>
 
-      {/* Content */}
-      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16 sm:mb-24"
-        >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
-            <span className="text-white">Meet Our</span>{' '}
-            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-rose-400 text-transparent bg-clip-text">Leaders</span>
-          </h2>
-          <p className="text-lg sm:text-xl text-gray-400 max-w-3xl mx-auto">
-            Visionaries driving innovation and excellence in AI technology
-          </p>
-        </motion.div>
-
-        {/* Team Grid - Centered for 2 members */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 max-w-5xl mx-auto">
-          {teamMembers.map((member, index) => (
-            <TeamMember
-              key={member.name}
-              name={member.name}
-              role={member.role}
-              image={member.image}
-              index={index}
+          {/* Animated particles */}
+          {[...Array(20)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 rounded-full bg-white/20"
+              style={{
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, -30, 0],
+                opacity: [0.2, 0.5, 0.2],
+                scale: [1, 1.2, 1],
+              }}
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: Math.random() * 2,
+                ease: "easeInOut",
+              }}
             />
           ))}
         </div>
-      </div>
+      </motion.div>
 
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(3)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-[500px] h-[500px] rounded-full"
-            style={{
-              background: `radial-gradient(circle at center, ${i === 0 ? 'rgba(139, 92, 246, 0.03)' : i === 1 ? 'rgba(236, 72, 153, 0.03)' : 'rgba(59, 130, 246, 0.03)'} 0%, transparent 70%)`,
-              left: `${i * 30}%`,
-              top: `${i * 20}%`,
-            }}
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.3, 0.5, 0.3],
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              delay: i * 2,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
+      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Title Section */}
+        <motion.div
+          className="text-center mb-16"
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          variants={titleVariants}
+        >
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            Our Team
+          </h2>
+          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            Meet the passionate individuals behind our success
+          </p>
+        </motion.div>
+
+        {/* Team Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {teamMembers.map((member, index) => (
+            <motion.div
+              key={member.name}
+              custom={index}
+              variants={cardVariants}
+              initial="hidden"
+              animate={isInView ? "visible" : "hidden"}
+              whileHover={{ 
+                scale: 1.02,
+                transition: { duration: 0.2 }
+              }}
+              className="relative group"
+              style={{
+                y: useSpring(
+                  useTransform(
+                    scrollYProgress,
+                    [0, 0.2, 0.4, 0.8, 1],
+                    [30, 0, 0, 0, 30]
+                  ),
+                  { stiffness: 100, damping: 30 }
+                )
+              }}
+            >
+              <div className="relative backdrop-blur-xl bg-gradient-to-br from-black/40 to-black/20 rounded-3xl p-8 border border-white/[0.08] overflow-hidden">
+                {/* Hover Effects */}
+                <motion.div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                  animate={{
+                    background: [
+                      "radial-gradient(circle at 0% 0%, rgba(255,255,255,0.1) 0%, transparent 50%)",
+                      "radial-gradient(circle at 100% 100%, rgba(255,255,255,0.1) 0%, transparent 50%)",
+                    ],
+                  }}
+                  transition={{
+                    duration: 5,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                />
+
+                {/* Animated border */}
+                <motion.div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{
+                    background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)",
+                  }}
+                  animate={{
+                    x: ["100%", "-100%"],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                />
+
+                {/* Content */}
+                <div className="relative z-10">
+                  <div className="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden border-2 border-white/10">
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                    />
+                  </div>
+                  <motion.h3
+                    className="text-2xl font-semibold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80"
+                    whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+                  >
+                    {member.name}
+                  </motion.h3>
+                  <motion.p
+                    className="text-lg text-white/40 mb-4"
+                    whileHover={{ color: "rgba(255,255,255,0.6)", transition: { duration: 0.2 } }}
+                  >
+                    {member.role}
+                  </motion.p>
+                  <motion.p
+                    className="text-base text-white/60 font-light"
+                    style={{ fontFamily: "SF Pro Text, system-ui, -apple-system, BlinkMacSystemFont, sans-serif" }}
+                  >
+                    {member.bio}
+                  </motion.p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 
 interface ValueCardProps {
   title: string;
@@ -8,51 +8,103 @@ interface ValueCardProps {
 }
 
 const ValueCard: React.FC<ValueCardProps> = ({ title, description, index }) => {
+  const cardRef = useRef(null);
+  const isInView = useInView(cardRef, { once: false, margin: "-100px" });
+
+  const variants = {
+    hidden: { 
+      opacity: 0,
+      x: index % 2 === 0 ? -100 : 100,
+      rotateY: index % 2 === 0 ? -45 : 45
+    },
+    visible: {
+      opacity: 1,
+      x: 0,
+      rotateY: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 20,
+        delay: index * 0.2
+      }
+    }
+  };
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.8, delay: index * 0.1 }}
-      className="relative group"
+      ref={cardRef}
+      variants={variants}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      className="relative"
     >
-      <div className="relative backdrop-blur-xl bg-white/[0.01] rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 border border-white/[0.05] overflow-hidden transition-all duration-500 hover:bg-white/[0.02]">
-        {/* Content */}
-        <div className="relative z-10">
-          <motion.h3
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: index * 0.2 }}
-            className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4"
-            style={{ fontFamily: "SF Pro Display, -apple-system, BlinkMacSystemFont, sans-serif" }}
-          >
-            {title}
-          </motion.h3>
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: index * 0.3 }}
-            className="text-gray-400 text-base sm:text-lg leading-relaxed"
-            style={{ fontFamily: "SF Pro Text, -apple-system, BlinkMacSystemFont, sans-serif" }}
-          >
-            {description}
-          </motion.p>
-        </div>
+      <div className="relative p-1">
+        {/* Card */}
+        <div className="relative backdrop-blur-xl bg-gradient-to-br from-black/40 to-black/20 rounded-3xl p-8 border border-white/[0.08] overflow-hidden group">
+          {/* Animated Background */}
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.07] to-transparent" />
+            <div 
+              className="absolute inset-0" 
+              style={{
+                backgroundImage: `radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0%, transparent 50%)`,
+                backgroundSize: '100px 100px',
+                backgroundRepeat: 'repeat',
+                transform: 'rotate(30deg)'
+              }}
+            />
+          </div>
 
-        {/* Decorative elements */}
-        <div className="absolute inset-0 rounded-2xl sm:rounded-3xl overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          {/* Content */}
+          <div className="relative z-10">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
+              transition={{ duration: 0.5, delay: index * 0.3 }}
+              className="mb-6"
+            >
+              <h3 className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-600">
+                {title}
+              </h3>
+              <div className="h-0.5 w-16 bg-gradient-to-r from-white/40 to-transparent rounded-full mt-3 
+                transform origin-left transition-all duration-300 group-hover:w-24 group-hover:from-white/60" />
+            </motion.div>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              transition={{ duration: 0.5, delay: index * 0.4 }}
+              className="text-lg text-white/60 font-light leading-relaxed"
+              style={{ fontFamily: "SF Pro Text, system-ui, -apple-system, BlinkMacSystemFont, sans-serif" }}
+            >
+              {description}
+            </motion.p>
+          </div>
+
+          {/* Decorative Elements */}
           <motion.div
-            className="absolute -inset-[100%] bg-gradient-conic from-white/[0.05] via-white/[0.02] to-white/[0.05]"
+            className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-white/[0.05] to-transparent rounded-full blur-2xl"
             animate={{
-              rotate: [0, 360]
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.5, 0.3],
             }}
             transition={{
-              duration: 20,
+              duration: 4,
               repeat: Infinity,
-              ease: "linear"
+              ease: "easeInOut"
+            }}
+          />
+          <motion.div
+            className="absolute -bottom-10 -left-10 w-32 h-32 bg-gradient-to-br from-white/[0.05] to-transparent rounded-full blur-2xl"
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.5, 0.3],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 2
             }}
           />
         </div>
@@ -62,63 +114,87 @@ const ValueCard: React.FC<ValueCardProps> = ({ title, description, index }) => {
 };
 
 const AboutValues: React.FC = () => {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
   const values = [
     {
       title: "Innovation First",
-      description: "We constantly push the boundaries of what's possible, embracing cutting-edge technologies to create revolutionary AI solutions."
+      description: "Constantly pushing boundaries and exploring new frontiers in AI technology to deliver groundbreaking solutions.",
+      gradient: 'from-blue-500 to-indigo-600'
     },
     {
-      title: "User-Centric Design",
-      description: "Every decision we make is guided by our commitment to creating intuitive, accessible, and impactful user experiences."
+      title: "Ethical Excellence",
+      description: "Upholding the highest standards of ethics and transparency in every aspect of our AI development process.",
+      gradient: 'from-purple-500 to-pink-600'
     },
     {
-      title: "Ethical AI",
-      description: "We develop AI with strong ethical principles, ensuring transparency, fairness, and responsibility in everything we create."
+      title: "Client Success",
+      description: "Dedicated to delivering exceptional value and ensuring our clients achieve their business objectives through our solutions.",
+      gradient: 'from-emerald-500 to-teal-600'
     },
-    
+    {
+      title: "Continuous Learning",
+      description: "Embracing a culture of perpetual learning and adaptation to stay at the forefront of AI advancement.",
+      gradient: 'from-amber-500 to-orange-600'
+    }
   ];
 
   return (
-    <section className="relative py-16 sm:py-24 md:py-32 bg-black overflow-hidden">
-      {/* Background elements */}
+    <section ref={containerRef} className="relative py-32 bg-black overflow-hidden">
+      {/* Background Effects */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900 to-black opacity-50" />
-        <div className="absolute inset-0" style={{
-          background: 'radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 50%)'
-        }} />
+        <motion.div
+          className="absolute inset-0"
+          style={{
+            background: 'radial-gradient(circle at 30% 30%, rgba(120, 120, 120, 0.08) 0%, transparent 60%)',
+            rotate: useTransform(scrollYProgress, [0, 1], [0, 45]),
+            scale: useTransform(scrollYProgress, [0, 1], [1, 1.5]),
+          }}
+        />
+        <motion.div
+          className="absolute inset-0"
+          style={{
+            background: 'radial-gradient(circle at 70% 70%, rgba(120, 120, 120, 0.08) 0%, transparent 60%)',
+            rotate: useTransform(scrollYProgress, [0, 1], [0, -45]),
+            scale: useTransform(scrollYProgress, [0, 1], [1, 1.5]),
+          }}
+        />
       </div>
 
-      {/* Content */}
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          {/* Section Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16 sm:mb-24"
-          >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
-              <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400 text-transparent bg-clip-text">Our Core</span>{' '}
-              <span className="text-white">Values</span>
-            </h2>
-            <p className="text-lg sm:text-xl text-gray-400 max-w-3xl mx-auto">
-              The principles that guide our innovation and shape our future
-            </p>
-          </motion.div>
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, margin: "-100px" }}
+          transition={{ duration: 1 }}
+          className="text-center mb-20"
+        >
+          <h2 className="text-5xl sm:text-6xl font-semibold tracking-tight mb-6">
+            <span className="bg-clip-text text-transparent bg-gradient-to-b from-violet-500 via-purple-500 to-indigo-500">
+              Our Values
+            </span>
+          </h2>
+          <p className="text-xl text-white/60 max-w-3xl mx-auto font-light"
+            style={{ fontFamily: "SF Pro Text, system-ui, -apple-system, BlinkMacSystemFont, sans-serif" }}>
+            The principles that guide our innovation and shape our commitment to excellence
+          </p>
+        </motion.div>
 
-          {/* Values Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {values.map((value, index) => (
-              <ValueCard
-                key={value.title}
-                title={value.title}
-                description={value.description}
-                index={index}
-              />
-            ))}
-          </div>
+        {/* Values Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {values.map((value, index) => (
+            <ValueCard
+              key={value.title}
+              title={value.title}
+              description={value.description}
+              index={index}
+            />
+          ))}
         </div>
       </div>
     </section>

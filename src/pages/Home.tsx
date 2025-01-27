@@ -1,7 +1,7 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { HeroSection } from '../components/sections/HeroSection';
-import ComparisonSection from '../components/sections/ComparisonSection';
+import HeroSection from '../components/sections/HeroSection';
+import { ComparisonSection } from '../components/sections/ComparisonSection';
 import AIAgentSection from '../components/sections/AIAgentSection';
 import { StatsSection } from '../components/sections/StatsSection';
 import { CTASection } from '../components/sections/CTASection';
@@ -258,27 +258,45 @@ const Home = () => {
       <div className="relative z-10">
         <HeroSection />
         <div className="relative bg-black">
-          <ScrollingText />
+          <div className="-mt-12 sm:mt-0">
+            <ScrollingText />
+          </div>
 
           {/* Reduced spacing in mobile view */}
-          <div className="mt-8 sm:mt-16 md:mt-24">
+          <div className="-mt-16 sm:mt-0">
             <InvisibleApproachSection />
           </div>
 
           {/* Reduced spacing in mobile view */}
-          <div className="mt-8 sm:mt-16 md:mt-24">
-            <AIAgentSection />
+          <div className="-mt-16 sm:mt-8 md:mt-16">
+            <StatsSection />
           </div>
 
           {/* Reduced spacing in mobile view */}
-          <div className="mt-8 sm:mt-16 md:mt-24">
-            <StatsSection />
+          <div className="-mt-16 sm:mt-8 md:mt-16">
+            <AIAgentSection />
           </div>
-          <ComparisonSection />
-          <InfiniteIconsSection />
-          <ProductShowcase />
-          <DevelopmentProcess />
-          <CTASection />
+
+          {/* Other sections with reduced spacing */}
+          <div className="mt-0 sm:mt-8 md:mt-16">
+            <ComparisonSection />
+          </div>
+
+          <div className="mt-0 sm:mt-8 md:mt-16">
+            <InfiniteIconsSection />
+          </div>
+
+          <div className="mt-0 sm:mt-8 md:mt-16">
+            <ProductShowcase />
+          </div>
+
+          <div className="mt-0 sm:mt-8 md:mt-16">
+            <DevelopmentProcess />
+          </div>
+
+          <div className="mt-0 sm:mt-8 md:mt-16">
+            <CTASection />
+          </div>
         </div>
       </div>
 

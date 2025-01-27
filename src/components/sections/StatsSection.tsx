@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { GlowingOrbs } from '../ui/GlowingOrbs';
 
 interface StatItemProps {
   number: string;
@@ -81,25 +82,35 @@ export const StatsSection = () => {
       className="relative bg-black py-12 sm:py-16 md:py-20 lg:py-24 overflow-hidden"
       style={{ opacity, scale }}
     >
-      {/* Enhanced background grid */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:2rem_2rem] sm:bg-[size:3rem_3rem] md:bg-[size:4rem_4rem]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
-      </div>
       
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section title */}
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-12 sm:mb-16"
-        >
-          Our Impact in Numbers
-        </motion.h2>
+        <div className="relative">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent">
+              Impact By The Numbers
+            </h2>
+          </div>
+          
+          {/* Subtle accent line */}
+          <div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-24 h-1 bg-gradient-to-r from-purple-600 to-blue-600" />
+        </div>
+
+        
+
+        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
 
         {/* Stats grid with improved responsive layout */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 lg:gap-10">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ 
+            duration: 0.6,
+            delay: 0.2,
+            ease: "easeOut"
+          }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 lg:gap-10"
+        >
           <StatItem 
             number="500+" 
             label="Projects Completed"
@@ -120,7 +131,7 @@ export const StatsSection = () => {
             label="Team Members"
             delay={0.6}
           />
-        </div>
+        </motion.div>
       </div>
     </motion.section>
   );

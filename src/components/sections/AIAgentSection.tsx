@@ -1,6 +1,7 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, MotionValue } from 'framer-motion';
 import { useRef, useEffect } from 'react';
 import agentVideo from '../../assets/agent.mp4';
+import { GlowingOrbs } from '../ui/GlowingOrbs';
 
 const AIAgentSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -11,8 +12,8 @@ const AIAgentSection = () => {
     offset: ["start end", "end start"]
   });
 
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.8]);
+  const opacity: MotionValue<number> = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  const scale: MotionValue<number> = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.8]);
 
   // Ensure video plays continuously
   useEffect(() => {
@@ -45,20 +46,28 @@ const AIAgentSection = () => {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-[70vh] sm:min-h-[80vh] md:min-h-screen py-8 sm:py-12 md:py-16 lg:py-24 overflow-hidden bg-black"
+      className="relative min-h-[60vh] sm:min-h-[80vh] md:min-h-screen flex items-center justify-center overflow-hidden py-8 sm:py-12 md:py-20"
+      style={{ 
+        opacity: opacity as any, 
+        scale: scale as any 
+      }}
     >
+      {/* Add GlowingOrbs with low intensity */}
+      <GlowingOrbs count={3} intensity="low" color="rgba(255,255,255)" />
+
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+
       <motion.div
-        style={{ opacity, scale }}
         className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8"
       >
         {/* Section Title */}
-        <div className="text-center mb-6 sm:mb-8 md:mb-12 lg:mb-16">
+        <div className="text-center mb-4 sm:mb-6 md:mb-8 lg:mb-12">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-8xl font-bold tracking-tight gradient-text px-2"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight gradient-text px-2"
           >
             AI Agent Working For You
           </motion.h2>

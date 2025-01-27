@@ -1,228 +1,192 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { Milestone, Flag, Award, Rocket } from 'lucide-react';
 
-interface MilestoneProps {
+interface TimelineItemProps {
   year: string;
   title: string;
   description: string;
   index: number;
+  gradient: string;
+  icon: JSX.Element;
 }
 
-const Milestone: React.FC<MilestoneProps> = ({ year, title, description, index }) => {
+const TimelineItem: React.FC<TimelineItemProps> = ({ year, title, description, index, gradient, icon }) => {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 100 }}
+      initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
+      viewport={{ once: true }}
       transition={{
-        duration: 1.5,
-        delay: index * 0.5,
+        duration: 1,
+        delay: index * 0.2,
         ease: [0.25, 0.1, 0.25, 1]
       }}
-      className="relative mb-20 md:mb-32 group"
+      className="relative group"
     >
-      {/* Connecting Line */}
-      <motion.div 
-        initial={{ height: 0 }}
-        whileInView={{ height: "100%" }}
-        viewport={{ once: true }}
-        transition={{
-          duration: 1.5,
-          delay: index * 0.5,
-          ease: "easeOut"
-        }}
-        className="absolute left-0 top-0 w-[2px] origin-top hidden md:block"
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-500 via-blue-500 to-transparent animate-gradient" />
-      </motion.div>
+      {/* Timeline Line */}
+      <div className="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-white/20 via-white/10 to-transparent" />
       
-      {/* Content Container */}
-      <div className="relative md:pl-16 pl-0"> {/* Adjusted padding for mobile */}
-        {/* Content Card */}
+      {/* Timeline Dot */}
+      <motion.div
+        initial={{ scale: 0 }}
+        whileInView={{ scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: index * 0.2 }}
+        className="absolute left-0 top-0 w-3 h-3 -translate-x-1/2 rounded-full bg-white/20 border border-white/30 group-hover:bg-white/40 transition-colors duration-300"
+      />
+
+      {/* Content */}
+      <div className="pl-8 pb-12">
+        {/* Year */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          transition={{
-            duration: 1,
-            delay: index * 0.5 + 0.4
-          }}
-          className="relative backdrop-blur-xl bg-white/[0.02] rounded-2xl p-6 md:p-10 border border-white/[0.05] 
-                     transform transition-all duration-500 hover:bg-white/[0.05] hover:border-white/[0.1] 
-                     hover:shadow-2xl hover:shadow-purple-500/10 group-hover:translate-x-2
-                     md:ml-0 mx-4" // Added margin for mobile
+          transition={{ duration: 0.5, delay: index * 0.3 }}
+          className="inline-block px-4 py-1 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 mb-4"
         >
-          {/* Year with floating effect */}
-          <motion.div
-            animate={{
-              y: [0, -8, 0],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            className="inline-block mb-4 md:mb-6"
-          >
-            <h3 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-purple-400 via-blue-400 to-purple-400 
-                          text-transparent bg-clip-text bg-300% animate-gradient-x">
-              {year}
-            </h3>
-          </motion.div>
-          
-          {/* Title with reveal effect */}
-          <motion.h4
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{
-              duration: 1,
-              delay: index * 0.5 + 0.6
-            }}
-            className="text-xl md:text-3xl font-semibold mb-3 md:mb-4 text-white group-hover:text-purple-300 transition-colors duration-500"
-          >
-            {title}
-          </motion.h4>
-          
-          {/* Description with typing effect */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{
-              duration: 1.5,
-              delay: index * 0.5 + 0.8
-            }}
-            className="text-base md:text-xl text-gray-400 max-w-2xl leading-relaxed group-hover:text-gray-300 transition-colors duration-500"
-          >
-            {description}
-          </motion.p>
-
-          {/* Decorative elements */}
-          <div className="absolute -right-2 -bottom-2 w-24 h-24 bg-gradient-to-br from-purple-500/10 to-blue-500/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+          <span className="text-sm text-white/60 font-light tracking-wide"
+            style={{ fontFamily: "SF Pro Text, system-ui, -apple-system, BlinkMacSystemFont, sans-serif" }}>
+            {year}
+          </span>
         </motion.div>
+
+        {/* Title */}
+        <motion.h3
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: index * 0.4 }}
+          className="text-2xl font-semibold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500"
+        >
+          {title}
+        </motion.h3>
+
+        {/* Description */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: index * 0.5 }}
+          className="text-lg text-white/60 font-light leading-relaxed"
+          style={{ fontFamily: "SF Pro Text, system-ui, -apple-system, BlinkMacSystemFont, sans-serif" }}
+        >
+          {description}
+        </motion.p>
+
+        {/* Icon */}
+        <div className={`w-12 h-12 mb-4 rounded-lg bg-gradient-to-br ${gradient} flex items-center justify-center text-white`}>
+          {icon}
+        </div>
+
+        {/* Hover Effect */}
+        <motion.div
+          className="absolute inset-0 -m-2 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          style={{
+            background: 'radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%)'
+          }}
+        />
       </div>
     </motion.div>
   );
 };
 
 const AboutTimeline: React.FC = () => {
-  const timelineData = [
+  const { scrollYProgress } = useScroll();
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
+  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+
+  const timeline = [
     {
-      year: '2020',
-      title: 'Our Beginning',
-      description: 'Founded with a vision to revolutionize AI technology and make it accessible to everyone.'
+      year: "2020",
+      title: "Foundation",
+      description: "TopEdge was founded with a vision to revolutionize AI technology and make it accessible to businesses worldwide.",
+      gradient: 'from-blue-500 to-indigo-600',
+      icon: <Flag className="w-6 h-6" />,
     },
     {
-      year: '2021',
-      title: 'Rapid Growth',
-      description: 'Expanded our team and capabilities, serving clients across multiple industries.'
+      year: "2021",
+      title: "First Major Breakthrough",
+      description: "Launched our flagship AI platform, enabling businesses to harness the power of artificial intelligence effortlessly.",
+      gradient: 'from-purple-500 to-pink-600',
+      icon: <Milestone className="w-6 h-6" />,
     },
     {
-      year: '2022',
-      title: 'Global Expansion',
-      description: 'Established international presence and partnerships with leading tech companies.'
+      year: "2022",
+      title: "Global Expansion",
+      description: "Expanded operations to multiple continents, serving clients across diverse industries and establishing key partnerships.",
+      gradient: 'from-emerald-500 to-teal-600',
+      icon: <Award className="w-6 h-6" />,
     },
     {
-      year: '2023',
-      title: 'Innovation Milestone',
-      description: 'Launched groundbreaking AI solutions and received industry recognition.'
+      year: "2023",
+      title: "Innovation Award",
+      description: "Received industry recognition for our groundbreaking AI solutions and commitment to ethical technology development.",
+      gradient: 'from-amber-500 to-orange-600',
+      icon: <Rocket className="w-6 h-6" />,
+    },
+    {
+      year: "2024",
+      title: "Future Forward",
+      description: "Continuing to push boundaries with cutting-edge AI research and development, shaping the future of technology.",
+      gradient: 'from-violet-500 to-indigo-600',
+      icon: <Flag className="w-6 h-6" />,
     }
   ];
 
   return (
-    <section className="relative py-20 md:py-32 bg-black overflow-hidden">
-      {/* Enhanced Background Elements */}
+    <section className="relative py-32 bg-black overflow-hidden">
+      {/* Background Effects */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900 to-black opacity-50" />
-        <div className="absolute inset-0" style={{
-          background: 'radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.07) 0%, transparent 50%)'
-        }} />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(51,51,51,0.2),transparent_50%)]" />
+        <motion.div
+          className="absolute inset-0"
+          style={{
+            background: 'radial-gradient(circle at 70% 30%, rgba(120, 120, 120, 0.08) 0%, transparent 60%)',
+            y: useTransform(scrollYProgress, [0, 1], [0, 100])
+          }}
+        />
       </div>
 
-      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header with Enhanced Animation */}
+      <motion.div
+        style={{ opacity }}
+        className="relative container mx-auto px-4 sm:px-6 lg:px-8"
+      >
+        {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 1.2 }}
-          className="text-center mb-16 md:mb-24"
+          transition={{ duration: 1 }}
+          className="text-center mb-20"
         >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-            className="inline-block mb-4 md:mb-6"
-          >
-            <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold">
-              <span className="text-white">Our</span>{' '}
-              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 text-transparent bg-clip-text animate-gradient-x bg-300%">
-                Journey
-              </span>
-            </h2>
-          </motion.div>
-          
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.2 }}
-            className="text-lg md:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed"
-          >
-            A timeline of our achievements and milestones
-          </motion.p>
+          <h2 className="text-5xl sm:text-6xl font-semibold tracking-tight mb-6">
+            <span className="bg-clip-text text-transparent bg-gradient-to-b from-violet-500 via-purple-500 to-indigo-500">
+              Our Journey
+            </span>
+          </h2>
+          <p className="text-xl text-white/60 max-w-3xl mx-auto font-light"
+            style={{ fontFamily: "SF Pro Text, system-ui, -apple-system, BlinkMacSystemFont, sans-serif" }}>
+            A timeline of innovation, growth, and transformative achievements
+          </p>
         </motion.div>
 
         {/* Timeline */}
-        <div className="max-w-5xl mx-auto">
-          <div className="space-y-16 md:space-y-24">
-            {timelineData.map((milestone, index) => (
-              <Milestone
-                key={milestone.year}
-                year={milestone.year}
-                title={milestone.title}
-                description={milestone.description}
-                index={index}
-              />
-            ))}
-          </div>
+        <div className="max-w-4xl mx-auto">
+          {timeline.map((item, index) => (
+            <TimelineItem
+              key={item.year}
+              year={item.year}
+              title={item.title}
+              description={item.description}
+              index={index}
+              gradient={item.gradient}
+              icon={item.icon}
+            />
+          ))}
         </div>
-      </div>
-
-      {/* Enhanced Animated Background Elements */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {[...Array(4)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full blur-3xl"
-            style={{
-              width: `${400 + i * 100}px`,
-              height: `${400 + i * 100}px`,
-              background: `radial-gradient(circle at center, 
-                ${i === 0 ? 'rgba(139, 92, 246, 0.03)' : 
-                  i === 1 ? 'rgba(236, 72, 153, 0.03)' : 
-                  i === 2 ? 'rgba(59, 130, 246, 0.03)' :
-                  'rgba(147, 51, 234, 0.03)'} 0%, transparent 70%)`,
-              left: `${i * 25}%`,
-              top: `${i * 15}%`,
-            }}
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.3, 0.5, 0.3],
-              x: [0, 50, 0],
-              y: [0, 30, 0],
-            }}
-            transition={{
-              duration: 15 + i * 2,
-              repeat: Infinity,
-              delay: i * 5,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </div>
+      </motion.div>
     </section>
   );
 };

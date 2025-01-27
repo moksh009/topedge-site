@@ -1,7 +1,7 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, ArrowRight, Star, Zap } from 'lucide-react';
+import { Check, ArrowRight, Star, Zap, Sparkles } from 'lucide-react';
 
 const plans = [
   {
@@ -137,6 +137,42 @@ const PricingPlans = () => {
                 }}
                 className="relative flex flex-col"
               >
+                {/* Floating sparkles */}
+                <AnimatePresence>
+                  {isHovered && (
+                    <>
+                      {[...Array(5)].map((_, i) => (
+                        <motion.div
+                          key={`sparkle-${i}`}
+                          initial={{ opacity: 0, scale: 0 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0 }}
+                          className="absolute"
+                          style={{
+                            top: `${Math.random() * 100}%`,
+                            left: `${Math.random() * 100}%`,
+                            zIndex: 30,
+                          }}
+                        >
+                          <motion.div
+                            animate={{
+                              y: [0, -20, 0],
+                              opacity: [0, 1, 0],
+                            }}
+                            transition={{
+                              duration: 1.5,
+                              repeat: Infinity,
+                              delay: Math.random() * 0.5,
+                            }}
+                          >
+                            <Sparkles className="w-3 h-3 text-purple-400" />
+                          </motion.div>
+                        </motion.div>
+                      ))}
+                    </>
+                  )}
+                </AnimatePresence>
+
                 {/* Most Popular Badge */}
                 {plan.name === "Pro" && (
                   <motion.div
@@ -147,7 +183,18 @@ const PricingPlans = () => {
                   >
                     <div className="relative">
                       {/* Glow Effect */}
-                      <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-violet-600 rounded-full blur-sm opacity-75" />
+                      <motion.div 
+                        className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-violet-600 rounded-full blur-sm"
+                        animate={{
+                          opacity: [0.5, 0.8, 0.5],
+                          scale: [1, 1.1, 1],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      />
                       
                       {/* Badge */}
                       <div className="relative px-3 sm:px-4 py-1 sm:py-1.5 bg-gradient-to-r from-purple-500 to-violet-500 rounded-full">
@@ -175,56 +222,212 @@ const PricingPlans = () => {
 
                 {/* Card */}
                 <motion.div
-                  className={`relative flex-1 p-6 sm:p-8 rounded-2xl backdrop-blur-xl border border-white/10 bg-black/50 overflow-hidden ${plan.popular ? 'md:scale-105' : ''}`}
+                  className={`relative flex-1 p-6 sm:p-8 rounded-2xl backdrop-blur-xl border border-white/10 bg-gradient-to-b from-black/80 to-purple-950/20 overflow-hidden ${plan.popular ? 'md:scale-105' : ''}`}
                   onHoverStart={() => setHoveredPlan(plan.name)}
                   onHoverEnd={() => setHoveredPlan(null)}
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ duration: 0.2 }}
+                  whileHover={{ scale: 1.02, y: -5 }}
+                  initial={{ scale: 1, y: 0 }}
+                  animate={{ scale: 1, y: 0 }}
+                  transition={{ 
+                    duration: 0.2,
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 25
+                  }}
                 >
-                  {/* Plan Icon */}
+                  {/* Animated gradient border */}
+                  <motion.div
+                    className="absolute inset-0 rounded-2xl"
+                    initial={{ background: 'linear-gradient(0deg, rgba(139,92,246,0), rgba(0,0,0,0))' }}
+                    animate={isHovered ? {
+                      background: [
+                        'linear-gradient(0deg, rgba(139,92,246,0.1), rgba(0,0,0,0))',
+                        'linear-gradient(90deg, rgba(139,92,246,0.1), rgba(0,0,0,0))',
+                        'linear-gradient(180deg, rgba(139,92,246,0.1), rgba(0,0,0,0))',
+                        'linear-gradient(270deg, rgba(139,92,246,0.1), rgba(0,0,0,0))'
+                      ]
+                    } : {
+                      background: 'linear-gradient(0deg, rgba(139,92,246,0), rgba(0,0,0,0))'
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: isHovered ? Infinity : 0,
+                      ease: "linear"
+                    }}
+                  />
+
+                  {/* Plan Icon with enhanced animation */}
                   <motion.div
                     className={`relative w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl bg-gradient-to-r ${plan.gradient} p-0.5 mb-4 sm:mb-6`}
-                    whileHover={{ rotate: [0, -5, 5, 0] }}
-                    transition={{ duration: 0.3 }}
+                    whileHover={{ rotate: [0, -5, 5, 0], scale: 1.1 }}
+                    initial={{ rotate: 0, scale: 1 }}
+                    animate={{ rotate: 0, scale: 1 }}
+                    transition={{ 
+                      duration: 0.3,
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 25
+                    }}
                   >
-                    <div className="w-full h-full bg-black rounded-xl flex items-center justify-center">
-                      <Icon className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
-                    </div>
+                    <motion.div 
+                      className="w-full h-full bg-black rounded-xl flex items-center justify-center overflow-hidden"
+                      initial={{ background: 'rgba(0,0,0,1)' }}
+                      animate={isHovered ? {
+                        background: ['rgba(0,0,0,1)', 'rgba(20,0,40,1)', 'rgba(0,0,0,1)']
+                      } : {
+                        background: 'rgba(0,0,0,1)'
+                      }}
+                      transition={{ 
+                        duration: 2,
+                        repeat: isHovered ? Infinity : 0,
+                        ease: "easeInOut"
+                      }}
+                    >
+                      <motion.div
+                        initial={{ scale: 1, rotate: 0 }}
+                        animate={isHovered ? {
+                          scale: [1, 1.2, 1],
+                          rotate: [0, 10, -10, 0],
+                        } : {
+                          scale: 1,
+                          rotate: 0
+                        }}
+                        transition={{ 
+                          duration: 1,
+                          repeat: isHovered ? Infinity : 0,
+                          ease: "easeInOut"
+                        }}
+                      >
+                        <Icon className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
+                      </motion.div>
+                    </motion.div>
                   </motion.div>
 
-                  {/* Plan Details */}
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3">{plan.name}</h3>
+                  {/* Plan Details with hover effects */}
+                  <motion.h3 
+                    className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3"
+                    initial={{ color: '#FFFFFF' }}
+                    animate={isHovered ? {
+                      color: ['#FFFFFF', '#C4B5FD', '#FFFFFF'],
+                    } : {
+                      color: '#FFFFFF'
+                    }}
+                    transition={{ 
+                      duration: 2,
+                      repeat: isHovered ? Infinity : 0,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    {plan.name}
+                  </motion.h3>
                   <p className="text-sm sm:text-base text-gray-400 mb-4 sm:mb-6">{plan.description}</p>
 
-                  {/* Price */}
+                  {/* Price with animation */}
                   <div className="mb-6 sm:mb-8">
-                    <div className="flex items-baseline">
-                      <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">${plan.price}</span>
-                      <span className="text-sm sm:text-base text-gray-400 ml-2">/month</span>
-                    </div>
+                    <motion.div 
+                      className="flex items-baseline"
+                      initial={{ scale: 1 }}
+                      animate={isHovered ? { 
+                        scale: [1, 1.05, 1] 
+                      } : {
+                        scale: 1
+                      }}
+                      transition={{ 
+                        duration: 1,
+                        repeat: isHovered ? Infinity : 0,
+                        ease: "easeInOut"
+                      }}
+                    >
+                      <span className="text-4xl sm:text-5xl font-bold text-white">$</span>
+                      <span className="text-4xl sm:text-5xl font-bold text-white ml-1">{plan.price}</span>
+                      <span className="text-gray-400 ml-2">/month</span>
+                    </motion.div>
                   </div>
 
-                  {/* Features */}
-                  <ul className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
-                    {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-2 sm:gap-3">
-                        <Check className="w-4 h-4 sm:w-5 sm:h-5 text-green-400 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm sm:text-base text-gray-300">{feature}</span>
-                      </li>
+                  {/* Features list with enhanced animations */}
+                  <ul className="space-y-3 mb-8">
+                    {plan.features.map((feature, featureIndex) => (
+                      <motion.li
+                        key={feature}
+                        className="flex items-start gap-2"
+                        initial={{ opacity: 1, x: 0 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ 
+                          delay: index * 0.1 + featureIndex * 0.1,
+                          type: "spring",
+                          stiffness: 400,
+                          damping: 25
+                        }}
+                      >
+                        <motion.div
+                          initial={{ scale: 1, rotate: 0 }}
+                          animate={isHovered ? {
+                            scale: [1, 1.2, 1],
+                            rotate: [0, 10, -10, 0],
+                          } : {
+                            scale: 1,
+                            rotate: 0
+                          }}
+                          transition={{ 
+                            duration: 0.5,
+                            delay: featureIndex * 0.1,
+                            repeat: isHovered ? Infinity : 0,
+                            ease: "easeInOut"
+                          }}
+                        >
+                          <Check className="w-5 h-5 text-green-400 mt-0.5" />
+                        </motion.div>
+                        <span className="text-gray-300">{feature}</span>
+                      </motion.li>
                     ))}
                   </ul>
 
-                  {/* CTA Button */}
-                  <Link
-                    to="/signup"
-                    className={`block w-full py-3 sm:py-4 px-6 sm:px-8 text-center rounded-xl text-sm sm:text-base font-semibold transition-all duration-300
-                      ${plan.popular 
-                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700' 
-                        : 'bg-white/10 text-white hover:bg-white/20'
-                      }`}
-                  >
-                    Get Started
-                    <ArrowRight className="inline-block ml-2 w-4 h-4 sm:w-5 sm:h-5" />
+                  {/* Get Started Button with enhanced hover effects */}
+                  <Link to="/booking" className="block mt-auto">
+                    <motion.button
+                      className="relative w-full py-3 px-6 rounded-xl overflow-hidden bg-gradient-to-r from-purple-600/20 to-purple-600/10 border border-purple-500/20 text-white font-semibold"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      initial={{ scale: 1 }}
+                      animate={{ scale: 1 }}
+                      transition={{ 
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 25
+                      }}
+                    >
+                      <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-purple-600/0 via-purple-600/40 to-purple-600/0"
+                        initial={{ x: '-100%' }}
+                        animate={isHovered ? {
+                          x: ['-100%', '100%'],
+                        } : {
+                          x: '-100%'
+                        }}
+                        transition={{
+                          duration: 1.5,
+                          repeat: isHovered ? Infinity : 0,
+                          ease: "linear",
+                        }}
+                      />
+                      <motion.div
+                        className="relative z-10 flex items-center justify-center gap-2"
+                        initial={{ x: 0 }}
+                        animate={isHovered ? {
+                          x: [0, 5, 0],
+                        } : {
+                          x: 0
+                        }}
+                        transition={{
+                          duration: 1,
+                          repeat: isHovered ? Infinity : 0,
+                          ease: "easeInOut",
+                        }}
+                      >
+                        Get Started
+                        <ArrowRight className="w-5 h-5" />
+                      </motion.div>
+                    </motion.button>
                   </Link>
                 </motion.div>
               </motion.div>
