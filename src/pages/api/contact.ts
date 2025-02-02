@@ -1,54 +1,66 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import clientPromise from '../../lib/mongodb';
+import nodemailer from 'nodemailer';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'POST') {
-    try {
-      const { name, email, subject, message } = req.body;
+type ResponseData = {
+  message: string;
+};
 
-      // Validate the input
-      if (!name || !email || !subject || !message) {
-        return res.status(400).json({ error: 'All fields are required' });
-      }
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<ResponseData>
+) {
+  if (req.method !== 'POST') {
+    res.status(405).json({ message: 'Method not allowed' });
+    return;
+  }
 
-      const client = await clientPromise;
-      const db = client.db('contact_form');
-      
-      // Insert the submission
-      const result = await db.collection('submissions').insertOne({
-        name,
-        email,
-        subject,
-        message,
-        timestamp: new Date()
-      });
+  try {
+    const { name, email, phone, companyName, subject, message } = req.body;
 
-      return res.status(200).json({ 
-        message: 'Submission saved successfully',
-        id: result.insertedId 
-      });
-    } catch (error) {
-      console.error('Error saving submission:', error);
-      return res.status(500).json({ error: 'Failed to save submission' });
-    }
-  } else if (req.method === 'GET') {
-    try {
-      const client = await clientPromise;
-      const db = client.db('contact_form');
-      
-      // Get all submissions, sorted by timestamp
-      const submissions = await db.collection('submissions')
-        .find({})
-        .sort({ timestamp: -1 })
-        .toArray();
+    // Create transporter
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
 
-      return res.status(200).json(submissions);
-    } catch (error) {
-      console.error('Error fetching submissions:', error);
-      return res.status(500).json({ error: 'Failed to fetch submissions' });
-    }
-  } else {
-    res.setHeader('Allow', ['POST', 'GET']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    // Email template
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Thank you for contacting TopEdge',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #0A84FF;">Thank You for Contacting TopEdge</h2>
+          <p>Dear ${name},</p>
+          <p>Thank you for reaching out to us. We have received your message and our team will get back to you shortly.</p>
+          
+          <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">
+            <h3 style="color: #0A84FF;">Your Message Details:</h3>
+            <p><strong>Subject:</strong> ${subject}</p>
+            <p><strong>Message:</strong> ${message}</p>
+            ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
+            ${companyName ? `<p><strong>Company:</strong> ${companyName}</p>` : ''}
+          </div>
+          
+          <p>We typically respond within 24-48 business hours.</p>
+          
+          <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+            <p style="color: #666;">Best Regards,</p>
+            <p style="color: #666;">The TopEdge Team</p>
+          </div>
+        </div>
+      `,
+    };
+
+    // Send email
+    await transporter.sendMail(mailOptions);
+
+    res.status(200).json({ message: 'Message sent successfully' });
+  } catch (error) {
+    console.error('Error sending message:', error);
+    res.status(500).json({ message: 'Failed to send message' });
   }
 }

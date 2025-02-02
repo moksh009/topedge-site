@@ -5,6 +5,10 @@ import path from 'path';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  build: {
+    outDir: 'dist',
+    sourcemap: true
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -14,17 +18,11 @@ export default defineConfig({
     },
     mainFields: ['browser', 'module', 'main', 'jsnext:main'],
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
-    external: ['events'],
   },
   server: {
     port: 5173,
     proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/api/, '/api')
-      },
+      '/api': 'http://localhost:3001',
     },
   },
 });

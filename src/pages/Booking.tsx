@@ -281,9 +281,9 @@ const FormInput = ({ label, value, onChange, type = 'text', placeholder, require
   </div>
 );
 
-const Calendar = ({ selectedDate, onSelect }: { selectedDate: Date | undefined; onSelect: SelectSingleEventHandler }) => {
-  const selectedModifier = selectedDate ? { selected: selectedDate } : {};
-  
+const Calendar = ({ selectedDate, onSelect }: { selectedDate: Date | undefined; onSelect: (date: Date) => void }) => {
+  const selectedModifier = selectedDate ? { selected: [selectedDate] } : undefined;
+
   return (
     <div className="calendar-wrapper p-2 sm:p-4 bg-[#0a0a0a] rounded-lg overflow-x-auto">
       <style jsx global>{`
@@ -304,7 +304,7 @@ const Calendar = ({ selectedDate, onSelect }: { selectedDate: Date | undefined; 
       <DayPicker
         mode="single"
         selected={selectedDate}
-        onSelect={onSelect}
+        onSelect={(date) => date && onSelect(date)}
         modifiers={selectedModifier}
         modifiersClassNames={{
           selected: 'bg-purple-600 text-white rounded-lg',
