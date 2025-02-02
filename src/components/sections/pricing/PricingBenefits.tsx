@@ -69,15 +69,15 @@ const PricingBenefits = () => {
   return (
     <motion.section
       ref={containerRef}
-      className="relative py-32 overflow-hidden"
+      className="relative py-16 sm:py-24 md:py-32 overflow-hidden px-4 sm:px-6"
       style={{
         opacity,
         scale,
       }}
     >
-      {/* Background Grid */}
+      {/* Background Grid - Adjusted for mobile */}
       <motion.div
-        className="absolute inset-0"
+        className="absolute inset-0 hidden sm:block"
         style={{
           background: "radial-gradient(circle at center, rgba(124, 58, 237, 0.1) 0%, rgba(0,0,0,0) 70%)",
           y,
@@ -98,10 +98,9 @@ const PricingBenefits = () => {
       
       
 
-      {/* Decorative Elements */}
-      {/* Top Left Large Purple Orb */}
+      {/* Decorative Elements - Adjusted visibility for mobile */}
       <motion.div
-        className="absolute left-0 top-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[160px]"
+        className="absolute left-0 top-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-purple-600/10 rounded-full blur-[100px] sm:blur-[160px]"
         style={{ 
           y: useTransform(scrollYProgress, [0, 1], ["-20%", "-80%"]),
           x: useTransform(scrollYProgress, [0, 1], ["-20%", "-40%"])
@@ -154,17 +153,17 @@ const PricingBenefits = () => {
       />
 
       {/* Content Container */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
+      <div className="relative max-w-7xl mx-auto">
+        {/* Section Header - Adjusted for mobile */}
         <motion.div
-          className="text-center max-w-3xl mx-auto mb-24"
+          className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 md:mb-24"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
           <motion.h2
-            className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent px-4 sm:px-0"
             animate={{
               backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
             }}
@@ -177,7 +176,7 @@ const PricingBenefits = () => {
             Why Choose Our Platform?
           </motion.h2>
           <motion.p
-            className="text-gray-400 text-lg"
+            className="text-gray-400 text-base sm:text-lg px-4 sm:px-0"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -187,17 +186,17 @@ const PricingBenefits = () => {
           </motion.p>
         </motion.div>
 
-        {/* Benefits List */}
-        <div className="space-y-32">
+        {/* Benefits List - Adjusted for mobile */}
+        <div className="space-y-16 sm:space-y-24 md:space-y-32 px-4 sm:px-6">
           {benefits.map((benefit, index) => {
             const isLeft = benefit.direction === "left";
             return (
               <motion.div
                 key={index}
-                className={`flex ${isLeft ? 'justify-start' : 'justify-end'}`}
+                className={`flex ${isLeft ? 'justify-start' : 'justify-end'} ${index % 2 === 0 ? 'sm:justify-start' : 'sm:justify-end'}`}
                 initial={{ 
                   opacity: 0, 
-                  x: isLeft ? -100 : 100,
+                  x: 0,
                   scale: 0.8
                 }}
                 whileInView={{ 
@@ -207,13 +206,13 @@ const PricingBenefits = () => {
                 }}
                 exit={{ 
                   opacity: 0,
-                  x: isLeft ? -100 : 100,
+                  x: 0,
                   scale: 0.8
                 }}
                 viewport={{ 
                   once: false,
-                  amount: 0.8,
-                  margin: "-100px"
+                  amount: 0.3,
+                  margin: "-50px"
                 }}
                 transition={{ 
                   duration: 0.9, 
@@ -222,33 +221,33 @@ const PricingBenefits = () => {
                 }}
               >
                 <motion.div 
-                  className="relative max-w-xl group"
-                  whileHover={{ scale: 1.05 }}
+                  className="relative w-full sm:max-w-xl group"
+                  whileHover={{ scale: 1.02 }}
                   transition={{ duration: 0.2 }}
                 >
                   {/* Card */}
                   <motion.div
-                    className="relative p-8 rounded-2xl backdrop-blur-xl border border-white/10 bg-black/50 h-full overflow-hidden"
+                    className="relative p-6 sm:p-8 rounded-2xl backdrop-blur-xl border border-white/10 bg-black/50 h-full overflow-hidden"
                     transition={{ duration: 0.2 }}
                   >
                     {/* Icon */}
                     <motion.div
-                      className={`relative w-16 h-16 rounded-xl bg-gradient-to-r ${benefit.gradient} p-0.5 mb-6`}
+                      className={`relative w-12 h-12 sm:w-16 sm:h-16 rounded-xl bg-gradient-to-r ${benefit.gradient} p-0.5 mb-4 sm:mb-6`}
                       whileHover={{ rotate: [0, -5, 5, 0] }}
                       transition={{ duration: 0.3 }}
                     >
                       <div className="w-full h-full bg-black rounded-xl flex items-center justify-center">
-                        <benefit.icon className="w-8 h-8 text-white" />
+                        <benefit.icon className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                       </div>
                     </motion.div>
 
                     {/* Content */}
-                    <h3 className="text-2xl font-bold text-white mb-4">{benefit.title}</h3>
-                    <p className="text-gray-400">{benefit.description}</p>
+                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-4">{benefit.title}</h3>
+                    <p className="text-sm sm:text-base text-gray-400">{benefit.description}</p>
 
-                    {/* Hover Effects */}
+                    {/* Hover Effects - Adjusted for mobile */}
                     <motion.div
-                      className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100"
+                      className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 hidden sm:block"
                       initial={false}
                       transition={{ duration: 0.3 }}
                     >
@@ -258,9 +257,9 @@ const PricingBenefits = () => {
                     </motion.div>
                   </motion.div>
 
-                  {/* Star Effect on Hover */}
+                  {/* Star Effect on Hover - Hidden on mobile */}
                   <motion.div
-                    className="absolute inset-0 pointer-events-none"
+                    className="absolute inset-0 pointer-events-none hidden sm:block"
                     initial={false}
                   >
                     {[...Array(5)].map((_, i) => (

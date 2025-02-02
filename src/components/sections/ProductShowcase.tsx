@@ -19,28 +19,104 @@ const ArrowRightIcon = ({ className }: { className?: string }) => (
 
 const products = [
   {
-    title: "AI Caller",
-    description: "Experience seamless communication with our advanced AI calling system. Perfect for businesses looking to automate customer interactions while maintaining a personal touch.",
+    title: "AI Agent",
+    description: "Next-generation AI agents that combine human-like understanding with superhuman capabilities. Experience unmatched efficiency, consistency, and scalability.",
     image: showcaseImage,
     features: [
-      "Natural voice interactions",
-      "Real-time response generation",
-      "Multi-language support",
-      "Custom voice and personality"
+      {
+        title: "Instant Scalability",
+        description: "Handle unlimited concurrent conversations without quality degradation",
+        icon: "Scale"
+      },
+      {
+        title: "Consistent Excellence",
+        description: "Maintain peak performance 24/7 with zero quality variance",
+        icon: "Star"
+      },
+      {
+        title: "Global Accessibility",
+        description: "Instant support in 50+ languages with native-level understanding",
+        icon: "Globe"
+      },
+      {
+        title: "Cost Efficiency",
+        description: "90% reduction in operational costs with higher satisfaction rates",
+        icon: "TrendingUp"
+      }
     ],
+    metrics: {
+      responseTime: {
+        value: "0.3s",
+        comparison: "20x faster",
+        trend: "positive"
+      },
+      accuracy: {
+        value: "99.9%",
+        comparison: "15% higher",
+        trend: "positive"
+      },
+      availability: {
+        value: "24/7",
+        comparison: "3x more",
+        trend: "positive"
+      },
+      scalability: {
+        value: "∞",
+        comparison: "Unlimited",
+        trend: "positive"
+      }
+    },
     link: "/services/ai-agent",
     gradient: "from-violet-600 via-indigo-500 to-purple-500"
   },
   {
-    title: "Advanced Chatbot",
-    description: "Elevate your customer service with our intelligent chatbot solution. Powered by cutting-edge AI to handle complex conversations and tasks.",
+    title: "Human Agent",
+    description: "Traditional customer service with inherent limitations in scalability, consistency, and availability. See how our AI solution provides superior results.",
     image: showcaseImage,
     features: [
-      "Context-aware responses",
-      "Multi-platform integration",
-      "24/7 availability",
-      "Learning capabilities"
+      {
+        title: "Limited Capacity",
+        description: "One conversation at a time per agent",
+        icon: "User"
+      },
+      {
+        title: "Variable Quality",
+        description: "Performance varies based on mood, time, and workload",
+        icon: "AlertTriangle"
+      },
+      {
+        title: "Language Barriers",
+        description: "Limited language support with translation delays",
+        icon: "MessageSquare"
+      },
+      {
+        title: "High Operational Costs",
+        description: "Significant overhead with training and management",
+        icon: "DollarSign"
+      }
     ],
+    metrics: {
+      responseTime: {
+        value: "3-5min",
+        comparison: "20x slower",
+        trend: "negative"
+      },
+      accuracy: {
+        value: "85%",
+        comparison: "15% lower",
+        trend: "negative"
+      },
+      availability: {
+        value: "8hrs",
+        comparison: "3x less",
+        trend: "negative"
+      },
+      scalability: {
+        value: "1:1",
+        comparison: "Limited",
+        trend: "negative"
+      }
+    },
     link: "/services/chatbot",
     gradient: "from-blue-600 via-cyan-500 to-teal-500"
   }
@@ -56,7 +132,7 @@ const ProductShowcase = () => {
   });
 
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.8]);
+  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.95, 1, 1, 0.95]);
   const y = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [100, 0, 0, -100]);
 
   const handleProductClick = (link: string) => {
@@ -70,118 +146,123 @@ const ProductShowcase = () => {
   return (
     <section 
       ref={sectionRef}
-      className="relative bg-black min-h-screen py-20 overflow-hidden"
+      className="relative bg-[#000000] min-h-screen py-20 overflow-hidden"
     >
-      {/* Animated background elements */}
-      <GlowingOrbs count={3} intensity="low" color="rgba(139,92,246,0.3)" />
-      <div className="absolute inset-0 bg-gradient-to-b from-black via-black/95 to-black/90 backdrop-blur-sm" />
+      {/* Enhanced background effects */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-purple-900/20 via-black to-black" />
+        <GlowingOrbs count={5} intensity="medium" color="rgba(139,92,246,0.15)" />
+      </div>
 
       {/* Content Container */}
       <motion.div 
-        className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20"
+        className="relative max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20"
         style={{ scale, opacity, y }}
       >
-        {/* Section Title with animated underline */}
-        <div className="text-center mb-16 sm:mb-20">
+        {/* Section Title with Apple-style animation */}
+        <div className="text-center mb-20 sm:mb-28">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
             className="relative inline-block"
           >
-            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent mb-6">
-              Our Solutions
+            <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-8">
+              AI vs Human
             </h2>
-            <motion.div
-              className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-blue-500"
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            />
+           
           </motion.div>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-lg sm:text-xl md:text-2xl text-white/70 max-w-3xl mx-auto mt-6"
-          >
-            Transform your business with our cutting-edge AI solutions
-          </motion.p>
+          
         </div>
 
-        {/* Product Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 md:gap-12 lg:gap-16">
+        {/* Product Grid with Apple-style cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-16 md:gap-20 lg:gap-24">
           {products.map((product, index) => (
-            <motion.div
+          <motion.div
               key={product.title}
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.2 }}
+            viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: index * 0.2 }}
               className="group relative"
-            >
-              {/* Product Card */}
+          >
+              {/* Product Card with enhanced styling */}
               <div 
-                className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900 to-black border border-white/10 hover:border-purple-500/50 transition-all duration-500"
-                style={{ transformStyle: 'preserve-3d' }}
+                className="relative overflow-hidden rounded-3xl bg-[#1A1A1A] border border-white/10 transition-all duration-700 group-hover:border-purple-500/30"
+                style={{ 
+                  transformStyle: 'preserve-3d',
+                  boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+                }}
               >
-                {/* Image Container with Parallax Effect */}
+                {/* Image Container with enhanced parallax */}
                 <div className="relative aspect-[16/9] overflow-hidden">
                   <motion.div
-                    whileHover={{ scale: 1.1 }}
-                    transition={{ duration: 0.6 }}
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 1.2, ease: [0.33, 1, 0.68, 1] }}
                     className="absolute inset-0"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-60 z-10" />
-                    <img
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A] via-black/50 to-transparent opacity-70 z-10" />
+                    <motion.img
                       src={product.image}
                       alt={product.title}
                       className="absolute inset-0 w-full h-full object-cover"
+                      initial={{ scale: 1.2 }}
+                      animate={{ scale: 1 }}
+                      transition={{ duration: 1.5, ease: [0.33, 1, 0.68, 1] }}
                     />
                   </motion.div>
-                  
-                  {/* Floating gradient overlay */}
-                  <div className={`absolute inset-0 bg-gradient-to-r ${product.gradient} opacity-20 mix-blend-overlay`} />
-                </div>
 
-                {/* Content Container */}
-                <div className="relative z-20 p-6 sm:p-8">
+                  {/* Enhanced gradient overlay */}
+                  <div className={`absolute inset-0 bg-gradient-to-r ${product.gradient} opacity-30 mix-blend-overlay transition-opacity duration-700 group-hover:opacity-40`} />
+              </div>
+
+                {/* Content Container with improved layout */}
+                <div className="relative z-20 p-8 sm:p-10">
                   {/* Animated gradient orb */}
-                  <div className={`absolute -top-20 right-0 w-40 h-40 rounded-full blur-3xl opacity-0 group-hover:opacity-30 transition-opacity duration-700 bg-gradient-to-r ${product.gradient}`} />
+          <motion.div
+                    className={`absolute -top-40 right-0 w-80 h-80 rounded-full blur-[100px] opacity-0 group-hover:opacity-20 transition-opacity duration-700 bg-gradient-to-r ${product.gradient}`}
+                    animate={{
+                      scale: [1, 1.2, 1],
+                      opacity: [0, 0.2, 0],
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  />
                   
                   <motion.h3 
-                    className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4"
+                    className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6"
                     initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                  >
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+          >
                     {product.title}
                   </motion.h3>
-                  
+              
                   <motion.p 
-                    className="text-base sm:text-lg text-white/70 mb-6"
+                    className="text-lg sm:text-xl text-gray-300 mb-8"
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
                   >
                     {product.description}
                   </motion.p>
-                  
-                  {/* Features List with staggered animation */}
+              
+                  {/* Features List with enhanced animations */}
                   <motion.ul 
-                    className="space-y-3 mb-8"
+                    className="space-y-4 mb-10"
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true }}
                     variants={{
                       visible: {
                         transition: {
-                          staggerChildren: 0.1
+                          staggerChildren: 0.15
                         }
                       }
                     }}
@@ -193,29 +274,57 @@ const ProductShowcase = () => {
                           hidden: { opacity: 0, x: -20 },
                           visible: { opacity: 1, x: 0 }
                         }}
-                        className="flex items-center gap-3"
+                        className="flex items-center gap-4"
                       >
-                        <div className="flex-shrink-0 w-5 h-5 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 flex items-center justify-center">
-                          <CheckIcon className="w-3 h-3 text-white" />
-                        </div>
-                        <span className="text-sm sm:text-base text-white/80">{feature}</span>
+                        <div className="flex-shrink-0 w-6 h-6 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110">
+                          <CheckIcon className="w-3.5 h-3.5 text-white" />
+                    </div>
+                        <span className="text-base sm:text-lg text-gray-300">{feature.description}</span>
                       </motion.li>
-                    ))}
+                ))}
                   </motion.ul>
 
-                  {/* CTA Button */}
-                  <motion.button
+                  {/* Stats Grid */}
+                  <div className="grid grid-cols-2 gap-4 mb-8">
+                    {Object.entries(product.metrics).map(([key, metric]) => (
+                      <div key={key} className="text-center p-4 rounded-xl bg-white/5 backdrop-blur-sm">
+                        <div className="text-2xl font-bold text-white mb-1">{metric.value}</div>
+                        <div className="text-sm text-gray-400 capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</div>
+              </div>
+                    ))}
+        </div>
+
+                  {/* Enhanced CTA Button */}
+          <motion.button
                     onClick={() => handleProductClick(product.link)}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="group relative inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full text-white transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/25"
-                  >
-                    <span className="text-sm sm:text-base font-medium">Learn More</span>
-                    <ArrowRightIcon className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
-                  </motion.button>
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+                    className="group relative inline-flex items-center gap-3 px-8 py-4 bg-white rounded-full text-black transition-all duration-300"
+                    style={{
+                      boxShadow: '0 0 20px rgba(139,92,246,0.3)'
+                    }}
+          >
+                    <span className="text-base sm:text-lg font-semibold relative z-10">
+                      {product.title === "AI Agent" ? "Experience AI Advantage" : "Compare with AI"}
+            </span>
+            <motion.div
+                      className="relative z-10"
+                      animate={{
+                        x: [0, 5, 0],
+                      }}
+                      transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+            >
+                      <ArrowRightIcon className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
+            </motion.div>
+                    <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl" />
+          </motion.button>
                 </div>
               </div>
-            </motion.div>
+        </motion.div>
           ))}
         </div>
       </motion.div>

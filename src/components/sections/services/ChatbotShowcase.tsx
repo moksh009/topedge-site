@@ -24,6 +24,44 @@ const ChatbotShowcase = () => {
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [prefilledIndex, setPrefilledIndex] = useState(0);
+  
+  // Add audio refs
+  const sendAudioRef = useRef<HTMLAudioElement>(null);
+  const receiveAudioRef = useRef<HTMLAudioElement>(null);
+
+  // Set initial volume for audio elements
+  useEffect(() => {
+    if (sendAudioRef.current) {
+      sendAudioRef.current.volume = 0.5;
+    }
+    if (receiveAudioRef.current) {
+      receiveAudioRef.current.volume = 0.5;
+    }
+  }, []);
+
+  // Function to play send sound
+  const playSendSound = async () => {
+    if (sendAudioRef.current) {
+      try {
+        sendAudioRef.current.currentTime = 0;
+        await sendAudioRef.current.play();
+      } catch (error) {
+        console.log('Error playing send sound:', error);
+      }
+    }
+  };
+
+  // Function to play receive sound
+  const playReceiveSound = async () => {
+    if (receiveAudioRef.current) {
+      try {
+        receiveAudioRef.current.currentTime = 0;
+        await receiveAudioRef.current.play();
+      } catch (error) {
+        console.log('Error playing receive sound:', error);
+      }
+    }
+  };
 
   const scrollToBottom = () => {
     if (messagesContainerRef.current) {
@@ -69,6 +107,8 @@ const ChatbotShowcase = () => {
     await new Promise(resolve => setTimeout(resolve, 1000));
     setIsTyping(false);
     
+    // Play receive sound and add bot message
+    await playReceiveSound();
     setMessages(prev => [...prev, {
       id: Date.now().toString(),
       type: 'bot',
@@ -84,20 +124,37 @@ const ChatbotShowcase = () => {
   };
 
   const handleSendMessage = async () => {
+    // Create and add user message
     const userMessage = {
       id: Date.now().toString(),
       type: 'user' as const,
       content: currentPrefilled,
       timestamp: new Date()
     };
+
+    // Play send sound and add message
+    await playSendSound();
     setMessages(prev => [...prev, userMessage]);
 
+    // Generate and simulate bot response
     const response = generateBotResponse(currentPrefilled);
-    simulateTyping(response);
+    await simulateTyping(response);
   };
 
   return (
     <div className="relative mt-32 mb-20 bg-black">
+      {/* Audio elements */}
+      <audio 
+        ref={sendAudioRef} 
+        src="/message sound/send.mp3" 
+        preload="auto"
+      />
+      <audio 
+        ref={receiveAudioRef} 
+        src="/message sound/receive.mp3" 
+        preload="auto"
+      />
+      
       <div className="text-center mb-16">
         <h2 className="text-6xl md:text-8xl font-bold tracking-tight">
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-200 to-white">

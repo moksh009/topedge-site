@@ -36,17 +36,17 @@ const images = [
 
 const InfiniteIconsSection = () => {
   return (
-    <div className="relative h-60 sm:h-72 md:h-80 lg:h-96 bg-black overflow-hidden">
+    <div className="relative h-40 sm:h-48 md:h-56 lg:h-64 bg-black overflow-hidden">
       {/* Single row of images moving left */}
       <div className="absolute w-full h-full flex items-center">
         <motion.div
-          className="flex gap-4 sm:gap-6 md:gap-8 lg:gap-12 items-center"
+          className="flex gap-3 sm:gap-4 md:gap-6 lg:gap-8 items-center"
           initial={{ x: 0 }}
           animate={{
-            x: [-3200, 0], // Increased movement range for smoother loop
+            x: [-2400, 0],
           }}
           transition={{
-            duration: 40, // Slowed down animation for better viewing
+            duration: 30,
             repeat: Infinity,
             ease: "linear",
             repeatType: "loop"
@@ -56,11 +56,11 @@ const InfiniteIconsSection = () => {
           {[...images, ...images, ...images].map((image, index) => (
             <div
               key={index}
-              className="relative w-48 h-48 sm:w-60 sm:h-60 md:w-72 md:h-72 lg:w-80 lg:h-80 group"
+              className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 group"
             >
               <div 
-                className="absolute inset-0 rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-3xl overflow-hidden transform transition-all duration-300 group-hover:scale-105"
-                style={{ boxShadow: `0 0 20px ${image.color}20 sm:0 0 30px ${image.color}25 md:0 0 40px ${image.color}30` }}
+                className="absolute inset-0 rounded-lg sm:rounded-xl md:rounded-2xl overflow-hidden transform transition-all duration-300 group-hover:scale-105"
+                style={{ boxShadow: `0 0 15px ${image.color}20` }}
               >
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-50" />
                 <img
@@ -69,7 +69,7 @@ const InfiniteIconsSection = () => {
                   className="w-full h-full object-cover"
                   loading="lazy"
                 />
-                <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-5 lg:p-6 text-white text-sm sm:text-base md:text-lg font-medium opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3 md:p-4 text-white text-xs sm:text-sm md:text-base font-medium opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
                   {image.alt}
                 </div>
               </div>
@@ -79,8 +79,8 @@ const InfiniteIconsSection = () => {
       </div>
 
       {/* Gradient overlays for smooth fade at edges */}
-      <div className="absolute inset-y-0 left-0 w-32 sm:w-40 md:w-48 lg:w-64 bg-gradient-to-r from-black to-transparent z-10" />
-      <div className="absolute inset-y-0 right-0 w-32 sm:w-40 md:w-48 lg:w-64 bg-gradient-to-l from-black to-transparent z-10" />
+      <div className="absolute inset-y-0 left-0 w-24 sm:w-32 md:w-40 lg:w-48 bg-gradient-to-r from-black to-transparent z-10" />
+      <div className="absolute inset-y-0 right-0 w-24 sm:w-32 md:w-40 lg:w-48 bg-gradient-to-l from-black to-transparent z-10" />
     </div>
   );
 };

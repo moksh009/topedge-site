@@ -1,8 +1,137 @@
 import React, { useRef } from 'react';
 import { motion, useScroll, useTransform, useInView, useSpring } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Building2, Users2, Lightbulb, Target, ArrowRight, Trophy } from 'lucide-react';
+import { Building2, Users2, Lightbulb, Target, ArrowRight, Trophy, LucideIcon } from 'lucide-react';
 import { GlowingOrbs } from '../../ui/GlowingOrbs';
+
+interface PremiumButtonProps {
+  icon: LucideIcon;
+  text: string;
+  to: string;
+}
+
+const PremiumButton: React.FC<PremiumButtonProps> = ({ 
+  icon: Icon, 
+  text, 
+  to 
+}) => (
+  <Link to={to}>
+    <motion.button
+      whileHover="hover"
+      whileTap="tap"
+      variants={{
+        hover: { scale: 1.05 },
+        tap: { scale: 0.95 }
+      }}
+      className="group relative rounded-full"
+    >
+      {/* Button Container */}
+      <div className="relative px-8 py-4 rounded-full">
+        {/* Outer Glow */}
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/30 via-cyan-500/30 to-blue-600/30 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full" />
+        
+        {/* Moving Particles Background */}
+        <div className="absolute inset-0 overflow-hidden rounded-full">
+          {[...Array(5)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-blue-400 rounded-full"
+              animate={{
+                x: [
+                  Math.random() * 200,
+                  Math.random() * -200,
+                  Math.random() * 200
+                ],
+                y: [
+                  Math.random() * 100,
+                  Math.random() * -100,
+                  Math.random() * 100
+                ],
+                scale: [0, 1.5, 0],
+                opacity: [0, 1, 0]
+              }}
+              transition={{
+                duration: Math.random() * 3 + 2,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Main Button Background */}
+        <div className="absolute inset-0 bg-black border border-blue-500/50 group-hover:border-blue-400 rounded-full" />
+        
+        {/* Animated Border Lines */}
+        <div className="absolute inset-0 rounded-full overflow-hidden">
+          <motion.div
+            className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-500 to-transparent"
+            animate={{
+              x: [-100, 100, -100],
+              opacity: [0.3, 1, 0.3]
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          />
+          <motion.div
+            className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent"
+            animate={{
+              x: [100, -100, 100],
+              opacity: [0.3, 1, 0.3]
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          />
+        </div>
+
+        {/* Button Content */}
+        <div className="relative flex items-center gap-3">
+          <div className="relative flex items-center gap-3">
+            <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400 group-hover:text-white transition-colors duration-300" />
+            <span className="text-base sm:text-lg font-medium bg-gradient-to-r from-white via-blue-200 to-white bg-clip-text text-transparent">
+              {text}
+            </span>
+            <motion.div
+              className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-400 to-transparent"
+              animate={{
+                scaleX: [0, 1, 0],
+                opacity: [0, 1, 0]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+          </div>
+          <motion.div
+            animate={{
+              x: [0, 5, 0],
+              y: [0, -2, 0]
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          >
+            <span className="text-blue-400 group-hover:text-white transition-colors duration-300">→</span>
+          </motion.div>
+        </div>
+      </div>
+    </motion.button>
+  </Link>
+);
 
 const AboutHero: React.FC = () => {
   const containerRef = useRef(null);
@@ -125,7 +254,7 @@ const AboutHero: React.FC = () => {
       }}
     >
       {/* Dynamic Background */}
-      <motion.div 
+        <motion.div 
         className="absolute inset-0"
         style={{
           opacity: useTransform(
@@ -140,16 +269,16 @@ const AboutHero: React.FC = () => {
           <GlowingOrbs 
             count={5} 
             intensity="high" 
-            color="rgba(139,92,246,0.5)" 
+            color="rgba(10,132,255,0.6)"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-black/95 to-purple-900/10 backdrop-blur-sm" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-black/95 to-[#0A84FF]/20 backdrop-blur-sm" />
         </div>
 
         {/* Main gradient */}
         <motion.div
           className="absolute inset-0"
           style={{
-            background: 'radial-gradient(circle at 30% 30%, rgba(120, 120, 120, 0.05) 0%, transparent 60%)',
+            background: 'radial-gradient(circle at 30% 30%, rgba(10,132,255,0.08) 0%, transparent 60%)',
             scale,
             rotate
           }}
@@ -165,12 +294,12 @@ const AboutHero: React.FC = () => {
               left: `${Math.random() * 100}%`,
               scale: useTransform(scrollYProgress, [0, 0.5], [1, 0.5])
             }}
-            animate={{
+          animate={{
               y: [0, -30, 0],
               opacity: [0.2, 0.5, 0.2],
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
               duration: 3 + Math.random() * 2,
               repeat: Infinity,
               delay: Math.random() * 2,
@@ -183,7 +312,7 @@ const AboutHero: React.FC = () => {
         <motion.div
           className="absolute w-[800px] h-[800px] rounded-full blur-3xl"
           style={{
-            background: 'radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%)',
+            background: 'radial-gradient(circle, rgba(10,132,255,0.05) 0%, transparent 70%)',
             top: '10%',
             left: '20%',
             scale: useTransform(scrollYProgress, [0, 0.5], [1, 0.8]),
@@ -195,26 +324,26 @@ const AboutHero: React.FC = () => {
           }}
           transition={{
             duration: 20,
-            repeat: Infinity,
+              repeat: Infinity,
             ease: "linear"
           }}
         />
 
         {/* Animated grid */}
-        <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.03 }}>
+        <svg className="absolute inset-0 w-full h-full opacity-[0.02]">
           <defs>
             <pattern id="grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
-              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5"/>
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(10,132,255,0.3)" strokeWidth="0.5"/>
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#grid-pattern)" />
         </svg>
 
         {/* Animated highlight lines */}
-        <motion.div
+        <motion.div 
           className="absolute inset-0"
           style={{
-            background: 'linear-gradient(45deg, transparent 0%, rgba(255,255,255,0.02) 50%, transparent 100%)',
+            background: 'linear-gradient(45deg, transparent 0%, rgba(10,132,255,0.03) 50%, transparent 100%)',
             rotate: useTransform(scrollYProgress, [0, 1], [0, 360]),
             opacity: useTransform(scrollYProgress, [0, 0.5], [1, 0])
           }}
@@ -222,20 +351,20 @@ const AboutHero: React.FC = () => {
       </motion.div>
 
       {/* Animated background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/20 to-black">
+      <div className="absolute inset-0 bg-gradient-to-b from-black via-[#0A84FF]/5 to-black">
         <div className="absolute inset-0">
           {[...Array(50)].map((_, i) => (
             <motion.div
               key={i}
-              className="absolute w-1 h-1 bg-purple-300/20 rounded-full"
-              animate={{
+              className="absolute w-1 h-1 bg-[#0A84FF]/20 rounded-full"
+          animate={{
                 y: [Math.random() * 1000, -10],
                 opacity: [0, 1, 0],
                 scale: [0, 1.5, 0]
-              }}
-              transition={{
+          }}
+          transition={{
                 duration: Math.random() * 3 + 2,
-                repeat: Infinity,
+              repeat: Infinity,
                 repeatType: "loop",
                 ease: "linear",
                 delay: Math.random() * 2
@@ -243,15 +372,15 @@ const AboutHero: React.FC = () => {
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`
-              }}
-            />
+          }}
+        />
           ))}
         </div>
       </div>
 
       {/* Content */}
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-32">
-        <motion.div 
+          <motion.div 
           className="max-w-4xl mx-auto text-center"
           style={{
             scale: useTransform(scrollYProgress, [0, 0.5], [1, 0.9]),
@@ -304,16 +433,16 @@ const AboutHero: React.FC = () => {
               y: useTransform(scrollYProgress, [0, 0.3], [0, 30])
             }}
           >
-            <motion.h1
+            <motion.h1 
               variants={textReveal}
               className="flex justify-center items-center text-6xl sm:text-7xl md:text-8xl font-semibold tracking-tight"
             >
               <motion.span 
-                className="whitespace-nowrap bg-clip-text text-transparent bg-gradient-to-r from-slate-200 via-blue-200 to-slate-200"
+                className="whitespace-nowrap bg-clip-text text-transparent bg-gradient-to-r from-white via-[#0A84FF] to-white"
                 style={{
                   backgroundSize: '200% auto',
                   animation: 'shine 8s linear infinite',
-                  textShadow: '0 0 40px rgba(148, 163, 184, 0.2)',
+                  textShadow: '0 0 40px rgba(10,132,255,0.2)',
                 }}
                 whileHover={{
                   scale: 1.02,
@@ -333,7 +462,7 @@ const AboutHero: React.FC = () => {
             <motion.p 
               className="text-2xl md:text-3xl font-light leading-relaxed mb-16"
               style={{
-                background: 'linear-gradient(to right, #E2E8F0, #93C5FD, #E2E8F0)',
+                background: 'linear-gradient(to right, #FFFFFF, #0A84FF, #FFFFFF)',
                 backgroundSize: '200% auto',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
@@ -345,134 +474,23 @@ const AboutHero: React.FC = () => {
           </motion.div>
 
           {/* CTA Buttons */}
-          <motion.div
+            <motion.div
             variants={fadeIn}
             className="flex flex-col sm:flex-row gap-6 justify-center items-center"
-          >
-            <Link to="/contact">
-              <motion.button
-                whileHover="hover"
-                whileTap="tap"
-                variants={{
-                  hover: { scale: 1.05 },
-                  tap: { scale: 0.95 }
-                }}
-                className="relative px-10 py-5 rounded-full overflow-hidden group"
-              >
-                {/* Animated background */}
-                <div className="absolute inset-0 bg-gradient-to-r from-slate-600 via-blue-600 to-slate-600" />
-                
-                {/* Animated particles */}
-                <div className="absolute inset-0 overflow-hidden">
-                  {[...Array(5)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className="absolute w-1 h-1 bg-white rounded-full"
-                      animate={{
-                        x: [
-                          Math.random() * 200,
-                          Math.random() * -200,
-                          Math.random() * 200
-                        ],
-                        y: [
-                          Math.random() * 100,
-                          Math.random() * -100,
-                          Math.random() * 100
-                        ],
-                        scale: [0, 1.5, 0],
-                        opacity: [0, 0.5, 0]
-                      }}
-                      transition={{
-                        duration: Math.random() * 3 + 2,
-                        repeat: Infinity,
-                        ease: "linear"
-                      }}
-                      style={{
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`
-                      }}
-                    />
-                  ))}
-                </div>
+            >
+              <PremiumButton 
+                icon={Building2} 
+                text="Get Started" 
+                to="/contact"
+              />
 
-                {/* Shine effect */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300">
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-                </div>
-
-                {/* Button content */}
-                <div className="relative flex items-center gap-3 text-white font-medium text-lg">
-                  <span className="group-hover:tracking-wider transition-all duration-300">Get Started</span>
-                  <motion.div
-                    animate={{
-                      x: [0, 5, 0],
-                    }}
-                    transition={{
-                      duration: 1.5,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
-                  >
-                    <ArrowRight className="w-5 h-5" />
-                  </motion.div>
-                </div>
-              </motion.button>
-            </Link>
-
-            <Link to="/about">
-              <motion.button
-                whileHover="hover"
-                whileTap="tap"
-                variants={{
-                  hover: { scale: 1.05 },
-                  tap: { scale: 0.95 }
-                }}
-                className="relative px-10 py-5 rounded-full overflow-hidden group"
-              >
-                {/* Gradient border */}
-                <div className="absolute inset-0 bg-gradient-to-r from-slate-600 via-blue-600 to-slate-600 rounded-full p-[2px]">
-                  <div className="absolute inset-0 bg-black rounded-full" />
-                </div>
-
-                {/* Hover gradient */}
-                <div className="absolute inset-0 bg-gradient-to-r from-slate-700 via-blue-700 to-slate-700 opacity-0 group-hover:opacity-20 transition-opacity duration-500" />
-                
-                {/* Moving border line */}
-                <div className="absolute inset-0 rounded-full overflow-hidden">
-                  <motion.div
-                    className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-blue-400 to-transparent"
-                    animate={{
-                      x: [-100, 100, -100],
-                      opacity: [0.2, 0.4, 0.2]
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "linear"
-                    }}
-                  />
-                </div>
-
-                {/* Button content */}
-                <div className="relative flex items-center gap-3 text-white font-medium text-lg">
-                  <span className="group-hover:tracking-wider transition-all duration-300">Learn More</span>
-                  <motion.div
-                    animate={{
-                      x: [0, 5, 0],
-                    }}
-                    transition={{
-                      duration: 1.5,
-                      repeat: Infinity,
-                      ease: "easeInOut"
-                    }}
-                  >
-                    <ArrowRight className="w-5 h-5" />
-                  </motion.div>
-                </div>
-              </motion.button>
-            </Link>
+              <PremiumButton 
+                icon={Users2} 
+                text="Learn More" 
+                to="/about"
+              />
+            </motion.div>
           </motion.div>
-        </motion.div>
 
         {/* Scroll Indicator */}
         <motion.div
@@ -511,7 +529,7 @@ const AboutHero: React.FC = () => {
         <div className="absolute inset-0 pointer-events-none">
           {/* 3D Spheres */}
           {[...Array(3)].map((_, i) => (
-            <motion.div
+          <motion.div 
               key={i}
               className="absolute w-64 h-64"
               style={{
@@ -528,11 +546,11 @@ const AboutHero: React.FC = () => {
                 repeat: Infinity,
                 ease: "linear",
               }}
-            >
+          >
               <div className="relative w-full h-full">
                 <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/5 to-transparent blur-xl" />
-              </div>
-            </motion.div>
+            </div>
+          </motion.div>
           ))}
 
           {/* Animated Lines */}
@@ -582,7 +600,7 @@ const AboutHero: React.FC = () => {
         >
           <Building2 className="w-16 h-16" />
         </motion.div>
-        <motion.div
+        <motion.div 
           className="absolute middle-10 top text-cyan-500/20"
           animate={{
             y: [-20, 20, -20],
@@ -604,7 +622,7 @@ const AboutHero: React.FC = () => {
           <Trophy className="w-16 h-16" />
         </motion.div>
 
-        <motion.div
+            <motion.div
           className="absolute right-10 top-1/3 text-fuchsia-500/20"
           animate={{
             y: [20, -20, 20],
@@ -622,7 +640,7 @@ const AboutHero: React.FC = () => {
               ease: "linear",
             },
           }}
-        >
+            >
           <Users2 className="w-16 h-16" />
         </motion.div>
 
@@ -650,9 +668,9 @@ const AboutHero: React.FC = () => {
               ease: "linear",
             },
           }}
-        >
+              >
           <Lightbulb className="w-12 h-12" />
-        </motion.div>
+            </motion.div>
 
         <motion.div
           className="absolute right-1/4 top-1/6 text-green-500/20"
@@ -684,7 +702,7 @@ const AboutHero: React.FC = () => {
 
         {/* Decorative elements */}
         <motion.div
-          className="absolute left-0 top-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-slate-800/30 via-blue-800/30 to-slate-800/30 rounded-full blur-3xl"
+          className="absolute left-0 top-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-[#0A84FF]/20 via-[#5E5CE6]/20 to-[#0A84FF]/20 rounded-full blur-3xl"
           animate={{
             scale: [1, 1.2, 1],
             opacity: [0.2, 0.3, 0.2],
@@ -696,7 +714,7 @@ const AboutHero: React.FC = () => {
           }}
         />
         <motion.div
-          className="absolute right-0 top-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-l from-slate-800/30 via-blue-800/30 to-slate-800/30 rounded-full blur-3xl"
+          className="absolute right-0 top-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-l from-[#0A84FF]/20 via-[#5E5CE6]/20 to-[#0A84FF]/20 rounded-full blur-3xl"
           animate={{
             scale: [1.2, 1, 1.2],
             opacity: [0.2, 0.3, 0.2],
@@ -707,7 +725,7 @@ const AboutHero: React.FC = () => {
             ease: "easeInOut",
           }}
         />
-      </div>
+    </div>
     </motion.section>
   );
 };

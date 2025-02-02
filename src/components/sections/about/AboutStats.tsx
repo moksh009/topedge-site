@@ -43,7 +43,7 @@ const StatCard: React.FC<StatCardProps> = ({ number, label, index }) => {
     >
       <div className="relative">
         {/* Glass Card */}
-        <div className="relative backdrop-blur-xl bg-gradient-to-br from-black/40 to-black/20 rounded-3xl p-8 border border-white/[0.08] overflow-hidden">
+        <div className="relative backdrop-blur-xl bg-gradient-to-br from-black/40 to-black/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-white/[0.08] overflow-hidden">
           {/* Animated Highlight */}
           <motion.div
             className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
@@ -64,7 +64,7 @@ const StatCard: React.FC<StatCardProps> = ({ number, label, index }) => {
           {/* Content */}
           <div className="relative z-10 text-center">
             <motion.div
-              className="text-5xl sm:text-6xl font-semibold mb-4"
+              className="text-4xl sm:text-5xl lg:text-6xl font-semibold mb-4"
               initial={{ scale: 0.5, opacity: 0 }}
               animate={isInView ? {
                 scale: 1,
@@ -80,7 +80,7 @@ const StatCard: React.FC<StatCardProps> = ({ number, label, index }) => {
                 opacity: 0
               }}
             >
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 via-purple-500 to-pink-600">
+              <span className="text-white">
                 {isInView && (
                   <CountUp
                     end={number}
@@ -134,7 +134,7 @@ const StatCard: React.FC<StatCardProps> = ({ number, label, index }) => {
   );
 };
 
-const AboutStats: React.FC = () => {
+const AboutStats = () => {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -170,25 +170,27 @@ const AboutStats: React.FC = () => {
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: "-100px" }}
-          transition={{ duration: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
           className="text-center mb-20"
         >
-          <h2 className="text-5xl sm:text-6xl font-semibold tracking-tight mb-6">
-            <span className="bg-clip-text text-transparent bg-gradient-to-b from-violet-500 via-purple-500 to-indigo-500">
-              By the Numbers
-            </span>
+          <div className="inline-flex items-center justify-center mb-4">
+            <div className="h-px w-12 bg-[#0A84FF]/50" />
+            <p className="text-[#0A84FF] text-lg font-medium tracking-wide px-4">BY THE NUMBERS</p>
+            <div className="h-px w-12 bg-[#0A84FF]/50" />
+          </div>
+          <h2 className="text-5xl sm:text-6xl font-semibold tracking-tight text-white mb-6">
+            Our Impact in Numbers
           </h2>
-          <p className="text-xl text-white/60 max-w-3xl mx-auto font-light"
-            style={{ fontFamily: "SF Pro Text, system-ui, -apple-system, BlinkMacSystemFont, sans-serif" }}>
-            Our impact in numbers, showcasing our commitment to excellence and growth
+          <p className="text-xl text-[#86868B] max-w-3xl mx-auto font-light leading-relaxed">
+            Measurable results that demonstrate our commitment to excellence and innovation
           </p>
         </motion.div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
           {stats.map((stat, index) => (
             <StatCard
               key={index}

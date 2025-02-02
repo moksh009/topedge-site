@@ -1,207 +1,181 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { ArrowRight } from 'lucide-react';
 
 const AboutMission = () => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
+  const containerRef = useRef<HTMLElement>(null);
+  const { ref, inView } = useInView({
     threshold: 0.2,
+    triggerOnce: false,
+    rootMargin: "-100px"
   });
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.3,
-      },
-    },
-  };
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.3, 1, 1, 0.3]);
+  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.9, 1, 1, 0.9]);
+  const y = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [50, 0, 0, -50]);
+
+  const titleVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 50,
+      filter: "blur(10px)"
+    },
+    visible: { 
+      opacity: 1, 
       y: 0,
+      filter: "blur(0px)",
+      transition: {
+        duration: 1,
+        ease: [0.25, 0.1, 0.25, 1],
+      }
+    },
+    exit: {
+      opacity: 0,
+      y: -50,
+      filter: "blur(10px)",
       transition: {
         duration: 0.5,
-      },
-    },
+        ease: [0.25, 0.1, 0.25, 1],
+      }
+    }
   };
 
   return (
-    <section className="relative py-20 bg-black" ref={ref}>
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-grid-white/[0.02] bg-grid-white/[0.02]" />
+    <motion.section 
+      ref={containerRef} 
+      className="relative min-h-[100vh] w-full py-32 md:py-40 bg-black overflow-hidden"
+      style={{ opacity, scale, y }}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      id="mission"
+    >
+      {/* Subtle Background Glow */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-[#0A84FF]/5 rounded-full blur-[120px]" />
+      </div>
 
-      <div className="container relative mx-auto px-4">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          className="max-w-6xl mx-auto"
-        >
-          {/* Section Header */}
+      {/* Content Container */}
+      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 z-20">
+        <div ref={ref} className="max-w-6xl mx-auto">
+          {/* Enhanced Section Header */}
           <motion.div
-            variants={itemVariants}
-            className="text-center mb-20"
+            className="text-center"
+            variants={titleVariants}
+            initial="hidden"
+            animate={inView ? "visible" : "hidden"}
           >
-            <motion.h2
-              className="text-5xl sm:text-6xl font-semibold tracking-tight mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
+            <motion.div
+              className="inline-flex items-center justify-center mb-6"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
+              transition={{ 
+                duration: 0.8, 
+                delay: 0.3,
+                ease: [0.25, 0.1, 0.25, 1]
+              }}
             >
-              <span className="bg-clip-text text-transparent bg-gradient-to-b from-white via-purple/90 to-purple/80">
-                Our Mission
+              <motion.div 
+                className="h-px w-16 bg-gradient-to-r from-transparent via-[#0A84FF] to-transparent"
+                animate={{
+                  scaleX: inView ? [0, 1] : 0
+                }}
+                transition={{
+                  duration: 0.8,
+                  delay: 0.5,
+                  ease: [0.25, 0.1, 0.25, 1]
+                }}
+              />
+              <p className="text-[#0A84FF] text-sm md:text-base font-medium tracking-[0.2em] px-6 uppercase">Our Mission</p>
+              <motion.div 
+                className="h-px w-16 bg-gradient-to-r from-transparent via-[#0A84FF] to-transparent"
+                animate={{
+                  scaleX: inView ? [0, 1] : 0
+                }}
+                transition={{
+                  duration: 0.8,
+                  delay: 0.5,
+                  ease: [0.25, 0.1, 0.25, 1]
+                }}
+              />
+            </motion.div>
+
+            <motion.h2
+              className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6"
+              variants={{
+                hidden: { 
+                  opacity: 0, 
+                  y: 50,
+                  filter: "blur(10px)"
+                },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  filter: "blur(0px)",
+                  transition: {
+                    duration: 1,
+                    delay: 0.4,
+                    ease: [0.25, 0.1, 0.25, 1]
+                  }
+                }
+              }}
+            >
+              <span className="text-white relative">
+                Pioneering the Future of
+                <br />
+                <span className="relative inline-block mt-2">
+                  <span className="relative z-10 bg-gradient-to-r from-[#0A84FF] via-white to-[#0A84FF] text-transparent bg-clip-text animate-gradient-x">
+                    Intelligent Technology
+                  </span>
+                  <motion.div
+                    className="absolute -inset-2 bg-[#0A84FF]/10 blur-xl rounded-full z-0"
+                    animate={{
+                      opacity: [0.3, 0.5, 0.3],
+                      scale: [1, 1.1, 1],
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  />
+                </span>
               </span>
             </motion.h2>
+
             <motion.p
-              className="text-lg text-gray-400 max-w-3xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
+              className="text-lg md:text-2xl lg:text-3xl text-[#86868B] max-w-3xl mx-auto font-light leading-relaxed"
+              variants={{
+                hidden: { 
+                  opacity: 0, 
+                  y: 30,
+                  filter: "blur(5px)"
+                },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  filter: "blur(0px)",
+                  transition: {
+                    duration: 1,
+                    delay: 0.6,
+                    ease: [0.25, 0.1, 0.25, 1]
+                  }
+                }
+              }}
             >
-              Empowering businesses through innovative AI solutions and strategic digital transformation
+              At TopEdge, we're revolutionizing how businesses harness AI technology. 
+              Our intelligent solutions adapt, learn, and evolve, ensuring your business 
+              stays ahead in an ever-changing digital landscape.
             </motion.p>
           </motion.div>
-
-          {/* Mission Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Vision Card */}
-            <motion.div
-              variants={itemVariants}
-              whileHover={{ y: -10, transition: { duration: 0.3 } }}
-              className="relative group"
-            >
-              <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 opacity-25 blur transition duration-1000 group-hover:opacity-75 group-hover:duration-200" />
-              <div className="relative h-full bg-black rounded-lg p-8 border border-white/10">
-                {/* Card Content */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
-                  className="flex flex-col h-full"
-                >
-                  {/* Icon */}
-                  <motion.div
-                    className="w-12 h-12 mb-6 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center"
-                    whileHover={{ rotate: 5, scale: 1.1 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <ArrowRight className="w-6 h-6 text-white transform -rotate-45" />
-                  </motion.div>
-
-                  <motion.h3
-                    className="text-2xl font-semibold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80"
-                    whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
-                  >
-                    Our Vision
-                  </motion.h3>
-
-                  <motion.p
-                    className="text-gray-400 flex-grow"
-                    initial={{ opacity: 0 }}
-                    animate={inView ? { opacity: 1 } : { opacity: 0 }}
-                    transition={{ duration: 0.5, delay: 0.6 }}
-                  >
-                    To be the global leader in AI innovation, shaping the future of digital transformation across industries.
-                  </motion.p>
-                </motion.div>
-              </div>
-            </motion.div>
-
-            {/* Mission Card */}
-            <motion.div
-              variants={itemVariants}
-              whileHover={{ y: -10, transition: { duration: 0.3 } }}
-              className="relative group"
-            >
-              <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 opacity-25 blur transition duration-1000 group-hover:opacity-75 group-hover:duration-200" />
-              <div className="relative h-full bg-black rounded-lg p-8 border border-white/10">
-                {/* Card Content */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.5, delay: 0.5 }}
-                  className="flex flex-col h-full"
-                >
-                  {/* Icon */}
-                  <motion.div
-                    className="w-12 h-12 mb-6 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center"
-                    whileHover={{ rotate: 5, scale: 1.1 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <ArrowRight className="w-6 h-6 text-white" />
-                  </motion.div>
-
-                  <motion.h3
-                    className="text-2xl font-semibold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80"
-                    whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
-                  >
-                    Our Approach
-                  </motion.h3>
-
-                  <motion.p
-                    className="text-gray-400 flex-grow"
-                    initial={{ opacity: 0 }}
-                    animate={inView ? { opacity: 1 } : { opacity: 0 }}
-                    transition={{ duration: 0.5, delay: 0.7 }}
-                  >
-                    We combine cutting-edge AI technology with deep industry expertise to deliver transformative solutions.
-                  </motion.p>
-                </motion.div>
-              </div>
-            </motion.div>
-
-            {/* Values Card */}
-            <motion.div
-              variants={itemVariants}
-              whileHover={{ y: -10, transition: { duration: 0.3 } }}
-              className="relative group"
-            >
-              <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 opacity-25 blur transition duration-1000 group-hover:opacity-75 group-hover:duration-200" />
-              <div className="relative h-full bg-black rounded-lg p-8 border border-white/10">
-                {/* Card Content */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.5, delay: 0.6 }}
-                  className="flex flex-col h-full"
-                >
-                  {/* Icon */}
-                  <motion.div
-                    className="w-12 h-12 mb-6 rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center"
-                    whileHover={{ rotate: 5, scale: 1.1 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <ArrowRight className="w-6 h-6 text-white transform rotate-45" />
-                  </motion.div>
-
-                  <motion.h3
-                    className="text-2xl font-semibold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-white/80"
-                    whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
-                  >
-                    Our Values
-                  </motion.h3>
-
-                  <motion.p
-                    className="text-gray-400 flex-grow"
-                    initial={{ opacity: 0 }}
-                    animate={inView ? { opacity: 1 } : { opacity: 0 }}
-                    transition={{ duration: 0.5, delay: 0.8 }}
-                  >
-                    Innovation, integrity, and excellence drive everything we do, ensuring the highest quality solutions.
-                  </motion.p>
-                </motion.div>
-              </div>
-            </motion.div>
-          </div>
-        </motion.div>
+        </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

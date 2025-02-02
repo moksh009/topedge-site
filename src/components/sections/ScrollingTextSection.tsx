@@ -33,7 +33,7 @@ export const ScrollingTextSection = () => {
                 fontFamily: "-apple-system, 'SF Pro Display', sans-serif",
                 fontFeatureSettings: '"ss01" on, "ss02" on'
               }}>
-            Revolutionizing Development
+            Revolutionizing Business
           </h2>
         </motion.div>
       </div>

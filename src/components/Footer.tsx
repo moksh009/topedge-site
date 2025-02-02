@@ -31,19 +31,16 @@ export default function Footer() {
 
   return (
     <footer className="relative bg-black">
-   
-    
-
       {/* Main Footer Content */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 text-center md:text-left">
           {/* Company Info */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="space-y-6"
+            className="space-y-6 flex flex-col items-center md:items-start"
           >
             <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
               TopEdge
@@ -51,7 +48,7 @@ export default function Footer() {
             <p className="text-gray-400 leading-relaxed">
               Pioneering the future of artificial intelligence with cutting-edge solutions and innovative technologies.
             </p>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center justify-center md:justify-start gap-4">
               {socialLinks.map((social) => (
                 <motion.a
                   key={social.label}
@@ -73,12 +70,12 @@ export default function Footer() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="space-y-6"
+            className="space-y-6 flex flex-col items-center md:items-start"
           >
             <h4 className="text-lg font-semibold text-white">Quick Links</h4>
-            <ul className="space-y-4">
+            <ul className="space-y-4 w-full">
               {quickLinks.map((link) => (
-                <motion.li key={link.name}>
+                <motion.li key={link.name} className="flex justify-center md:justify-start">
                   <motion.a
                     href={link.href}
                     className="text-gray-400 hover:text-white flex items-center space-x-2 group transition-all"
@@ -98,18 +95,22 @@ export default function Footer() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="space-y-6"
+            className="space-y-6 flex flex-col items-center md:items-start"
           >
             <h4 className="text-lg font-semibold text-white">Services</h4>
-            <ul className="space-y-4">
+            <ul className="space-y-4 w-full">
               {services.map((service) => (
                 <motion.li 
                   key={service}
-                  className="text-gray-400 hover:text-white transition-colors cursor-pointer flex items-center space-x-2 group"
-                  whileHover={{ x: 4 }}
+                  className="flex justify-center md:justify-start"
                 >
-                  <span>{service}</span>
-                  <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                  <motion.span
+                    className="text-gray-400 hover:text-white transition-colors cursor-pointer flex items-center space-x-2 group"
+                    whileHover={{ x: 4 }}
+                  >
+                    <span>{service}</span>
+                    <ArrowRight className="w-4 h-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                  </motion.span>
                 </motion.li>
               ))}
             </ul>
@@ -121,12 +122,12 @@ export default function Footer() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="space-y-6"
+            className="space-y-6 flex flex-col items-center md:items-start"
           >
             <h4 className="text-lg font-semibold text-white">Contact Us</h4>
-            <ul className="space-y-4">
+            <ul className="space-y-4 w-full">
               {contactInfo.map((item) => (
-                <motion.li key={item.text}>
+                <motion.li key={item.text} className="flex justify-center md:justify-start">
                   <motion.a
                     href={item.href}
                     className="text-gray-400 hover:text-white flex items-center space-x-3 group transition-colors"
@@ -143,11 +144,11 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="mt-16 pt-8 border-t border-gray-800">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
             <div className="text-gray-400 text-sm">
-              &copy; {new Date().getFullYear()} NeuralFlow AI. All rights reserved.
+              &copy; {new Date().getFullYear()} TopEdge AI. All rights reserved.
             </div>
-            <div className="flex items-center gap-6">
+            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
               <a href="/privacy" className="text-gray-400 hover:text-white text-sm transition-colors">
                 Privacy Policy
               </a>

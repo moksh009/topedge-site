@@ -123,13 +123,13 @@ const DevelopmentProcess = () => {
               >
                 {/* Step Number */}
                 <motion.div 
-                  className="absolute -top-16 left-0 right-0"
+                  className="absolute -top-16 left-0 right-0 text-center"
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5 }}
                 >
-                  <div className={`text-8xl font-bold bg-gradient-to-r ${step.color} bg-clip-text text-transparent`}>
+                  <div className={`text-8xl font-bold bg-gradient-to-r ${step.color} bg-clip-text text-transparent inline-block mx-auto`}>
                     {step.number}
                   </div>
                 </motion.div>

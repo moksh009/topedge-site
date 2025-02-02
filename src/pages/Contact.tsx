@@ -1,7 +1,8 @@
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 import { Loader2, Send, CheckCircle2, XCircle, Building2, ArrowRight, Mail, Phone, User, Briefcase } from 'lucide-react';
-import emailjs from '@emailjs/browser';
+import { emailService } from '../services/emailService';
+import { toast } from 'react-hot-toast';
 
 const Contact = () => {
   const formRef = useRef<HTMLFormElement>(null);
@@ -38,31 +39,37 @@ const Contact = () => {
     if (!formRef.current) return;
 
     setIsSubmitting(true);
-    setSubmitStatus('idle');
 
     try {
-      await emailjs.send(
-        'service_5fndngs',
-        'template_ks6yblh',
-        {
-          from_name: formRef.current.user_name.value,
-          company_name: formRef.current.company_name.value,
-          to_name: "Moksh",
-          from_email: formRef.current.user_email.value,
-          phone: formRef.current.phone.value,
-          subject: formRef.current.subject.value,
-          message: formRef.current.message.value,
-          reply_to: formRef.current.user_email.value,
-        },
-        'n--Yx3vL8ch_WR7vO'
-      );
-      setSubmitStatus('success');
+      const formData = {
+        name: formRef.current.user_name.value,
+        email: formRef.current.user_email.value,
+        phone: formRef.current.phone.value,
+        companyName: formRef.current.company_name.value,
+        subject: formRef.current.subject.value,
+        message: formRef.current.message.value,
+      };
+
+      // Validate required fields
+      if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+        toast.error('Please fill in all required fields');
+        return;
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        toast.error('Please enter a valid email address');
+        return;
+      }
+
+      await emailService.sendContactEmails(formData);
+      
       formRef.current.reset();
-      setTimeout(() => setSubmitStatus('idle'), 3000);
+      toast.success('Message sent successfully! We will get back to you soon.');
     } catch (error) {
-      console.error('Email send failed:', error);
-      setSubmitStatus('error');
-      setTimeout(() => setSubmitStatus('idle'), 3000);
+      console.error('Failed to send message:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to send message. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

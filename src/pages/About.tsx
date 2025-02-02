@@ -40,7 +40,7 @@ const About: React.FC = () => {
     <main className="bg-black min-h-screen relative">
       {/* Progress Bar */}
       <motion.div
-        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-600 to-blue-500 transform origin-left z-50"
+        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#0A84FF] to-[#5E5CE6] transform origin-left z-50"
         style={{ scaleX: scrollYProgress }}
       />
 
@@ -69,34 +69,9 @@ const About: React.FC = () => {
         <AboutStats />
       </div>
 
-      {/* Awards Section - Slide from Right */}
-      {/* <div className="animate-on-scroll slide-from-right">
-        <AboutAwards />
-      </div> */}
-
       {/* Team Section - Blur In */}
       <div className="animate-on-scroll blur-in">
         <AboutTeam />
-      </div>
-
-      {/* Locations Section - Fade Slide Up */}
-      {/* <div className="animate-on-scroll fade-slide-up">
-        <AboutLocations />
-      </div> */}
-
-      {/* Floating Navigation Dots */}
-      <div className="fixed right-8 top-1/2 transform -translate-y-1/2 space-y-4 z-40">
-        {['hero', 'mission', 'values', 'timeline', 'stats', 'awards', 'team', 'locations'].map((section, index) => (
-          <motion.a
-            key={section}
-            href={`#${section}`}
-            className="block w-3 h-3 rounded-full bg-white/20 hover:bg-white/50 transition-colors duration-300"
-            whileHover={{ scale: 1.5 }}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.1 }}
-          />
-        ))}
       </div>
     </main>
   );

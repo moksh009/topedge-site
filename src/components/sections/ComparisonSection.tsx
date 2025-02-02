@@ -72,7 +72,7 @@ export const ComparisonSection = () => {
       const currentMessage = messages[activeMessageIndex];
       setIsTyping(true);
       setTypedText('');
-      
+
       let currentText = '';
       const totalDuration = currentMessage.typingDuration || 1000;
       const intervalTime = totalDuration / currentMessage.content.length;
@@ -81,13 +81,13 @@ export const ComparisonSection = () => {
         if (currentText.length < currentMessage.content.length) {
           currentText = currentMessage.content.slice(0, currentText.length + 1);
           setTypedText(currentText);
-        } else {
+      } else {
           clearInterval(typingInterval);
-          setIsTyping(false);
-          setTimeout(() => {
-            setActiveMessageIndex(prev => prev + 1);
-          }, 1000);
-        }
+        setIsTyping(false);
+        setTimeout(() => {
+          setActiveMessageIndex(prev => prev + 1);
+      }, 1000);
+    }
       }, intervalTime);
 
       return () => clearInterval(typingInterval);
@@ -167,16 +167,16 @@ export const ComparisonSection = () => {
                 {/* Avatar */}
                 <div className={`order-${message.type === 'ai' ? '2' : '1'}`}>
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                    message.type === 'ai' 
+                      message.type === 'ai' 
                       ? 'bg-gradient-to-r from-purple-600 to-blue-600' 
                       : 'bg-gradient-to-r from-gray-700 to-gray-600'
-                  }`}>
+                    }`}>
                     {message.type === 'ai' ? (
                       <Bot className="w-6 h-6 text-white" />
                     ) : (
                       <User className="w-6 h-6 text-white" />
                     )}
-                  </div>
+                    </div>
                 </div>
 
                 {/* Message Bubble */}
@@ -205,13 +205,13 @@ export const ComparisonSection = () => {
                       />
                     )}
                   </div>
-                  
+
                   {/* AI Badge */}
                   {message.type === 'ai' && (
                     <div className="absolute -top-3 right-4 px-2 py-1 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center gap-1">
                       <Sparkles className="w-3 h-3 text-white" />
                       <span className="text-xs font-semibold text-white">AI</span>
-                    </div>
+                  </div>
                   )}
                 </motion.div>
               </motion.div>

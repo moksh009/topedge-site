@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useRef } from 'react';
-import { ChevronRight, Coins, CreditCard, Gem, Crown, Wallet, Sparkles, Star } from 'lucide-react';
+import { ChevronRight, Coins, CreditCard, Gem, Crown, Wallet, Sparkles, Star, PhoneCall } from 'lucide-react';
 import { CyberButton } from '../../ui/CyberButton';
 
 const PricingHero = () => {
@@ -261,13 +261,13 @@ const PricingHero = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Main Heading with enhanced animation */}
         <motion.div
-          className="relative inline-block mb-8"
+          className="relative inline-block mb-8 sm:mb-12 md:mb-16"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
         >
           <motion.h1 
-            className="text-6xl md:text-7xl font-bold leading-tight relative z-10"
+            className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl 2xl:text-9xl font-bold leading-[1.1] relative z-10"
             style={{ y, opacity }}
           >
             <motion.span 
@@ -286,9 +286,9 @@ const PricingHero = () => {
             >
               Pricing Plans
             </motion.span>
-            <br />
+            <br className="hidden sm:block" />
             <motion.span
-              className="inline-block bg-gradient-to-r from-purple-400 via-yellow-200 to-white bg-clip-text text-transparent"
+              className="inline-block bg-gradient-to-r from-purple-400 via-yellow-200 to-white bg-clip-text text-transparent mt-2 sm:mt-0"
               animate={{
                 backgroundPosition: ['100% 50%', '0% 50%', '100% 50%'],
               }}
@@ -324,7 +324,7 @@ const PricingHero = () => {
         </motion.div>
 
         <motion.p 
-          className="text-gray-300 text-xl max-w-3xl mx-auto mb-12"
+          className="text-lg sm:text-xl md:text-2xl lg:text-3xl max-w-3xl mx-auto mb-12 sm:mb-16 md:mb-20"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5 }}
@@ -347,67 +347,243 @@ const PricingHero = () => {
 
         {/* CTA Buttons with enhanced animations */}
         <motion.div 
-          className="flex flex-col sm:flex-row items-center justify-center gap-8"
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 md:gap-8"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.7 }}
         >
           {/* View Plans Button */}
           <motion.button
-            className="group relative rounded-full px-8 py-4 bg-purple-600 text-white font-semibold text-lg overflow-hidden"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover="hover"
+            whileTap="tap"
+            variants={{
+              hover: { scale: 1.05 },
+              tap: { scale: 0.95 }
+            }}
+            className="group relative rounded-full"
             onClick={() => navigate('/pricing')}
           >
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-purple-600 via-purple-500 to-purple-600"
-              animate={{
-                x: ['-100%', '100%'],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "linear",
-              }}
-              style={{
-                opacity: 0.5,
-              }}
-            />
-            <motion.div
-              className="relative z-10 flex items-center gap-2"
-              animate={{
-                x: [0, 5, 0],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            >
-              View Plans
-              <ChevronRight className="w-5 h-5" />
-            </motion.div>
+            {/* Button Container */}
+            <div className="relative px-8 py-4 rounded-full">
+              {/* Outer Glow */}
+              <div className="absolute inset-0 bg-gradient-to-r from-yellow-600/30 via-amber-500/30 to-yellow-600/30 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full" />
+              
+              {/* Moving Particles Background */}
+              <div className="absolute inset-0 overflow-hidden rounded-full">
+                {[...Array(5)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute w-1 h-1 bg-yellow-400 rounded-full"
+                    animate={{
+                      x: [
+                        Math.random() * 200,
+                        Math.random() * -200,
+                        Math.random() * 200
+                      ],
+                      y: [
+                        Math.random() * 100,
+                        Math.random() * -100,
+                        Math.random() * 100
+                      ],
+                      scale: [0, 1.5, 0],
+                      opacity: [0, 1, 0]
+                    }}
+                    transition={{
+                      duration: Math.random() * 3 + 2,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }}
+                    style={{
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* Main Button Background */}
+              <div className="absolute inset-0 bg-black border border-yellow-500/50 group-hover:border-yellow-400 rounded-full" />
+              
+              {/* Animated Border Lines */}
+              <div className="absolute inset-0 rounded-full overflow-hidden">
+                <motion.div
+                  className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-yellow-500 to-transparent"
+                  animate={{
+                    x: [-100, 100, -100],
+                    opacity: [0.3, 1, 0.3]
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                />
+                <motion.div
+                  className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-amber-500 to-transparent"
+                  animate={{
+                    x: [100, -100, 100],
+                    opacity: [0.3, 1, 0.3]
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                />
+              </div>
+
+              {/* Button Content */}
+              <div className="relative flex items-center gap-3">
+                <div className="relative flex items-center gap-3">
+                  <CreditCard className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-400 group-hover:text-white transition-colors duration-300" />
+                  <span className="text-base sm:text-lg font-medium bg-gradient-to-r from-white via-yellow-200 to-white bg-clip-text text-transparent">
+                    View Plans
+                  </span>
+                  <motion.div
+                    className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-yellow-400 to-transparent"
+                    animate={{
+                      scaleX: [0, 1, 0],
+                      opacity: [0, 1, 0]
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  />
+                </div>
+                <motion.div
+                  animate={{
+                    x: [0, 5, 0],
+                    y: [0, -2, 0]
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                >
+                  <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-400 group-hover:text-white transition-colors duration-300" />
+                </motion.div>
+              </div>
+            </div>
           </motion.button>
 
           {/* Contact Sales Button */}
           <motion.button
-            className="group relative rounded-full px-8 py-4 bg-transparent text-white font-semibold text-lg border border-purple-500/30"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover="hover"
+            whileTap="tap"
+            variants={{
+              hover: { scale: 1.05 },
+              tap: { scale: 0.95 }
+            }}
+            className="group relative rounded-full"
             onClick={() => navigate('/contact')}
           >
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-purple-600/0 via-purple-500/10 to-purple-600/0"
-              animate={{
-                opacity: [0, 0.5, 0],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            />
-            <span className="relative z-10">Contact Sales</span>
+            {/* Button Container */}
+            <div className="relative px-8 py-4 rounded-full">
+              {/* Outer Glow */}
+              <div className="absolute inset-0 bg-gradient-to-r from-amber-600/30 via-yellow-500/30 to-amber-600/30 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full" />
+              
+              {/* Moving Particles Background */}
+              <div className="absolute inset-0 overflow-hidden rounded-full">
+                {[...Array(5)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute w-1 h-1 bg-amber-400 rounded-full"
+                    animate={{
+                      x: [
+                        Math.random() * 200,
+                        Math.random() * -200,
+                        Math.random() * 200
+                      ],
+                      y: [
+                        Math.random() * 100,
+                        Math.random() * -100,
+                        Math.random() * 100
+                      ],
+                      scale: [0, 1.5, 0],
+                      opacity: [0, 1, 0]
+                    }}
+                    transition={{
+                      duration: Math.random() * 3 + 2,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }}
+                    style={{
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* Main Button Background */}
+              <div className="absolute inset-0 bg-black border border-amber-500/50 group-hover:border-amber-400 rounded-full" />
+              
+              {/* Animated Border Lines */}
+              <div className="absolute inset-0 rounded-full overflow-hidden">
+                <motion.div
+                  className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-amber-500 to-transparent"
+                  animate={{
+                    x: [-100, 100, -100],
+                    opacity: [0.3, 1, 0.3]
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                />
+                <motion.div
+                  className="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-yellow-500 to-transparent"
+                  animate={{
+                    x: [100, -100, 100],
+                    opacity: [0.3, 1, 0.3]
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                />
+              </div>
+
+              {/* Button Content */}
+              <div className="relative flex items-center gap-3">
+                <div className="relative flex items-center gap-3">
+                  <PhoneCall className="w-5 h-5 sm:w-6 sm:h-6 text-amber-400 group-hover:text-white transition-colors duration-300" />
+                  <span className="text-base sm:text-lg font-medium bg-gradient-to-r from-white via-amber-200 to-white bg-clip-text text-transparent">
+                    Contact Sales
+                  </span>
+                  <motion.div
+                    className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-amber-400 to-transparent"
+                    animate={{
+                      scaleX: [0, 1, 0],
+                      opacity: [0, 1, 0]
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  />
+                </div>
+                <motion.div
+                  animate={{
+                    x: [0, 5, 0],
+                    y: [0, -2, 0]
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                >
+                  <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-amber-400 group-hover:text-white transition-colors duration-300" />
+                </motion.div>
+              </div>
+            </div>
           </motion.button>
         </motion.div>
       </div>

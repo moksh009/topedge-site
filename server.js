@@ -11,158 +11,106 @@ const __dirname = dirname(__filename);
 dotenv.config();
 
 const app = express();
+const port = process.env.PORT || 3001;
 
-// Configure CORS
+// Middleware
 app.use(cors({
-  origin: 'http://localhost:5173', // Your Vite dev server
-  methods: ['GET', 'POST'],
-  credentials: true
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://topedge.vercel.app', 'https://www.topedge.com'] 
+    : 'http://localhost:5173'
 }));
-
 app.use(express.json());
 
-// Create transporter using Gmail credentials
+// Create transporter
 const transporter = nodemailer.createTransport({
-  service: "Gmail",
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
+  service: 'gmail',
   auth: {
-    user: process.env.NEXT_PUBLIC_EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD
-  }
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD,
+  },
 });
 
-// Test email configuration
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("Error verifying email configuration:", error);
-  } else {
-    console.log("Server is ready to send emails");
-  }
-});
-
-// API endpoint for sending user emails
-app.post('/api/send-user-email', async (req, res) => {
+// Contact Form - User Email
+app.post('/api/send-contact-user-email', async (req, res) => {
   try {
-    const { name, email, service, date, time, duration, notes } = req.body;
-    console.log('Received email request for:', email);
+    const { name, email, phone, companyName, subject, message } = req.body;
 
-    if (!email || !name) {
-      return res.status(400).json({ message: 'Email and name are required' });
-    }
-
-    // HTML template for user email
-    const htmlContent = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h1 style="color: #6d28d9;">Booking Confirmed!</h1>
-        <p>Dear ${name},</p>
-        <p>Thank you for booking a consultation with TopEdge AI. Here are your booking details:</p>
-        
-        <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
-          <p><strong>Service:</strong> ${service}</p>
-          <p><strong>Date:</strong> ${date}</p>
-          <p><strong>Time:</strong> ${time}</p>
-          <p><strong>Duration:</strong> ${duration}</p>
-          <p><strong>Notes:</strong> ${notes || 'No additional notes'}</p>
-        </div>
-        
-        <p>We will send you a Google Meet link before the meeting.</p>
-        <p>Best regards,<br>TopEdge AI Team</p>
-      </div>
-    `;
-
-    // Configure email options
     const mailOptions = {
-      from: {
-        name: 'TopEdge AI',
-        address: process.env.NEXT_PUBLIC_EMAIL_USER
-      },
+      from: process.env.EMAIL_USER,
       to: email,
-      subject: 'Booking Confirmation - TopEdge AI',
-      html: htmlContent,
-      replyTo: process.env.NEXT_PUBLIC_EMAIL_USER
+      subject: 'Thank you for contacting TopEdge',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #0A84FF;">Thank You for Contacting TopEdge</h2>
+          <p>Dear ${name},</p>
+          <p>Thank you for reaching out to us. We have received your message and our team will get back to you shortly.</p>
+          
+          <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">
+            <h3 style="color: #0A84FF;">Your Message Details:</h3>
+            <p><strong>Subject:</strong> ${subject}</p>
+            <p><strong>Message:</strong> ${message}</p>
+            ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
+            ${companyName ? `<p><strong>Company:</strong> ${companyName}</p>` : ''}
+          </div>
+          
+          <p>We typically respond within 24-48 business hours.</p>
+          
+          <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+            <p style="color: #666;">Best Regards,</p>
+            <p style="color: #666;">The TopEdge Team</p>
+          </div>
+        </div>
+      `,
     };
 
-    // Send email
-    const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully:', info.response);
-
+    await transporter.sendMail(mailOptions);
     res.status(200).json({ message: 'Email sent successfully' });
   } catch (error) {
     console.error('Error sending email:', error);
-    res.status(500).json({ 
-      message: 'Failed to send email', 
-      error: error.message,
-      details: error.response || 'No additional details'
-    });
+    res.status(500).json({ message: 'Failed to send email' });
   }
 });
 
-// API endpoint for sending admin emails
-app.post('/api/send-admin-email', async (req, res) => {
+// Contact Form - Admin Email
+app.post('/api/send-contact-admin-email', async (req, res) => {
   try {
-    const { name, email, phone, service, date, time, duration, notes } = req.body;
-    console.log('Received admin notification request for booking by:', name);
+    const { name, email, phone, companyName, subject, message } = req.body;
 
-    if (!email || !name) {
-      return res.status(400).json({ message: 'Email and name are required' });
-    }
-
-    // HTML template for admin email
-    const htmlContent = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h1 style="color: #6d28d9;">New Booking Notification</h1>
-        <p>A new consultation has been booked with the following details:</p>
-        
-        <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
-          <p><strong>Client Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Phone:</strong> ${phone || 'Not provided'}</p>
-          <p><strong>Service:</strong> ${service}</p>
-          <p><strong>Date:</strong> ${date}</p>
-          <p><strong>Time:</strong> ${time}</p>
-          <p><strong>Duration:</strong> ${duration}</p>
-          <p><strong>Notes:</strong> ${notes || 'No additional notes'}</p>
-        </div>
-        
-        <p>Please schedule the Google Meet and send the link to the client.</p>
-      </div>
-    `;
-
-    // Configure email options
     const mailOptions = {
-      from: {
-        name: 'TopEdge AI Booking System',
-        address: process.env.NEXT_PUBLIC_EMAIL_USER
-      },
-      to: process.env.NEXT_PUBLIC_EMAIL_USER, // Send to admin email
-      subject: `New Booking - ${service} with ${name}`,
-      html: htmlContent
+      from: process.env.EMAIL_USER,
+      to: 'acctopedge@gmail.com',
+      subject: `New Contact Form Submission: ${subject}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #0A84FF;">New Contact Form Submission</h2>
+          
+          <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">
+            <h3 style="color: #0A84FF;">Contact Details:</h3>
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            ${phone ? `<p><strong>Phone:</strong> ${phone}</p>` : ''}
+            ${companyName ? `<p><strong>Company:</strong> ${companyName}</p>` : ''}
+            <p><strong>Subject:</strong> ${subject}</p>
+            <p><strong>Message:</strong> ${message}</p>
+          </div>
+          
+          <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+            <p>This is an automated notification. Please respond to the inquiry within 24-48 hours.</p>
+            <p>You can reply directly to the sender at: ${email}</p>
+          </div>
+        </div>
+      `,
     };
 
-    // Send email
-    const info = await transporter.sendMail(mailOptions);
-    console.log('Admin notification sent successfully:', info.response);
-
+    await transporter.sendMail(mailOptions);
     res.status(200).json({ message: 'Admin notification sent successfully' });
   } catch (error) {
     console.error('Error sending admin notification:', error);
-    res.status(500).json({ 
-      message: 'Failed to send admin notification', 
-      error: error.message,
-      details: error.response || 'No additional details'
-    });
+    res.status(500).json({ message: 'Failed to send admin notification' });
   }
 });
 
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'OK' });
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`Email server configured with: ${process.env.NEXT_PUBLIC_EMAIL_USER}`);
+// Start server
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });

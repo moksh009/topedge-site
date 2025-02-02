@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useMotionValue, useTransform, LayoutGroup } from 'framer-motion';
-import { Bot, Send, CheckCircle, Calendar as CalendarIcon, Star, Clock, Mail, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Bot, Send, CheckCircle, Calendar as CalendarIcon, Star, Clock, Mail, ArrowRight, ArrowLeft, ListChecks, User, Phone, Building2, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -282,44 +282,50 @@ const FormInput = ({ label, value, onChange, type = 'text', placeholder, require
 );
 
 const Calendar = ({ selectedDate, onSelect }: { selectedDate: Date | undefined; onSelect: SelectSingleEventHandler }) => {
+  const selectedModifier = selectedDate ? { selected: selectedDate } : {};
+  
   return (
-    <div className="calendar-wrapper p-4 bg-[#0a0a0a] rounded-lg">
+    <div className="calendar-wrapper p-2 sm:p-4 bg-[#0a0a0a] rounded-lg overflow-x-auto">
+      <style jsx global>{`
+        .rdp {
+          --rdp-cell-size: clamp(30px, 8vw, 40px);
+          margin: 0;
+        }
+        @media (max-width: 640px) {
+          .rdp-month {
+            width: 100%;
+          }
+          .rdp-table {
+            width: 100%;
+            max-width: 100%;
+          }
+        }
+      `}</style>
       <DayPicker
         mode="single"
         selected={selectedDate}
         onSelect={onSelect}
-        modifiers={{
-          selected: selectedDate,
-        }}
-        modifiersStyles={{
-          selected: {
-            backgroundColor: '#7c3aed',
-            color: 'white',
-            borderRadius: '0.5rem',
-          },
+        modifiers={selectedModifier}
+        modifiersClassNames={{
+          selected: 'bg-purple-600 text-white rounded-lg',
+          today: 'text-purple-600 font-bold',
         }}
         styles={{
           caption: { color: 'white' },
           head_cell: { color: '#9ca3af' },
           cell: { 
-            margin: '0.2rem',
+            margin: '0.1rem',
             color: 'white',
           },
           day: {
-            margin: '0.2rem',
+            margin: '0.1rem',
             borderRadius: '0.5rem',
             transition: 'all 0.2s',
+            width: 'var(--rdp-cell-size)',
+            height: 'var(--rdp-cell-size)',
           },
           nav_button: { 
             color: 'white',
-          },
-          day_selected: {
-            backgroundColor: '#7c3aed !important',
-            color: 'white !important',
-          },
-          day_today: {
-            color: '#7c3aed !important',
-            fontWeight: 'bold',
           }
         }}
         fromDate={new Date()}
@@ -329,10 +335,87 @@ const Calendar = ({ selectedDate, onSelect }: { selectedDate: Date | undefined; 
   );
 };
 
+const GlowingOrbs = () => {
+  return (
+    <div className="fixed inset-0 overflow-hidden">
+      {/* Large purple orb */}
+      <motion.div
+        initial={{ x: "0%", y: "0%" }}
+        animate={{ 
+          x: ["0%", "25%", "0%", "-25%", "0%"],
+          y: ["0%", "25%", "50%", "25%", "0%"],
+          scale: [1, 1.2, 1, 1.2, 1]
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        className="absolute -top-[20%] -left-[10%] w-[80%] h-[80%]"
+      >
+        <div className="w-full h-full rounded-full bg-gradient-to-br from-purple-500/30 via-fuchsia-500/20 to-blue-500/30 blur-[120px] animate-pulse" />
+      </motion.div>
+
+      {/* Blue orb */}
+      <motion.div
+        initial={{ x: "100%", y: "0%" }}
+        animate={{ 
+          x: ["100%", "75%", "85%", "75%", "100%"],
+          y: ["0%", "25%", "50%", "75%", "0%"],
+          scale: [1, 1.1, 1, 1.1, 1]
+        }}
+        transition={{
+          duration: 25,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        className="absolute top-[10%] right-[-20%] w-[70%] h-[70%]"
+      >
+        <div className="w-full h-full rounded-full bg-gradient-to-bl from-blue-500/30 via-cyan-500/20 to-purple-500/30 blur-[120px] animate-pulse" />
+      </motion.div>
+
+      {/* Pink accent orb */}
+      <motion.div
+        initial={{ x: "50%", y: "100%" }}
+        animate={{ 
+          x: ["50%", "30%", "50%", "70%", "50%"],
+          y: ["100%", "60%", "50%", "60%", "100%"],
+          scale: [1, 1.2, 1, 1.2, 1]
+        }}
+        transition={{
+          duration: 30,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        className="absolute -bottom-[20%] left-[20%] w-[60%] h-[60%]"
+      >
+        <div className="w-full h-full rounded-full bg-gradient-to-tr from-pink-500/30 via-purple-500/20 to-indigo-500/30 blur-[120px] animate-pulse" />
+      </motion.div>
+
+      {/* Additional small orbs for depth */}
+      <motion.div
+        animate={{ 
+          scale: [1, 1.2, 1],
+          opacity: [0.3, 0.5, 0.3]
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        className="absolute top-[40%] left-[30%] w-[20%] h-[20%]"
+      >
+        <div className="w-full h-full rounded-full bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20 blur-[80px]" />
+      </motion.div>
+    </div>
+  );
+};
+
 const Booking = () => {
   const [selectedServices, setSelectedServices] = useState<Service[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [selectedTime, setSelectedTime] = useState<string>('');
+  const [totalDuration, setTotalDuration] = useState<string>('');
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -342,6 +425,7 @@ const Booking = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const progressBarRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     if (progressBarRef.current) {
@@ -349,6 +433,15 @@ const Booking = () => {
       progressBarRef.current.style.width = `${progress}%`;
     }
   }, [currentStep]);
+
+  useEffect(() => {
+    // Calculate total duration whenever selected services change
+    const duration = selectedServices.reduce((total, service) => {
+      const duration = parseInt(service.duration);
+      return total + (isNaN(duration) ? 0 : duration);
+    }, 0);
+    setTotalDuration(`${duration} hour${duration !== 1 ? 's' : ''}`);
+  }, [selectedServices]);
 
   const handleServiceSelect = (service: Service) => {
     setSelectedServices(prev => {
@@ -361,7 +454,7 @@ const Booking = () => {
     });
   };
 
-  const handleDateSelect = (date: Date | undefined) => {
+  const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
   };
 
@@ -380,45 +473,42 @@ const Booking = () => {
     );
   };
 
-  const handleSubmit = async () => {
-    if (!isFormValid()) {
-      toast.error('Please fill in all required fields');
-      return;
-    }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formRef.current || !selectedDate) return;
 
     setIsSubmitting(true);
 
     try {
-      if (!selectedDate) return;
-
-      const totalDuration = selectedServices.reduce((total, service) => {
-        const duration = parseInt(service.duration);
-        return total + (isNaN(duration) ? 0 : duration);
-      }, 0);
-
-      await emailService.sendBookingEmails({
-        name,
-        email,
-        phone,
-        companyName,
-        additionalInfo,
-        services: selectedServices.map(service => ({
-          name: service.name,
-          description: service.description,
-          duration: service.duration,
-          price: service.price
-        })),
+      const formData = {
+        name: formRef.current.user_name.value,
+        email: formRef.current.user_email.value,
+        phone: formRef.current.phone.value,
+        services: selectedServices,
         date: selectedDate,
         time: selectedTime,
-        duration: `${totalDuration} hour${totalDuration > 1 ? 's' : ''}`,
-        notes: `Selected Services: ${selectedServices.map(s => s.name).join(', ')}`
-      });
+        duration: totalDuration,
+        notes: formRef.current.notes?.value || '',
+      };
 
+      // Validate required fields
+      if (!formData.name || !formData.email || !formData.services.length || !formData.time) {
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        setIsSubmitting(false);
+        return;
+      }
+
+      await emailService.sendBookingEmails(formData);
       setIsSuccess(true);
-      toast.success('Booking confirmed! Check your email for details.');
+      
     } catch (error) {
-      console.error('Booking error:', error);
-      toast.error('Failed to send confirmation email. Please try again.');
+      console.error('Booking failed:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -458,47 +548,105 @@ const Booking = () => {
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="min-h-screen bg-black flex items-center justify-center"
+        className="min-h-screen bg-black pt-28 pb-20 px-4 sm:px-6 overflow-y-auto"
       >
-        <div className="max-w-2xl mx-auto px-4 py-16 text-center">
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="bg-[#0a0a0a] rounded-2xl p-8 border border-[#1a1a1a] backdrop-blur-xl relative"
-          >
-            <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-6" />
-            <h2 className="text-3xl font-bold text-white mb-4">Booking Confirmed!</h2>
-            <p className="text-gray-400 mb-8">
-              Thank you for booking with us! We've sent a confirmation email with all the details.
-              Our team will be in touch with you shortly.
-            </p>
-            <div className="space-y-4">
-              <h3 className="text-xl font-semibold text-white mb-4">Booking Details</h3>
-              <div className="space-y-2 text-left bg-[#0f0f0f] p-6 rounded-xl">
-                <p className="text-gray-400">
-                  <span className="font-medium text-white">Services:</span>{' '}
-                  {selectedServices.map(s => s.name).join(', ')}
-                </p>
-                <p className="text-gray-400">
-                  <span className="font-medium text-white">Date:</span>{' '}
-                  {selectedDate ? format(selectedDate, 'MMMM d, yyyy') : ''}
-                </p>
-                <p className="text-gray-400">
-                  <span className="font-medium text-white">Time:</span>{' '}
-                  {selectedTime}
-                </p>
-              </div>
-            </div>
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={resetForm}
-              className="mt-8 px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium"
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="max-w-3xl w-full mx-auto bg-[#0a0a0a] rounded-2xl p-6 sm:p-8 md:p-12 border border-[#1a1a1a] backdrop-blur-xl relative overflow-hidden"
+        >
+          {/* Background gradient */}
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-blue-500/10" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/20 via-transparent to-transparent" />
+          
+          {/* Content */}
+          <div className="relative z-10">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", delay: 0.2 }}
+              className="w-24 h-24 mx-auto mb-8 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 flex items-center justify-center relative"
             >
-              Book Another Service
-            </motion.button>
-          </motion.div>
-        </div>
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 opacity-20 blur-xl" />
+              <CheckCircle className="w-12 h-12 text-white relative z-10" />
+            </motion.div>
+
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="text-center mb-8"
+            >
+              <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-white via-purple-400 to-blue-400 bg-clip-text text-transparent">
+                Booking Confirmed!
+              </h2>
+              <p className="text-gray-400 text-lg leading-relaxed max-w-2xl mx-auto">
+                Thank you for booking with us! We've sent a confirmation email with all the details.
+                Our team will be in touch with you shortly to confirm your appointment.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              className="bg-white/5 rounded-xl p-6 mb-8 border border-white/10"
+            >
+              <h3 className="text-xl font-semibold text-white mb-4">Booking Details</h3>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <CalendarIcon className="w-5 h-5 text-purple-400 mt-1" />
+                  <div>
+                    <p className="text-white font-medium">Date & Time</p>
+                    <p className="text-gray-400">
+                      {selectedDate ? format(selectedDate, 'MMMM d, yyyy') : ''} at {selectedTime}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Clock className="w-5 h-5 text-purple-400 mt-1" />
+                  <div>
+                    <p className="text-white font-medium">Duration</p>
+                    <p className="text-gray-400">{totalDuration}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <ListChecks className="w-5 h-5 text-purple-400 mt-1" />
+                  <div>
+                    <p className="text-white font-medium">Services</p>
+                    <p className="text-gray-400">
+                      {selectedServices.map(s => s.name).join(', ')}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center"
+            >
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={resetForm}
+                className="px-8 py-3 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 text-white font-medium hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-300"
+              >
+                Book Another Session
+              </motion.button>
+              <motion.a
+                href="/"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-3 rounded-full border border-white/10 text-white font-medium hover:bg-white/5 transition-all duration-300"
+              >
+                Return Home
+              </motion.a>
+            </motion.div>
+          </div>
+        </motion.div>
       </motion.div>
     );
   }
@@ -508,186 +656,316 @@ const Booking = () => {
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="min-h-screen bg-[#111111] pt-20 md:pt-24 pb-12 px-4 sm:px-6"
+        className="min-h-screen bg-black relative overflow-hidden pt-24 sm:pt-28 pb-16 sm:pb-20 px-3 sm:px-6"
       >
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-8 md:mb-12">
-            <motion.h1 
-              initial={{ y: -20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4"
+        {/* Glowing Orbs Background */}
+        <GlowingOrbs />
+
+        {/* Background Elements */}
+        <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-900/10 to-black" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/20 via-transparent to-transparent" />
+          <div className="absolute inset-0 backdrop-blur-[100px]" />
+          {/* Grid pattern overlay */}
+          <div 
+            className="absolute inset-0 opacity-20"
+            style={{
+              backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.15) 1px, transparent 0)`,
+              backgroundSize: '40px 40px'
+            }}
+          />
+        </div>
+
+        <div className="relative z-10 container mx-auto">
+          <div className="max-w-5xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ 
+                duration: 0.8,
+                ease: [0.04, 0.62, 0.23, 0.98]
+              }}
+              className="text-center mb-16 sm:mb-20"
             >
-              Book Your Consultation
-            </motion.h1>
-            <motion.p 
-              initial={{ y: -20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto"
+              <motion.h1 
+                className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 sm:mb-8 bg-gradient-to-r from-white via-purple-400 to-blue-400 bg-clip-text text-transparent"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.8 }}
+              >
+                Book a Service
+              </motion.h1>
+              <motion.p 
+                className="text-xl sm:text-2xl text-gray-400 max-w-3xl mx-auto leading-relaxed px-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.8 }}
+              >
+                Choose your preferred services and schedule a time that works for you.
+                Let's create something amazing together.
+              </motion.p>
+            </motion.div>
+
+            <motion.form
+              ref={formRef}
+              onSubmit={handleSubmit}
+              className="space-y-6 sm:space-y-8 md:space-y-10 backdrop-blur-xl bg-white/5 p-4 sm:p-6 md:p-8 lg:p-10 rounded-2xl sm:rounded-3xl border border-white/10 shadow-2xl mx-2 sm:mx-4 md:mx-6"
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
             >
-              Choose your services and schedule a time that works best for you
-            </motion.p>
-          </div>
-
-          <div className="relative">
-            {/* Progress bar */}
-            <div className="h-1 bg-[#2a2a2a] rounded-full mb-8 mt-4">
-              <div
-                ref={progressBarRef}
-                className="h-full bg-gradient-to-r from-purple-600 to-blue-600 rounded-full transition-all duration-300 ease-out"
-              />
-            </div>
-
-            {/* Steps indicator */}
-            <div className="flex justify-center mb-8 space-x-4 md:space-x-8">
-              {[1, 2, 3].map((step) => (
-                <div
-                  key={step}
-                  className={`flex items-center ${
-                    currentStep >= step ? 'text-white' : 'text-gray-500'
-                  }`}
-                >
-                  <span className={`
-                    w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium
-                    ${currentStep >= step ? 'bg-gradient-to-r from-purple-600 to-blue-600' : 'bg-[#2a2a2a]'}
-                  `}>
-                    {step}
-                  </span>
-                  <span className="ml-2 text-sm hidden md:inline">
-                    {step === 1 ? 'Services' : step === 2 ? 'Schedule' : 'Details'}
-                  </span>
-                </div>
-              ))}
-            </div>
-
-            <div className="bg-[#1a1a1a] rounded-2xl p-4 md:p-8">
-              {currentStep === 1 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {services.map((service) => (
-                    <ServiceCard
+              {/* Services Selection */}
+              <div className="space-y-6">
+                <label className="block text-white text-lg sm:text-xl font-medium mb-6">Select Services *</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+                  {services.map((service, index) => (
+                    <motion.div
                       key={service.id}
-                      service={service}
-                      isSelected={selectedServices.some((s) => s.id === service.id)}
-                      onSelect={() => handleServiceSelect(service)}
-                    />
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 * index }}
+                      whileHover={{ 
+                        scale: 1.03,
+                        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)'
+                      }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => handleServiceSelect(service)}
+                      className={`
+                        relative cursor-pointer p-4 sm:p-6 rounded-2xl border-2 backdrop-blur-xl
+                        overflow-hidden group
+                        ${selectedServices.some(s => s.id === service.id)
+                          ? 'border-purple-500 bg-gradient-to-br from-purple-500/10 via-transparent to-blue-500/10'
+                          : 'border-white/10 bg-black/40 hover:bg-black/50'
+                        }
+                        transition-all duration-500 hover:shadow-2xl
+                      `}
+                    >
+                      {/* Glow effect */}
+                      <div className={`
+                        absolute inset-0 opacity-0 group-hover:opacity-100
+                        transition-opacity duration-500
+                        bg-gradient-to-br from-purple-500/20 via-transparent to-blue-500/20
+                        blur-xl
+                      `} />
+
+                      {/* Content wrapper */}
+                      <div className="relative z-10">
+                        {/* Icon section */}
+                        <div className={`
+                          inline-block mb-4 p-4 rounded-xl
+                          ${selectedServices.some(s => s.id === service.id)
+                            ? 'bg-gradient-to-br from-purple-500/20 to-blue-500/20'
+                            : 'bg-white/5'
+                          }
+                          transition-all duration-300 group-hover:scale-110
+                        `}>
+                          <span className="text-4xl">{service.icon}</span>
+                        </div>
+
+                        {/* Text content */}
+                        <div className="space-y-3">
+                          <h3 className="text-xl font-semibold text-white group-hover:text-purple-400 transition-colors">
+                            {service.name}
+                          </h3>
+                          <p className="text-gray-400 text-sm leading-relaxed min-h-[60px]">
+                            {service.description}
+                          </p>
+
+                          {/* Info badges */}
+                          <div className="flex items-center gap-3 pt-2">
+                            <div className="flex items-center gap-2 bg-white/5 px-3 py-2 rounded-full">
+                              <Clock className="w-4 h-4 text-purple-400" />
+                              <span className="text-sm text-gray-300">{service.duration}</span>
+                            </div>
+                            <div className="flex items-center gap-2 bg-white/5 px-3 py-2 rounded-full">
+                              <Star className="w-4 h-4 text-yellow-400" />
+                              <span className="text-sm text-gray-300">{service.rating}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
                   ))}
                 </div>
-              )}
-
-              {currentStep === 2 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div>
-                    <h3 className="text-white text-xl font-semibold mb-4">Select Date</h3>
-                    <Calendar selectedDate={selectedDate} onSelect={(date) => setSelectedDate(date)} />
-                  </div>
-                  <div>
-                    <h3 className="text-white text-xl font-semibold mb-4">Select Time</h3>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                      {availableTimes.map((time) => (
-                        <button
-                          key={time}
-                          onClick={() => handleTimeSelect(time)}
-                          className={`p-3 rounded-lg text-sm transition-all ${
-                            selectedTime === time
-                              ? 'bg-purple-600 text-white'
-                              : 'bg-[#1a1a1a] text-gray-300 hover:bg-[#2a2a2a]'
-                          }`}
-                        >
-                          {time}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {currentStep === 3 && (
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <FormInput
-                      label="Name"
-                      value={name}
-                      onChange={setName}
-                      placeholder="Your full name"
-                      required
-                    />
-                    <FormInput
-                      label="Email"
-                      value={email}
-                      onChange={setEmail}
-                      type="email"
-                      placeholder="Your email address"
-                      required
-                    />
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <FormInput
-                      label="Phone"
-                      value={phone}
-                      onChange={setPhone}
-                      type="tel"
-                      placeholder="Your phone number"
-                      required
-                    />
-                    <FormInput
-                      label="Company Name"
-                      value={companyName}
-                      onChange={setCompanyName}
-                      placeholder="Your company name (optional)"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-white text-sm font-medium mb-2">
-                      Additional Information
-                    </label>
-                    <textarea
-                      value={additionalInfo}
-                      onChange={(e) => setAdditionalInfo(e.target.value)}
-                      placeholder="Any additional details or requirements"
-                      className="w-full px-4 py-3 bg-[#1a1a1a] text-white rounded-lg border border-[#2a2a2a] focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors resize-vertical min-h-[100px]"
-                    />
-                  </div>
-                </div>
-              )}
-
-              <div className="flex justify-between mt-8">
-                {currentStep > 1 && (
-                  <button
-                    onClick={prevStep}
-                    className="flex items-center px-6 py-3 text-gray-300 hover:text-white transition-colors"
-                    disabled={isSubmitting}
-                  >
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    Back
-                  </button>
-                )}
-                <button
-                  onClick={currentStep === 3 ? handleSubmit : nextStep}
-                  disabled={isSubmitting}
-                  className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all ${
-                    isSubmitting
-                      ? 'bg-gray-600 cursor-not-allowed'
-                      : 'bg-gradient-to-r from-purple-600 to-blue-600 hover:opacity-90'
-                  } text-white ml-auto`}
-                >
-                  {isSubmitting ? (
-                    'Processing...'
-                  ) : currentStep === 3 ? (
-                    <>
-                      Confirm Booking
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </>
-                  ) : (
-                    <>
-                      Next Step
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </>
-                  )}
-                </button>
               </div>
-            </div>
+
+              {/* Date and Time Selection */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div className="space-y-4">
+                  <label className="block text-gray-300 text-sm font-medium mb-2">Select Date *</label>
+                  <div className="bg-black/50 rounded-xl border border-white/10 p-4 hover:border-purple-500/50 transition-colors duration-300">
+                    <Calendar selectedDate={selectedDate} onSelect={handleDateSelect} />
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <label className="block text-gray-300 text-sm font-medium mb-2">Select Time *</label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
+                    {availableTimes.map((time) => (
+                      <motion.button
+                        key={time}
+                        type="button"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => handleTimeSelect(time)}
+                        className={`
+                          p-2 sm:p-3 rounded-lg text-sm font-medium
+                          ${selectedTime === time
+                            ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg shadow-purple-500/25'
+                            : 'bg-black/50 border border-white/10 text-gray-300 hover:border-purple-500/50'
+                          }
+                          transition-all duration-300
+                        `}
+                      >
+                        {time}
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Personal Information */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-gray-300 text-sm font-medium">Name *</label>
+                  <motion.div 
+                    className="relative group"
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                  >
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-hover:text-purple-400 transition-colors" />
+                    <input
+                      type="text"
+                      name="user_name"
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="w-full bg-black/50 rounded-lg border border-white/10 px-4 py-3 pl-10 text-white placeholder:text-gray-500 
+                        focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent
+                        hover:border-purple-500/50 transition-all duration-300"
+                      placeholder="Your name"
+                    />
+                  </motion.div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-gray-300 text-sm font-medium">Email *</label>
+                  <motion.div 
+                    className="relative group"
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                  >
+                    <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-hover:text-purple-400 transition-colors" />
+                    <input
+                      type="email"
+                      name="user_email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full bg-black/50 rounded-lg border border-white/10 px-4 py-3 pl-10 text-white placeholder:text-gray-500 
+                        focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent
+                        hover:border-purple-500/50 transition-all duration-300"
+                      placeholder="Your email"
+                    />
+                  </motion.div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-gray-300 text-sm font-medium">Phone *</label>
+                  <motion.div 
+                    className="relative group"
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                  >
+                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-hover:text-purple-400 transition-colors" />
+                    <input
+                      type="tel"
+                      name="phone"
+                      required
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="w-full bg-black/50 rounded-lg border border-white/10 px-4 py-3 pl-10 text-white placeholder:text-gray-500 
+                        focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent
+                        hover:border-purple-500/50 transition-all duration-300"
+                      placeholder="Your phone number"
+                    />
+                  </motion.div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-gray-300 text-sm font-medium">Company</label>
+                  <motion.div 
+                    className="relative group"
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                  >
+                    <Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-hover:text-purple-400 transition-colors" />
+                    <input
+                      type="text"
+                      name="company_name"
+                      value={companyName}
+                      onChange={(e) => setCompanyName(e.target.value)}
+                      className="w-full bg-black/50 rounded-lg border border-white/10 px-4 py-3 pl-10 text-white placeholder:text-gray-500 
+                        focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent
+                        hover:border-purple-500/50 transition-all duration-300"
+                      placeholder="Your company name"
+                    />
+                  </motion.div>
+                </div>
+              </div>
+
+              {/* Additional Information */}
+              <div className="space-y-2">
+                <label className="text-gray-300 text-sm font-medium">Additional Notes</label>
+                <motion.div
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                >
+                  <textarea
+                    name="notes"
+                    value={additionalInfo}
+                    onChange={(e) => setAdditionalInfo(e.target.value)}
+                    rows={4}
+                    className="w-full bg-black/50 rounded-lg border border-white/10 px-4 py-3 text-white placeholder:text-gray-500 
+                      focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent
+                      hover:border-purple-500/50 transition-all duration-300 resize-none"
+                    placeholder="Any additional information or special requests"
+                  />
+                </motion.div>
+              </div>
+
+              {/* Submit Button */}
+              <motion.button
+                type="submit"
+                disabled={isSubmitting || !isFormValid()}
+                className={`
+                  w-full rounded-xl px-8 py-4 
+                  bg-gradient-to-r from-purple-500 via-purple-600 to-blue-500 
+                  text-white font-medium text-lg
+                  flex items-center justify-center gap-3 
+                  hover:shadow-lg hover:shadow-purple-500/30 
+                  transition-all duration-300
+                  ${(isSubmitting || !isFormValid()) ? 'opacity-75 cursor-not-allowed' : 'hover:scale-[1.02]'}
+                `}
+                whileHover={{ scale: isFormValid() ? 1.02 : 1 }}
+                whileTap={{ scale: isFormValid() ? 0.98 : 1 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-6 h-6 animate-spin" />
+                    <span>Processing your booking...</span>
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-6 h-6" />
+                    <span>Book Your Session</span>
+                  </>
+                )}
+              </motion.button>
+            </motion.form>
           </div>
         </div>
       </motion.div>

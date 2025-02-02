@@ -1,185 +1,20 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import HeroSection from '../components/sections/HeroSection';
-import { ComparisonSection } from '../components/sections/ComparisonSection';
+import ScrollingText from '../components/sections/ScrollingText';
 import AIAgentSection from '../components/sections/AIAgentSection';
+import InvisibleApproachSection from '../components/sections/InvisibleApproachSection';
+import { ComparisonSection } from '../components/sections/ComparisonSection';
+import InfiniteIconsSection from '../components/sections/InfiniteIconsSection';
+// import ProductShowcase from '../components/sections/ProductShowcase';
+import DevelopmentProcess from '../components/sections/DevelopmentProcess';
 import { StatsSection } from '../components/sections/StatsSection';
 import { CTASection } from '../components/sections/CTASection';
-import { ParticleField } from '../components/ui/ParticleField';
-import ProductShowcase from '../components/sections/ProductShowcase';
-import DevelopmentProcess from '../components/sections/DevelopmentProcess';
-import InfiniteIconsSection from '../components/sections/InfiniteIconsSection';
-import Footer from '../components/Footer';
-import heroImage from '../assets/1.png';
-
-const ScrollingText = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start end", "end start"]
-  });
-
-  const x1 = useTransform(scrollYProgress, [0, 1], [150, -500]);
-  const x2 = useTransform(scrollYProgress, [0, 1], [-500, 500]);
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.9, 1, 0.9]);
-
-  return (
-    <motion.section
-      ref={containerRef}
-      className="relative bg-black min-h-[80vh] sm:min-h-[90vh] md:min-h-screen flex flex-col items-center justify-center py-8 sm:py-12 md:py-20"
-      style={{ opacity }}
-    >
-      {/* Background grid */}
-      <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:2rem_2rem] sm:bg-[size:3rem_3rem] md:bg-[size:5rem_5rem] pointer-events-none" />
-      
-      {/* Container for better text positioning */}
-      <div className="max-w-[100vw] w-full mx-auto relative px-3 sm:px-4">
-        {/* First text line */}
-        <div className="overflow-hidden mb-3 sm:mb-4 md:mb-8">
-          <motion.div
-            className="flex items-center justify-start"
-            style={{ x: x1, scale }}
-          >
-            <h2 
-              className="text-[min(10vw,6rem)] sm:text-[min(12vw,8rem)] md:text-[8vw] font-semibold whitespace-nowrap"
-              style={{
-                fontFamily: "-apple-system, 'SF Pro Display', sans-serif",
-                fontFeatureSettings: '"ss01" on, "ss02" on',
-                background: 'linear-gradient(to right, #fff 40%, #666 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                letterSpacing: '-0.02em'
-              }}
-            >
-              Revolutionizing Development
-            </h2>
-          </motion.div>
-        </div>
-
-        {/* Second text line */}
-        <div className="overflow-hidden">
-          <motion.div
-            className="flex items-center justify-end"
-            style={{ x: x2, scale }}
-          >
-            <h2 
-              className="text-[min(10vw,6rem)] sm:text-[min(12vw,8rem)] md:text-[8vw] font-semibold whitespace-nowrap"
-              style={{
-                fontFamily: "-apple-system, 'SF Pro Display', sans-serif",
-                fontFeatureSettings: '"ss01" on, "ss02" on',
-                background: 'linear-gradient(to right, #666 0%, #fff 60%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-                letterSpacing: '-0.02em'
-              }}
-            >
-              With AI Intelligence
-            </h2>
-          </motion.div>
-        </div>
-      </div>
-    </motion.section>
-  );
-};
-
-const InvisibleApproachSection = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"]
-  });
-
-  const imageY = useTransform(scrollYProgress, [0, 1], [-50, 50]);
-  const imageScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.7, 1, 0.7]);
-  const imageRotate = useTransform(scrollYProgress, [0, 1], [-5, 5]);
-  const textY1 = useTransform(scrollYProgress, [0, 1], [-20, 20]);
-  const textY2 = useTransform(scrollYProgress, [0, 1], [20, -20]);
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.3, 1, 1, 0.3]);
-
-  return (
-    <section
-      ref={sectionRef}
-      className="relative h-[70vh] sm:h-[80vh] md:h-[90vh] flex items-center justify-center overflow-hidden bg-black py-12 sm:py-16 md:py-20 mb-12 sm:mb-16 md:mb-20"
-    >
-      {/* Background grid */}
-      <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:3rem_3rem] sm:bg-[size:4rem_4rem] md:bg-[size:5rem_5rem] pointer-events-none" />
-      
-      <div className="container mx-auto px-3 sm:px-4 relative">
-        {/* Text container */}
-        <div className="relative z-10 text-center">
-          <motion.h2 
-            className="text-[clamp(3rem,40vw,6rem)] sm:text-[clamp(2rem,10vw,8rem)] md:text-[clamp(2.5rem,12vw,11rem)] font-bold tracking-tight leading-none mb-2 sm:mb-4"
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            style={{
-              fontFamily: "-apple-system, 'SF Pro Display', sans-serif",
-              background: 'linear-gradient(to right, #fff 20%, #666 80%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              letterSpacing: '-0.02em',
-              y: textY1
-            }}
-          >
-            Multi Level
-          </motion.h2>
-          <motion.h2 
-            className="text-[clamp(3rem,40vw,6rem)] sm:text-[clamp(2rem,10vw,8rem)] md:text-[clamp(2.5rem,12vw,11rem)] font-bold tracking-tight leading-none"
-            initial={{ y: -50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            style={{
-              fontFamily: "-apple-system, 'SF Pro Display', sans-serif",
-              background: 'linear-gradient(to right, #666 20%, #fff 80%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              letterSpacing: '-0.02em',
-              y: textY2
-            }}
-          >
-            Super Agent
-          </motion.h2>
-        </div>
-
-        {/* Image container */}
-        <motion.div 
-          ref={imageRef}
-          className="absolute top-1/2 left-1/2 w-[min(35vw,170px)] sm:w-[min(70vw,300px)] md:w-[min(80vw,350px)] h-[min(35vw,170px)] sm:h-[min(70vw,300px)] md:h-[min(80vw,350px)] z-20"
-          initial={{ scale: 0, opacity: 0, rotate: -20 }}
-          animate={{ scale: 1, opacity: 1, rotate: 0 }}
-          transition={{ 
-            duration: 1,
-            delay: 0.2,
-            ease: [0.16, 1, 0.3, 1]
-          }}
-          style={{
-            x: '-50%',
-            y: '-50%',
-            scale: imageScale,
-            opacity,
-            rotate: imageRotate,
-            transform: 'translate(-50%, -50%)'
-          }}
-        >
-          <div 
-            className="w-full h-full bg-contain bg-center bg-no-repeat"
-            style={{ 
-              backgroundImage: `url(${heroImage})`,
-              filter: 'drop-shadow(0 0 20px rgba(59, 130, 246, 0.2)) sm:drop-shadow(0 0 25px rgba(59, 130, 246, 0.25)) md:drop-shadow(0 0 30px rgba(59, 130, 246, 0.3))'
-            }}
-          />
-        </motion.div>
-      </div>
-    </section>
-  );
-};
+import TestimonialsSection from '../components/sections/TestimonialsSection';
+import AutomationAppsShowcase from '../components/sections/AutomationAppsShowcase';
+import AICallerSection from '../components/sections/AICallerSection';
+import AdvancedChatbotSection from '../components/sections/AdvancedChatbotSection';
+import { ParticleField } from '@/components/ui/ParticleField';
 
 const Home = () => {
   const { scrollYProgress } = useScroll();
@@ -261,39 +96,46 @@ const Home = () => {
           <div className="-mt-12 sm:mt-0">
             <ScrollingText />
           </div>
-
-          {/* Reduced spacing in mobile view */}
-          <div className="-mt-16 sm:mt-0">
-            <InvisibleApproachSection />
-          </div>
-
-          {/* Reduced spacing in mobile view */}
-          <div className="-mt-16 sm:mt-8 md:mt-16">
-            <StatsSection />
-          </div>
-
-          {/* Reduced spacing in mobile view */}
           <div className="-mt-16 sm:mt-8 md:mt-16">
             <AIAgentSection />
           </div>
-
-          {/* Other sections with reduced spacing */}
+          <div className="-mt-16 sm:mt-0">
+            <InvisibleApproachSection />
+          </div>
+          
+          {/* New Sections */}
+          <div className="mt-0 sm:mt-8 md:mt-16">
+            <AutomationAppsShowcase />
+          </div>
+          <div className="mt-0 sm:mt-8 md:mt-16">
+            <AICallerSection />
+          </div>
+          <div className="mt-0 sm:mt-8 md:mt-16">
+            <AdvancedChatbotSection />
+          </div>
+          
+          {/* Existing Sections */}
           <div className="mt-0 sm:mt-8 md:mt-16">
             <ComparisonSection />
           </div>
-
           <div className="mt-0 sm:mt-8 md:mt-16">
             <InfiniteIconsSection />
           </div>
-
           <div className="mt-0 sm:mt-8 md:mt-16">
-            <ProductShowcase />
+            {/* <ProductShowcase /> */}
           </div>
-
           <div className="mt-0 sm:mt-8 md:mt-16">
             <DevelopmentProcess />
           </div>
-
+          <div className="-mt-16 sm:mt-8 md:mt-16">
+            <StatsSection />
+          </div>
+          
+          {/* Testimonials before CTA */}
+          <div className="mt-0 sm:mt-8 md:mt-16">
+            <TestimonialsSection />
+          </div>
+          
           <div className="mt-0 sm:mt-8 md:mt-16">
             <CTASection />
           </div>

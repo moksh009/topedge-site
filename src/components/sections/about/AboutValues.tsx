@@ -124,22 +124,18 @@ const AboutValues: React.FC = () => {
     {
       title: "Innovation First",
       description: "Constantly pushing boundaries and exploring new frontiers in AI technology to deliver groundbreaking solutions.",
-      gradient: 'from-blue-500 to-indigo-600'
     },
     {
       title: "Ethical Excellence",
       description: "Upholding the highest standards of ethics and transparency in every aspect of our AI development process.",
-      gradient: 'from-purple-500 to-pink-600'
     },
     {
       title: "Client Success",
       description: "Dedicated to delivering exceptional value and ensuring our clients achieve their business objectives through our solutions.",
-      gradient: 'from-emerald-500 to-teal-600'
     },
     {
       title: "Continuous Learning",
       description: "Embracing a culture of perpetual learning and adaptation to stay at the forefront of AI advancement.",
-      gradient: 'from-amber-500 to-orange-600'
     }
   ];
 
@@ -150,7 +146,7 @@ const AboutValues: React.FC = () => {
         <motion.div
           className="absolute inset-0"
           style={{
-            background: 'radial-gradient(circle at 30% 30%, rgba(120, 120, 120, 0.08) 0%, transparent 60%)',
+            background: 'radial-gradient(circle at 30% 30%, rgba(10, 132, 255, 0.08) 0%, transparent 60%)',
             rotate: useTransform(scrollYProgress, [0, 1], [0, 45]),
             scale: useTransform(scrollYProgress, [0, 1], [1, 1.5]),
           }}
@@ -158,7 +154,7 @@ const AboutValues: React.FC = () => {
         <motion.div
           className="absolute inset-0"
           style={{
-            background: 'radial-gradient(circle at 70% 70%, rgba(120, 120, 120, 0.08) 0%, transparent 60%)',
+            background: 'radial-gradient(circle at 70% 70%, rgba(10, 132, 255, 0.08) 0%, transparent 60%)',
             rotate: useTransform(scrollYProgress, [0, 1], [0, -45]),
             scale: useTransform(scrollYProgress, [0, 1], [1, 1.5]),
           }}
@@ -174,14 +170,17 @@ const AboutValues: React.FC = () => {
           transition={{ duration: 1 }}
           className="text-center mb-20"
         >
-          <h2 className="text-5xl sm:text-6xl font-semibold tracking-tight mb-6">
-            <span className="bg-clip-text text-transparent bg-gradient-to-b from-violet-500 via-purple-500 to-indigo-500">
-              Our Values
-            </span>
+          <div className="inline-flex items-center justify-center mb-4">
+            <div className="h-px w-12 bg-[#0A84FF]/50" />
+            <p className="text-[#0A84FF] text-lg font-medium tracking-wide px-4">OUR VALUES</p>
+            <div className="h-px w-12 bg-[#0A84FF]/50" />
+          </div>
+          <h2 className="text-5xl sm:text-6xl font-semibold tracking-tight text-white mb-6">
+            Principles That Drive Us
           </h2>
-          <p className="text-xl text-white/60 max-w-3xl mx-auto font-light"
+          <p className="text-xl text-[#86868B] max-w-3xl mx-auto font-light leading-relaxed"
             style={{ fontFamily: "SF Pro Text, system-ui, -apple-system, BlinkMacSystemFont, sans-serif" }}>
-            The principles that guide our innovation and shape our commitment to excellence
+            The core values that shape our approach to innovation and excellence in AI technology
           </p>
         </motion.div>
 

@@ -73,18 +73,18 @@ const PricingPlans = () => {
     <motion.section
       ref={containerRef}
       id="pricing-plans"
-      className="relative py-12 sm:py-16 md:py-20 lg:py-24 overflow-hidden"
+      className="relative py-8 sm:py-12 md:py-16 lg:py-20 overflow-hidden"
       style={{
-        background: "radial-gradient(circle at center, rgba(124, 58, 237, 0.05) sm:rgba(124, 58, 237, 0.08) md:rgba(124, 58, 237, 0.1) 0%, rgba(0,0,0,0) 70%)"
+        background: "radial-gradient(circle at center, rgba(124, 58, 237, 0.05) 0%, rgba(0,0,0,0) 70%)"
       }}
     >
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-900/5 sm:via-purple-900/8 md:via-purple-900/10 to-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-900/5 to-black" />
         <motion.div
           className="absolute inset-0"
           style={{
-            backgroundImage: "radial-gradient(circle at center, rgba(124, 58, 237, 0.05) sm:rgba(124, 58, 237, 0.08) md:rgba(124, 58, 237, 0.1) 0%, transparent 70%)",
+            backgroundImage: "radial-gradient(circle at center, rgba(124, 58, 237, 0.05) 0%, transparent 70%)",
             y
           }}
         />
@@ -97,10 +97,10 @@ const PricingPlans = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-12 sm:mb-16 md:mb-20"
+          className="text-center mb-8 sm:mb-12 md:mb-16"
         >
           <motion.div 
-            className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 mb-4 sm:mb-6"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 mb-3 sm:mb-4"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -110,7 +110,7 @@ const PricingPlans = () => {
             <span className="text-xs sm:text-sm text-purple-300">Choose Your Plan</span>
           </motion.div>
           
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 px-4">
             <span className="inline-block bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
               Pricing Plans That Scale With You
             </span>
@@ -118,7 +118,7 @@ const PricingPlans = () => {
         </motion.div>
 
         {/* Plans Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-sm md:max-w-none mx-auto">
           {plans.map((plan, index) => {
             const Icon = plan.icon;
             const isHovered = hoveredPlan === plan.name;
@@ -135,7 +135,7 @@ const PricingPlans = () => {
                   y,
                   scale,
                 }}
-                className="relative flex flex-col"
+                className="relative flex flex-col text-center"
               >
                 {/* Floating sparkles */}
                 <AnimatePresence>
@@ -226,14 +226,6 @@ const PricingPlans = () => {
                   onHoverStart={() => setHoveredPlan(plan.name)}
                   onHoverEnd={() => setHoveredPlan(null)}
                   whileHover={{ scale: 1.02, y: -5 }}
-                  initial={{ scale: 1, y: 0 }}
-                  animate={{ scale: 1, y: 0 }}
-                  transition={{ 
-                    duration: 0.2,
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 25
-                  }}
                 >
                   {/* Animated gradient border */}
                   <motion.div
@@ -258,7 +250,7 @@ const PricingPlans = () => {
 
                   {/* Plan Icon with enhanced animation */}
                   <motion.div
-                    className={`relative w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl bg-gradient-to-r ${plan.gradient} p-0.5 mb-4 sm:mb-6`}
+                    className={`relative w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl bg-gradient-to-r ${plan.gradient} p-0.5 mb-4 sm:mb-6 mx-auto`}
                     whileHover={{ rotate: [0, -5, 5, 0], scale: 1.1 }}
                     initial={{ rotate: 0, scale: 1 }}
                     animate={{ rotate: 0, scale: 1 }}
@@ -305,96 +297,44 @@ const PricingPlans = () => {
 
                   {/* Plan Details with hover effects */}
                   <motion.h3 
-                    className="text-xl sm:text-2xl font-bold mb-2 sm:mb-3"
-                    initial={{ color: '#FFFFFF' }}
-                    animate={isHovered ? {
-                      color: ['#FFFFFF', '#C4B5FD', '#FFFFFF'],
-                    } : {
-                      color: '#FFFFFF'
-                    }}
-                    transition={{ 
-                      duration: 2,
-                      repeat: isHovered ? Infinity : 0,
-                      ease: "easeInOut"
-                    }}
+                    className="text-lg sm:text-xl md:text-2xl font-bold mb-2 sm:mb-3 text-center"
                   >
                     {plan.name}
                   </motion.h3>
-                  <p className="text-sm sm:text-base text-gray-400 mb-4 sm:mb-6">{plan.description}</p>
+                  <p className="text-sm text-gray-400 mb-4 sm:mb-6 text-center px-2 sm:px-0">{plan.description}</p>
 
                   {/* Price with animation */}
-                  <div className="mb-6 sm:mb-8">
+                  <div className="mb-4 sm:mb-6">
                     <motion.div 
-                      className="flex items-baseline"
-                      initial={{ scale: 1 }}
-                      animate={isHovered ? { 
-                        scale: [1, 1.05, 1] 
-                      } : {
-                        scale: 1
-                      }}
-                      transition={{ 
-                        duration: 1,
-                        repeat: isHovered ? Infinity : 0,
-                        ease: "easeInOut"
-                      }}
+                      className="flex items-baseline justify-center"
                     >
-                      <span className="text-4xl sm:text-5xl font-bold text-white">$</span>
-                      <span className="text-4xl sm:text-5xl font-bold text-white ml-1">{plan.price}</span>
-                      <span className="text-gray-400 ml-2">/month</span>
+                      <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-white">$</span>
+                      <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-white ml-1">{plan.price}</span>
+                      <span className="text-sm sm:text-base text-gray-400 ml-2">/month</span>
                     </motion.div>
                   </div>
 
                   {/* Features list with enhanced animations */}
-                  <ul className="space-y-3 mb-8">
+                  <ul className="space-y-3 mb-8 text-left px-2 sm:px-0">
                     {plan.features.map((feature, featureIndex) => (
                       <motion.li
                         key={feature}
                         className="flex items-start gap-2"
-                        initial={{ opacity: 1, x: 0 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ 
-                          delay: index * 0.1 + featureIndex * 0.1,
-                          type: "spring",
-                          stiffness: 400,
-                          damping: 25
-                        }}
                       >
-                        <motion.div
-                          initial={{ scale: 1, rotate: 0 }}
-                          animate={isHovered ? {
-                            scale: [1, 1.2, 1],
-                            rotate: [0, 10, -10, 0],
-                          } : {
-                            scale: 1,
-                            rotate: 0
-                          }}
-                          transition={{ 
-                            duration: 0.5,
-                            delay: featureIndex * 0.1,
-                            repeat: isHovered ? Infinity : 0,
-                            ease: "easeInOut"
-                          }}
-                        >
-                          <Check className="w-5 h-5 text-green-400 mt-0.5" />
+                        <motion.div>
+                          <Check className="w-5 h-5 text-green-400 mt-0.5 shrink-0" />
                         </motion.div>
                         <span className="text-gray-300">{feature}</span>
                       </motion.li>
                     ))}
                   </ul>
 
-                  {/* Get Started Button with enhanced hover effects */}
-                  <Link to="/booking" className="block mt-auto">
+                  {/* Get Started Button */}
+                  <Link to="/booking" className="block mt-auto w-full sm:w-auto">
                     <motion.button
-                      className="relative w-full py-3 px-6 rounded-xl overflow-hidden bg-gradient-to-r from-purple-600/20 to-purple-600/10 border border-purple-500/20 text-white font-semibold"
+                      className="relative w-full py-3 px-4 sm:px-6 rounded-xl overflow-hidden bg-gradient-to-r from-purple-600/20 to-purple-600/10 border border-purple-500/20 text-white font-semibold text-center"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      initial={{ scale: 1 }}
-                      animate={{ scale: 1 }}
-                      transition={{ 
-                        type: "spring",
-                        stiffness: 400,
-                        damping: 25
-                      }}
                     >
                       <motion.div
                         className="absolute inset-0 bg-gradient-to-r from-purple-600/0 via-purple-600/40 to-purple-600/0"

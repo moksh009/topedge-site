@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Rocket, Info } from 'lucide-react';
 import { TypeAnimation } from 'react-type-animation';
 import { Link } from 'react-router-dom';
 import '../../styles/animations.css';
@@ -569,10 +569,13 @@ const HeroSection = () => {
 
                   {/* Button Content */}
                   <div className="relative flex items-center gap-3">
-                    <div className="relative">
-                      <span className="text-base sm:text-lg font-medium bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent">
-                        See how AI works
-                      </span>
+                    <div className="relative flex items-center">
+                      <div className="flex items-center gap-2">
+                        <Rocket className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400 group-hover:text-white transition-colors duration-300" />
+                        <span className="text-base sm:text-lg font-medium bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent">
+                          See how AI works
+                        </span>
+                      </div>
                       <motion.div
                         className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-purple-400 to-transparent"
                         animate={{
@@ -686,10 +689,13 @@ const HeroSection = () => {
 
                   {/* Button Content */}
                   <div className="relative flex items-center gap-3">
-                    <div className="relative">
-                      <span className="text-base sm:text-lg font-medium bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent">
-                        Explore Services
-                      </span>
+                    <div className="relative flex items-center">
+                      <div className="flex items-center gap-2">
+                        <Info className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400 group-hover:text-white transition-colors duration-300" />
+                        <span className="text-base sm:text-lg font-medium bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent">
+                          Learn More
+                        </span>
+                      </div>
                       <motion.div
                         className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-purple-400 to-transparent"
                         animate={{
