@@ -122,7 +122,7 @@ const AutomationAppsShowcase = () => {
           style={{ opacity }}
         >
           <motion.h2
-            className="text-5xl md:text-6xl font-bold mb-6"
+            className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
             style={{
               background: 'linear-gradient(to right, #fff 20%, #3B82F6 50%, #fff 80%)',
               backgroundSize: '200% auto',
@@ -131,16 +131,37 @@ const AutomationAppsShowcase = () => {
               animation: 'shine 8s linear infinite',
             }}
           >
-            Automation Ecosystem
+            Never Miss Another <br />Business Opportunity
           </motion.h2>
           <motion.p
-            className="text-gray-400 text-xl max-w-3xl mx-auto"
+            className="text-gray-400 text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
-            Connect and automate your workflow with our powerful integration platform
+            Did you know that <span className="text-red-400">72% of customers</span> choose another business when their call goes unanswered? Let our AI receptionist handle every call, 24/7, ensuring you never lose another lead.
           </motion.p>
+          
+          {/* Pain Points Grid */}
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 max-w-5xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+          >
+            <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-8 border border-white/10 hover:border-blue-500/50 transition-all duration-300">
+              <h3 className="text-2xl font-semibold text-white mb-4">Lost Opportunities</h3>
+              <p className="text-gray-400">Every missed call is a potential customer choosing your competitor. Don't let revenue slip away.</p>
+            </div>
+            <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-8 border border-white/10 hover:border-blue-500/50 transition-all duration-300">
+              <h3 className="text-2xl font-semibold text-white mb-4">24/7 Availability</h3>
+              <p className="text-gray-400">Business happens around the clock. Our AI ensures you're always available to capture leads.</p>
+            </div>
+            <div className="bg-white/5 backdrop-blur-lg rounded-2xl p-8 border border-white/10 hover:border-blue-500/50 transition-all duration-300">
+              <h3 className="text-2xl font-semibold text-white mb-4">Instant Response</h3>
+              <p className="text-gray-400">No more callback lists. Convert inquiries into appointments instantly with AI automation.</p>
+            </div>
+          </motion.div>
         </motion.div>
 
         {/* Infinite Scroll Container */}

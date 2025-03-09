@@ -6,18 +6,18 @@ import { useNavigate } from 'react-router-dom';
 const features = [
   {
     icon: <Bot className="w-7 h-7 text-indigo-400 group-hover:text-indigo-300 transition-colors duration-300" />,
-    title: "Natural Conversations",
-    description: "AI-powered natural language processing for human-like interactions"
+    title: "Smart Call Handling",
+    description: "AI answers calls 24/7, qualifies leads, and books meetings instantly"
   },
   {
     icon: <Waves className="w-7 h-7 text-violet-400 group-hover:text-violet-300 transition-colors duration-300" />,
-    title: "Voice Recognition",
-    description: "Advanced voice recognition with multi-language support"
+    title: "10+ Languages",
+    description: "Break language barriers and expand your global reach"
   },
   {
     icon: <Shield className="w-7 h-7 text-fuchsia-400 group-hover:text-fuchsia-300 transition-colors duration-300" />,
-    title: "Secure Calls",
-    description: "End-to-end encryption for maximum security"
+    title: "Lead Prioritization",
+    description: "Route high-value prospects to your team automatically"
   }
 ];
 
@@ -34,12 +34,13 @@ const AICallerSection = () => {
   const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.8]);
 
   const handleDemoClick = () => {
-    navigate('/services#showcase');
+    navigate('/services');
   };
 
   return (
     <motion.section
       ref={containerRef}
+      id="ai-caller-demo"
       className="relative min-h-screen bg-[#000000] py-12 sm:py-20 overflow-hidden"
       style={{
         opacity,
@@ -143,7 +144,7 @@ const AICallerSection = () => {
                 animation: 'shine 8s linear infinite',
               }}
             >
-              AI-Powered Voice Calls
+              Never Miss a Business Call
             </motion.h2>
             <motion.p
               className="text-gray-400 text-lg sm:text-xl mb-8 sm:mb-12 mx-auto lg:mx-0 max-w-[35ch]"
@@ -151,7 +152,7 @@ const AICallerSection = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
             >
-              Experience the future of communication with our advanced AI calling system
+              AI voice agent handles unlimited calls 24/7, turning inquiries into revenue
             </motion.p>
 
             {/* Features Grid */}

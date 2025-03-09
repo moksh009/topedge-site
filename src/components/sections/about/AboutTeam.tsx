@@ -1,19 +1,20 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Linkedin, Twitter, Github, Mail } from 'lucide-react';
+import { Linkedin, Twitter, Github, Mail, Instagram } from 'lucide-react';
 
 const teamMembers = [
   {
     name: "Moksh Patel",
     role: "Founder & CEO",
-    image: "/team/moksh.jpg",
+    image: "https://media.licdn.com/dms/image/v2/D4D03AQHJ1aaTdprBPg/profile-displayphoto-shrink_400_400/B4DZUk3778GcAo-/0/1740080399166?e=1746662400&v=beta&t=grLxLMYlnaAf2B_e_xbBhB1T32QdIol6jyke9VcdPHs",
     bio: "Visionary leader with expertise in AI and automation, driving innovation in business transformation.",
     social: {
-      linkedin: "https://linkedin.com/in/mokshpatel",
-      twitter: "https://twitter.com/mokshpatel",
-      github: "https://github.com/mokshpatel",
-      email: "moksh@topedge.tech"
+      linkedin: "https://www.linkedin.com/in/patel-moksh-80467b229/",
+      twitter: "https://x.com/moksh2031",
+      github: "https://github.com/moksh009",
+      Instagram: "https://www.instagram.com/m0ksh._.patel/",
+      email: "moksh@aitopedge.com"
     }
   },
   {
@@ -23,9 +24,8 @@ const teamMembers = [
     bio: "Technical innovator specializing in AI architecture and scalable solutions, passionate about pushing technological boundaries.",
     social: {
       linkedin: "https://linkedin.com/in/smittilva",
-      twitter: "https://twitter.com/smittilva",
-      github: "https://github.com/smittilva",
-      email: "smit@topedge.tech"
+      Instagram: "https://www.instagram.com/smit108_/",
+      email: "smit@aitopedge.com"
     }
   }
 ];
@@ -149,6 +149,18 @@ const AboutTeam = () => {
                         whileTap={{ scale: 0.9 }}
                       >
                         <Github className="w-6 h-6" />
+                      </motion.a>
+                    )}
+                    {member.social.Instagram && (
+                      <motion.a
+                        href={member.social.Instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#86868B] hover:text-pink-500 transition-colors duration-300"
+                        whileHover={{ scale: 1.2 }}
+                        whileTap={{ scale: 0.9 }}
+                      >
+                        <Instagram className="w-6 h-6" />
                       </motion.a>
                     )}
                     {member.social.email && (

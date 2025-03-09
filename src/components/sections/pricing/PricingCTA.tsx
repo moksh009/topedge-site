@@ -80,10 +80,14 @@ const PricingCTA = () => {
             transition={{ duration: 0.8, delay: 0.8 }}
           >
             <motion.a
-              href="/pricing"
+              href="#pricing-plans"
               className="group relative inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-emerald-600 to-green-600 rounded-full text-white font-semibold text-lg hover:from-emerald-500 hover:to-green-500 transition-all duration-300 shadow-xl hover:shadow-2xl"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('pricing-plans')?.scrollIntoView({ behavior: 'smooth' });
+              }}
             >
               View Plans
               <motion.div

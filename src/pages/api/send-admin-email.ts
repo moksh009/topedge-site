@@ -69,27 +69,27 @@ export default async function handler(
         <html>
           <head>
             <meta charset="utf-8">
-            <title>New Booking - TopEdge AI</title>
+            <title>New Booking Alert - TopEdge AI</title>
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
           </head>
           <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f4f4f4; margin: 0; padding: 20px;">
             <div style="max-width: 600px; margin: 0 auto; background-color: #fff; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow: hidden;">
               <!-- Header -->
-              <div style="text-align: center; padding: 40px 20px; background: linear-gradient(135deg, #8B5CF6 0%, #6366F1 100%); color: white;">
+              <div style="text-align: center; padding: 40px 20px; background: linear-gradient(135deg, #4D07E3 0%, #7A0BC0 100%); color: white;">
                 <h1 style="margin: 0; font-size: 28px; font-weight: 700;">TopEdge AI</h1>
-                <p style="margin: 10px 0 0 0; font-size: 18px; opacity: 0.9;">New Booking Alert!</p>
+                <p style="margin: 10px 0 0 0; font-size: 18px; opacity: 0.9;">New Booking Alert</p>
               </div>
               
               <div style="padding: 40px 30px;">
-                <!-- Overview -->
+                <!-- Alert -->
                 <div style="margin-bottom: 30px;">
-                  <h2 style="color: #1F2937; font-size: 24px; margin: 0 0 15px 0;">New Booking Details</h2>
-                  <p style="color: #4B5563; font-size: 16px; margin: 0;">A new booking has been made. Here's a summary:</p>
+                  <h2 style="color: #1F2937; font-size: 24px; margin: 0 0 15px 0;">New Booking Received</h2>
+                  <p style="color: #4B5563; font-size: 16px; margin: 0;">A new booking has been submitted. Here are the details:</p>
                 </div>
                 
                 <!-- Client Information -->
                 <div style="background-color: #F9FAFB; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
-                  <h3 style="color: #6366F1; font-size: 20px; margin: 0 0 20px 0;">Client Information</h3>
+                  <h3 style="color: #4D07E3; font-size: 20px; margin: 0 0 20px 0;">Client Information</h3>
                   <div style="background-color: #fff; border-radius: 8px; padding: 20px; border: 1px solid #E5E7EB;">
                     <div style="margin-bottom: 15px;">
                       <p style="margin: 0; color: #6B7280; font-size: 14px;">Name</p>
@@ -118,11 +118,11 @@ export default async function handler(
 
                 <!-- Booking Information -->
                 <div style="background-color: #F9FAFB; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
-                  <h3 style="color: #6366F1; font-size: 20px; margin: 0 0 20px 0;">Booking Details</h3>
+                  <h3 style="color: #4D07E3; font-size: 20px; margin: 0 0 20px 0;">Booking Details</h3>
                   
                   <!-- Services -->
                   <div style="background-color: #fff; border-radius: 8px; padding: 20px; margin-bottom: 20px; border: 1px solid #E5E7EB;">
-                    <h4 style="color: #4F46E5; font-size: 16px; margin: 0 0 15px 0;">Services Booked:</h4>
+                    <h4 style="color: #4D07E3; font-size: 16px; margin: 0 0 15px 0;">Services Booked:</h4>
                     ${formattedServices}
                   </div>
 
@@ -139,7 +139,7 @@ export default async function handler(
                   </div>
 
                   <!-- Duration -->
-                  <div style="margin-bottom: 15px;">
+                  <div>
                     <p style="margin: 0; color: #6B7280; font-size: 14px;">Total Duration</p>
                     <p style="margin: 5px 0 0 0; color: #1F2937; font-size: 16px; font-weight: 500;">${duration}</p>
                   </div>
@@ -148,7 +148,7 @@ export default async function handler(
                 <!-- Additional Information -->
                 ${additionalInfo ? `
                 <div style="background-color: #F9FAFB; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
-                  <h3 style="color: #6366F1; font-size: 20px; margin: 0 0 20px 0;">Additional Information</h3>
+                  <h3 style="color: #4D07E3; font-size: 20px; margin: 0 0 20px 0;">Additional Information</h3>
                   <div style="background-color: #fff; border-radius: 8px; padding: 20px; border: 1px solid #E5E7EB;">
                     <p style="margin: 0; color: #4B5563;">${additionalInfo}</p>
                   </div>
@@ -156,22 +156,22 @@ export default async function handler(
                 ` : ''}
 
                 <!-- Action Required -->
-                <div style="background-color: #FEF2F2; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
+                <div style="background-color: #FEF2F2; border-radius: 12px; padding: 25px;">
                   <h3 style="color: #DC2626; font-size: 20px; margin: 0 0 15px 0;">Action Required</h3>
                   <div style="background-color: #fff; border-radius: 8px; padding: 20px; border: 1px solid #FCA5A5;">
-                    <ul style="margin: 0; padding-left: 20px; color: #4B5563;">
-                      <li style="margin-bottom: 10px;">Review and confirm the booking</li>
-                      <li style="margin-bottom: 10px;">Schedule the Google Meet link</li>
-                      <li style="margin-bottom: 10px;">Send the meeting link to the client</li>
-                      <li>Prepare any necessary materials</li>
-                    </ul>
+                    <p style="margin: 0 0 15px 0; color: #4B5563;">Please take the following actions:</p>
+                    <ol style="margin: 0; padding-left: 20px; color: #4B5563;">
+                      <li style="margin-bottom: 10px;">Schedule the Google Meet and send the link to the client</li>
+                      <li style="margin-bottom: 10px;">Add the booking to your calendar</li>
+                      <li>Send a reminder email 24 hours before the meeting</li>
+                    </ol>
                   </div>
                 </div>
                 
                 <!-- Footer -->
                 <div style="text-align: center; color: #6B7280; font-size: 14px; margin-top: 40px;">
                   <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #E5E7EB;">
-                    <p style="margin: 0;"> 2025 TopEdge AI. All rights reserved.</p>
+                    <p style="margin: 0;">© 2024 TopEdge AI. All rights reserved.</p>
                   </div>
                 </div>
               </div>

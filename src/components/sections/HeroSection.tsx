@@ -465,9 +465,9 @@ const HeroSection = () => {
             >
               <TypeAnimation
                 sequence={[
-                  'Transforming visions into reality',
+                  'Stay Ahead of World',
                   1000,
-                  'Pioneering AI solutions',
+                  'Make Your Business Futuristic',
                   1000,
                   'Building tomorrow\'s technology',
                   1000,
@@ -488,7 +488,7 @@ const HeroSection = () => {
             className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center items-center"
           >
             {/* First Button - See how AI works */}
-            <Link to="/contact">
+            <Link to="/services">
               <motion.button
                 whileHover="hover"
                 whileTap="tap"

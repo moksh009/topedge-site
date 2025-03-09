@@ -4,13 +4,13 @@ import { Star, Quote } from 'lucide-react';
 
 const testimonials = [
   {
-    name: "Sarah Johnson",
-    role: "CTO at TechCorp",
-    image: "/testimonials/1.jpg",
+    name: "Steven Mugabe",
+    role: "Doctor at Code Clinic",
+    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTP5IqbmloRw1URDMMdIkaWrhKwXN6lMKfFQ&s",
     content: "TopEdge's AI solutions transformed our customer service. Response times dropped by 90% while satisfaction increased by 45%. It's like having a superhuman team that never sleeps.",
     rating: 5,
     company: {
-      logo: "/companies/techcorp.png",
+      logo: "/public/code clinic.png",
       name: "TechCorp"
     }
   },

@@ -21,37 +21,49 @@ export const ComparisonSection = () => {
     {
       id: 1,
       type: 'traditional',
-      content: "Manual code reviews taking days to complete...",
+      content: "I\’m stuck with a fixed-cost subscription, even if I barely use the service…",
       typingDuration: 1000
     },
     {
       id: 2,
       type: 'ai',
-      content: "Our AI completes thorough code reviews in minutes, not days! Automated analysis catches 95% more issues while providing instant feedback.",
-      typingDuration: 2000
+      content: "Pay only for what you use! no hidden charges—just pure efficiency.",
+      typingDuration: 1500
     },
     {
       id: 3,
       type: 'traditional',
-      content: "Struggling with server capacity planning...",
-      typingDuration: 1000
+      content: "They charge extra for after-hours calls. Why should I pay more for better availability?",
+      typingDuration: 2000
     },
     {
       id: 4,
       type: 'ai',
-      content: "TopEdge's intelligent infrastructure automatically scales in real-time, predicting and adjusting to your needs before they arise. Zero downtime, infinite scalability!",
+      content: "We operate 24/7—handling inquiries, scheduling appointments, and even forwarding calls at no extra cost!",
       typingDuration: 2500
     },
     {
       id: 5,
       type: 'traditional',
-      content: "Basic security measures aren't enough anymore...",
+      content: "I need specific features, but customization costs a fortune.",
       typingDuration: 1000
     },
     {
       id: 6,
       type: 'ai',
-      content: "Our AI-powered security system actively predicts and prevents threats 24/7. We've stopped over 1 million potential breaches with 99.9% accuracy!",
+      content: "We offer full customization at zero extra cost. Need a feature? We\’ll build it for you!",
+      typingDuration: 2500
+    },
+    {
+      id: 7,
+      type: 'traditional',
+      content: "We lose valuable customer information because our system has no memory of past conversations.",
+      typingDuration: 1000
+    },
+    {
+      id: 8,
+      type: 'ai',
+      content: "Our AI remembers every call, building a customer database that helps you deliver personalized experiences effortlessly.",
       typingDuration: 2500
     }
   ];

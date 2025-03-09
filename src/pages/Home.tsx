@@ -14,6 +14,7 @@ import TestimonialsSection from '../components/sections/TestimonialsSection';
 import AutomationAppsShowcase from '../components/sections/AutomationAppsShowcase';
 import AICallerSection from '../components/sections/AICallerSection';
 import AdvancedChatbotSection from '../components/sections/AdvancedChatbotSection';
+import AIBenefitsShowcase from '../components/sections/AIBenefitsShowcase';
 import { ParticleField } from '@/components/ui/ParticleField';
 
 const Home = () => {
@@ -99,11 +100,18 @@ const Home = () => {
           <div className="-mt-16 sm:mt-8 md:mt-16">
             <AIAgentSection />
           </div>
+           {/* New Benefits Section */}
+           <div className="mt-0 sm:mt-8 md:mt-16">
+            <AIBenefitsShowcase />
+          </div>
+          
           <div className="-mt-16 sm:mt-0">
             <InvisibleApproachSection />
           </div>
           
-          {/* New Sections */}
+         
+          
+          {/* Existing Sections */}
           <div className="mt-0 sm:mt-8 md:mt-16">
             <AutomationAppsShowcase />
           </div>

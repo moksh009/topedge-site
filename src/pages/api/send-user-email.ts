@@ -38,7 +38,7 @@ const userEmailTemplate = `
   <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f4f4f4; margin: 0; padding: 20px;">
     <div style="max-width: 600px; margin: 0 auto; background-color: #fff; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow: hidden;">
       <!-- Header -->
-      <div style="text-align: center; padding: 40px 20px; background: linear-gradient(135deg, #8B5CF6 0%, #6366F1 100%); color: white;">
+      <div style="text-align: center; padding: 40px 20px; background: linear-gradient(135deg, #4D07E3 0%, #7A0BC0 100%); color: white;">
         <h1 style="margin: 0; font-size: 28px; font-weight: 700;">TopEdge AI</h1>
         <p style="margin: 10px 0 0 0; font-size: 18px; opacity: 0.9;">Booking Confirmation</p>
       </div>
@@ -52,12 +52,12 @@ const userEmailTemplate = `
         
         <!-- Booking Information -->
         <div style="background-color: #F9FAFB; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
-          <h3 style="color: #6366F1; font-size: 20px; margin: 0 0 20px 0;">Booking Details</h3>
+          <h3 style="color: #4D07E3; font-size: 20px; margin: 0 0 20px 0;">Booking Details</h3>
           
           <!-- Services -->
           <div style="background-color: #fff; border-radius: 8px; padding: 20px; margin-bottom: 20px; border: 1px solid #E5E7EB;">
-            <h4 style="color: #4F46E5; font-size: 16px; margin: 0 0 15px 0;">Services Booked:</h4>
-            {{services}}
+            <h4 style="color: #4D07E3; font-size: 16px; margin: 0 0 15px 0;">Services Booked:</h4>
+            {{formattedServices}}
           </div>
 
           <!-- Date & Time -->
@@ -89,7 +89,7 @@ const userEmailTemplate = `
 
         <!-- Next Steps -->
         <div style="background-color: #F9FAFB; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
-          <h3 style="color: #6366F1; font-size: 20px; margin: 0 0 20px 0;">What's Next?</h3>
+          <h3 style="color: #4D07E3; font-size: 20px; margin: 0 0 20px 0;">What's Next?</h3>
           <div style="background-color: #fff; border-radius: 8px; padding: 20px; border: 1px solid #E5E7EB;">
             <p style="margin: 0 0 15px 0; color: #4B5563;">We'll send you a Google Meet link for the consultation via email at least 24 hours before the scheduled time. To ensure a smooth meeting:</p>
             <ul style="margin: 0; padding-left: 20px; color: #4B5563;">
@@ -104,7 +104,7 @@ const userEmailTemplate = `
         <!-- Additional Information -->
         {{#if additionalInfo}}
         <div style="background-color: #F9FAFB; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
-          <h3 style="color: #6366F1; font-size: 20px; margin: 0 0 20px 0;">Additional Information</h3>
+          <h3 style="color: #4D07E3; font-size: 20px; margin: 0 0 20px 0;">Additional Information</h3>
           <div style="background-color: #fff; border-radius: 8px; padding: 20px; border: 1px solid #E5E7EB;">
             <p style="margin: 0; color: #4B5563;">{{additionalInfo}}</p>
           </div>
@@ -112,11 +112,11 @@ const userEmailTemplate = `
         {{/if}}
 
         <!-- Contact -->
-        <div style="background-color: #ECFDF5; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
-          <h3 style="color: #059669; font-size: 20px; margin: 0 0 15px 0;">Need Help?</h3>
-          <p style="margin: 0; color: #065F46;">
+        <div style="background-color: #F0FDF4; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
+          <h3 style="color: #4D07E3; font-size: 20px; margin: 0 0 15px 0;">Need Help?</h3>
+          <p style="margin: 0; color: #4B5563;">
             If you need to reschedule or have any questions, please contact us at:
-            <a href="mailto:{{email}}" style="color: #4F46E5; text-decoration: none; font-weight: 500;">{{email}}</a>
+            <a href="mailto:support@topedge.ai" style="color: #4D07E3; text-decoration: none; font-weight: 500;">support@topedge.ai</a>
           </p>
         </div>
         
@@ -125,7 +125,7 @@ const userEmailTemplate = `
           <p style="margin: 0;">Best regards,</p>
           <p style="margin: 5px 0 0 0; font-weight: 500; color: #4B5563;">The TopEdge AI Team</p>
           <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #E5E7EB;">
-            <p style="margin: 0;"> 2025 TopEdge AI. All rights reserved.</p>
+            <p style="margin: 0;">© 2024 TopEdge AI. All rights reserved.</p>
           </div>
         </div>
       </div>
@@ -155,7 +155,7 @@ export default async function handler(
           <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #E5E7EB;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
               <h5 style="margin: 0; color: #1F2937; font-size: 16px; font-weight: 600;">${service.name}</h5>
-              <span style="color: #6366F1; font-weight: 600;">$${service.price}</span>
+              <span style="color: #4D07E3; font-weight: 600;">$${service.price}</span>
             </div>
             <p style="margin: 8px 0 0 0; color: #6B7280; font-size: 14px;">${service.description}</p>
             <p style="margin: 5px 0 0 0; color: #6B7280; font-size: 14px;">Duration: ${service.duration}</p>
@@ -173,7 +173,7 @@ export default async function handler(
       subject: 'Booking Confirmation - TopEdge AI',
       html: userEmailTemplate
         .replace(/\{\{name\}\}/g, name)
-        .replace(/\{\{services\}\}/g, formattedServices)
+        .replace(/\{\{formattedServices\}\}/g, formattedServices)
         .replace(/\{\{date\}\}/g, date)
         .replace(/\{\{time\}\}/g, time)
         .replace(/\{\{duration\}\}/g, duration)

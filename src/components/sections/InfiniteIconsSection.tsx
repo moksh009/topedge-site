@@ -3,12 +3,12 @@ import React from 'react';
 
 const images = [
   {
-    src: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&auto=format&fit=crop',
+    src: 'https://plus.unsplash.com/premium_photo-1683121710572-7723bd2e235d?q=80&w=3132&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     alt: 'Digital AI Brain',
     color: '#4ade80'
   },
   {
-    src: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&auto=format&fit=crop',
+    src: 'https://images.unsplash.com/photo-1677756119517-756a188d2d94?q=80&w=2900&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     alt: 'Futuristic AI Interface',
     color: '#60a5fa'
   },
@@ -18,12 +18,12 @@ const images = [
     color: '#f472b6'
   },
   {
-    src: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&auto=format&fit=crop',
+    src: 'https://images.unsplash.com/photo-1625314887424-9f190599bd56?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     alt: 'AI Network',
     color: '#818cf8'
   },
   {
-    src: 'https://images.unsplash.com/photo-1672600830594-ae4ccc159578?w=800&auto=format&fit=crop',
+    src: 'https://images.unsplash.com/photo-1684864411311-b2a65c30b698?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     alt: 'AI Generated Art',
     color: '#fb923c'
   },

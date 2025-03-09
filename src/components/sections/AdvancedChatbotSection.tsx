@@ -14,18 +14,18 @@ interface Platform {
 const features = [
   {
     icon: <Bot className="w-7 h-7 text-indigo-400 group-hover:text-indigo-300 transition-colors duration-300" />,
-    title: "Multi-Platform Integration",
-    description: "Connect and engage with your customers seamlessly across WhatsApp, Instagram, and other major platforms"
+    title: "Instant Support",
+    description: "Respond to customers in seconds across all channels"
   },
   {
     icon: <MessageSquare className="w-7 h-7 text-violet-400 group-hover:text-violet-300 transition-colors duration-300" />,
-    title: "Natural Conversations",
-    description: "Our AI understands context, emotions, and intent to deliver human-like interactions that feel natural"
+    title: "24/7 Lead Gen",
+    description: "Convert visitors into qualified leads while you sleep"
   },
   {
     icon: <Sparkles className="w-7 h-7 text-fuchsia-400 group-hover:text-fuchsia-300 transition-colors duration-300" />,
-    title: "Smart Responses",
-    description: "Advanced AI algorithms provide intelligent, context-aware responses that adapt to each conversation"
+    title: "Smart Follow-ups",
+    description: "Automated nurturing increases conversion by 40%"
   }
 ];
 
@@ -257,7 +257,7 @@ const AdvancedChatbotSection = () => {
                 animation: 'shine 8s linear infinite',
               }}
             >
-              Advanced AI Chatbot
+              AI-Powered Support
             </motion.h2>
             <motion.p
               className="text-gray-400 text-lg sm:text-xl mb-8 sm:mb-12 mx-auto lg:mx-0 max-w-[35ch]"
@@ -265,7 +265,7 @@ const AdvancedChatbotSection = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
             >
-              Experience seamless conversations with our state-of-the-art AI chatbot
+              Engage customers instantly on WhatsApp, Instagram, and Facebook
             </motion.p>
 
             {/* Features Grid */}

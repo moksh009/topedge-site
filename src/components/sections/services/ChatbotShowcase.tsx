@@ -33,32 +33,68 @@ const ChatbotShowcase = () => {
   useEffect(() => {
     if (sendAudioRef.current) {
       sendAudioRef.current.volume = 0.5;
+      sendAudioRef.current.preload = "auto";
     }
     if (receiveAudioRef.current) {
       receiveAudioRef.current.volume = 0.5;
+      receiveAudioRef.current.preload = "auto";
     }
+
+    // Pre-load audio files
+    const preloadAudio = async () => {
+      try {
+        if (sendAudioRef.current) {
+          await sendAudioRef.current.load();
+        }
+        if (receiveAudioRef.current) {
+          await receiveAudioRef.current.load();
+        }
+      } catch (error) {
+        console.log('Error preloading audio:', error);
+      }
+    };
+
+    preloadAudio();
   }, []);
 
-  // Function to play send sound
+  // Function to play send sound with retry
   const playSendSound = async () => {
     if (sendAudioRef.current) {
       try {
         sendAudioRef.current.currentTime = 0;
-        await sendAudioRef.current.play();
+        const playPromise = sendAudioRef.current.play();
+        if (playPromise !== undefined) {
+          await playPromise;
+        }
       } catch (error) {
         console.log('Error playing send sound:', error);
+        // Retry once
+        try {
+          await sendAudioRef.current.play();
+        } catch (retryError) {
+          console.log('Retry failed:', retryError);
+        }
       }
     }
   };
 
-  // Function to play receive sound
+  // Function to play receive sound with retry
   const playReceiveSound = async () => {
     if (receiveAudioRef.current) {
       try {
         receiveAudioRef.current.currentTime = 0;
-        await receiveAudioRef.current.play();
+        const playPromise = receiveAudioRef.current.play();
+        if (playPromise !== undefined) {
+          await playPromise;
+        }
       } catch (error) {
         console.log('Error playing receive sound:', error);
+        // Retry once
+        try {
+          await receiveAudioRef.current.play();
+        } catch (retryError) {
+          console.log('Retry failed:', retryError);
+        }
       }
     }
   };
@@ -143,6 +179,51 @@ const ChatbotShowcase = () => {
 
   return (
     <div className="relative mt-32 mb-20 bg-black">
+      {/* Premium Animated Background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-black to-black" />
+        
+        {/* Animated gradient lines */}
+        <div className="absolute inset-0 overflow-hidden">
+          <motion.div
+            className="absolute w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"
+            style={{ top: "25%" }}
+            animate={{
+              x: ["-100%", "100%"],
+            }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          />
+          <motion.div
+            className="absolute w-[1px] h-full bg-gradient-to-b from-transparent via-violet-500/50 to-transparent"
+            style={{ right: "35%" }}
+            animate={{
+              y: ["-100%", "100%"],
+            }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          />
+          <motion.div
+            className="absolute w-full h-[1px] bg-gradient-to-r from-transparent via-indigo-500/30 to-transparent"
+            style={{ top: "75%" }}
+            animate={{
+              x: ["100%", "-100%"],
+            }}
+            transition={{
+              duration: 7,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          />
+        </div>
+      </div>
+
       {/* Audio elements */}
       <audio 
         ref={sendAudioRef} 
@@ -161,17 +242,27 @@ const ChatbotShowcase = () => {
             Interactive AI Chatbot
           </span>
         </h2>
-        <p className="mt-6 text-2xl md:text-3xl text-slate-300 max-w-2xl mx-auto">
+        <p className="mt-6 text-2xl md:text-3xl text-slate-300 max-w-3xl mx-auto">
           Experience real-time conversations with our advanced AI.<br/>
-          <span className="text-blue-400">Try it out below →</span>
+          <span className="text-blue-400">Click the send button to see AI in action →</span>
         </p>
+        <motion.p 
+          className="mt-4 text-lg text-slate-400"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          Watch as our AI instantly responds with helpful information about our services
+        </motion.p>
       </div>
 
       <div className="max-w-4xl mx-auto px-4">
         <motion.section
+          ref={messagesContainerRef}
+          id="chatbot-showcase"
+          className="relative min-h-screen bg-black py-20 overflow-hidden"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="py-20 relative overflow-hidden"
         >
           <div className="max-w-[420px] mx-auto px-4">
             <motion.div

@@ -15,19 +15,19 @@ export const ServiceProcess = () => {
   const steps = [
     {
       number: "01",
-      title: "Voice Design",
+      title: "System Design",
       description: "Design natural voice interactions and conversation flows",
       color: "from-blue-500/80 to-cyan-500/80"
     },
     {
       number: "02",
-      title: "AI Training",
-      description: "Train the AI with domain knowledge and responses",
+      title: "Agent Training",
+      description: "Train the AI Agent with domain knowledge and responses",
       color: "from-purple-500/80 to-pink-500/80"
     },
     {
       number: "03",
-      title: "Voice Integration",
+      title: "Integration",
       description: "Integrate voice capabilities and real-time processing",
       color: "from-orange-500/80 to-red-500/80"
     },
@@ -57,7 +57,7 @@ export const ServiceProcess = () => {
             transition={{ duration: 0.8 }}
             className="text-6xl md:text-8xl font-bold tracking-tight gradient-text"
           >
-            AI Agent Process
+            Voice Agent Process
           </motion.h2>
         </div>
 

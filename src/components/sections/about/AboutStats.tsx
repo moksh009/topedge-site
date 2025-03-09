@@ -143,8 +143,8 @@ const AboutStats = () => {
 
   const stats = [
     { number: 98, label: "%" },
-    { number: 250, label: "Projects Completed" },
-    { number: 15, label: "Countries Served" },
+    { number: 2, label: "Projects Completed" },
+    { number: 2, label: "Countries Served" },
     { number: 99.9, label: "%" }
   ];
 

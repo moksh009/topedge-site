@@ -42,7 +42,7 @@ const ScrollingText = () => {
                 letterSpacing: '-0.02em'
               }}
             >
-              Revolutionizing Development
+              Never Miss Any Call Again
             </h2>
           </motion.div>
         </div>
@@ -65,7 +65,7 @@ const ScrollingText = () => {
                 letterSpacing: '-0.02em'
               }}
             >
-              With AI Intelligence
+              With Artificial Intelligence
             </h2>
           </motion.div>
         </div>

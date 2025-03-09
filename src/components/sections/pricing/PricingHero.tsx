@@ -284,7 +284,7 @@ const PricingHero = () => {
                 backgroundSize: '200% auto',
               }}
             >
-              Pricing Plans
+              Flexible Pricing
             </motion.span>
             <br className="hidden sm:block" />
             <motion.span
@@ -301,7 +301,7 @@ const PricingHero = () => {
                 backgroundSize: '200% auto',
               }}
             >
-              for Every Business
+              Tailored to Your Business
             </motion.span>
           </motion.h1>
           
@@ -361,7 +361,9 @@ const PricingHero = () => {
               tap: { scale: 0.95 }
             }}
             className="group relative rounded-full"
-            onClick={() => navigate('/pricing')}
+            onClick={() => {
+              document.getElementById('pricing-plans')?.scrollIntoView({ behavior: 'smooth' });
+            }}
           >
             {/* Button Container */}
             <div className="relative px-8 py-4 rounded-full">

@@ -104,8 +104,8 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({
         {/* Button Content */}
         <div className="relative flex items-center gap-3">
           <div className="relative flex items-center gap-3">
-            <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-[#7A0BC0] group-hover:text-white transition-colors duration-300" />
-            <span className="text-base sm:text-lg font-medium bg-gradient-to-r from-white via-[#7A0BC0] to-white bg-clip-text text-transparent">
+            <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-white transition-colors duration-300" />
+            <span className="text-base sm:text-lg font-medium text-white transition-colors duration-300">
               {text}
             </span>
             <motion.div
@@ -129,10 +129,11 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({
             transition={{
               duration: 2,
               repeat: Infinity,
-              ease: "easeInOut"
+              ease: "easeInOut",
+              delay: 0.5
             }}
           >
-            <span className="text-[#7A0BC0] group-hover:text-white transition-colors duration-300">→</span>
+            <span className="text-white transition-colors duration-300">→</span>
           </motion.div>
         </div>
       </div>
@@ -416,7 +417,7 @@ const Services: React.FC = () => {
               <div className="space-y-2">
                 <motion.p
                   variants={itemVariants}
-                  className="text-[#4D07E3] text-base md:text-lg tracking-[0.3em] uppercase font-medium bg-clip-text text-transparent bg-gradient-to-r from-[#4D07E3] via-[#7A0BC0] to-[#4D07E3] animate-gradient-x"
+                  className="text-[#4D07E3] text-base md:text-lg tracking-[0.3em] uppercase font-medium bg-clip-text text-white"
                   style={{
                     textShadow: "0 0 20px rgba(122, 11, 192, 0.5)"
                   }}
@@ -433,7 +434,9 @@ const Services: React.FC = () => {
                   }}
                 >
                   <motion.span 
-                    className="inline-block bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white"
+                    className="inline-block bg-clip-text text-transparent bg-clip-text text-transparent bg-gradient-to-r from-white via-[#7A0BC0] to-white animate-gradient-x"
+                    // className="text-[#4D07E3] text-base md:text-lg tracking-[0.3em] uppercase font-medium bg-clip-text text-transparent bg-gradient-to-r from-white via-[#7A0BC0] to-white animate-gradient-x"
+
                     animate={{
                       backgroundPosition: ['0% center', '100% center', '0% center'],
                     }}
@@ -467,14 +470,8 @@ const Services: React.FC = () => {
                     WebkitTextFillColor: "transparent",
                   }}
                 >
-                  Experience the future of AI technology with our
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#7A0BC0] to-[#4D07E3] font-medium mx-2">
-                    innovative solutions
-                  </span>
-                  and
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#4D07E3] to-[#7A0BC0] font-medium mx-2">
-                    cutting-edge services
-                  </span>
+                Experience the future with cutting-edge AI solutions built for efficiency and growth.                  {/* <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#7A0BC0] to-[#4D07E3] font-medium mx-2"> */}
+                  
                 </motion.p>
               </motion.div>
 

@@ -236,6 +236,51 @@ export const AIAgentInteraction = () => {
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen bg-black">
+      {/* Premium Animated Background Lines */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-purple-900/20 via-black to-black" />
+        
+        {/* Animated gradient lines */}
+        <div className="absolute inset-0 overflow-hidden">
+          <motion.div
+            className="absolute w-full h-[1px] bg-gradient-to-r from-transparent via-[#4D07E3]/50 to-transparent"
+            style={{ top: "30%" }}
+            animate={{
+              x: ["-100%", "100%"],
+            }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          />
+          <motion.div
+            className="absolute w-[1px] h-full bg-gradient-to-b from-transparent via-[#7A0BC0]/50 to-transparent"
+            style={{ left: "30%" }}
+            animate={{
+              y: ["-100%", "100%"],
+            }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          />
+          <motion.div
+            className="absolute w-full h-[1px] bg-gradient-to-r from-transparent via-[#7A0BC0]/30 to-transparent"
+            style={{ top: "70%" }}
+            animate={{
+              x: ["100%", "-100%"],
+            }}
+            transition={{
+              duration: 7,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          />
+        </div>
+      </div>
+      
       {/* Title Section */}
       <div className="text-center mb-16">
         <h2 className="text-6xl md:text-8xl font-bold tracking-tight">

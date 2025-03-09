@@ -45,13 +45,13 @@ export const ServiceCTA = () => {
       <div className="relative container mx-auto px-4">
         <motion.div
           className="max-w-4xl mx-auto text-center"
-          initial={{ opacity: 0, y: 50 }}
+          // initial={{ opacity: 0, y: 50 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           <motion.h2
             className="text-5xl md:text-6xl font-bold mb-8"
-            initial={{ opacity: 0, y: 20 }}
+            // initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
           >
@@ -66,7 +66,7 @@ export const ServiceCTA = () => {
 
           <motion.p
             className="text-xl text-gray-400 mb-12 leading-relaxed"
-            initial={{ opacity: 0, y: 20 }}
+            // initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
@@ -75,7 +75,7 @@ export const ServiceCTA = () => {
 
           <motion.div
             className="flex flex-col sm:flex-row gap-6 justify-center items-center"
-            initial={{ opacity: 0, y: 20 }}
+            //initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.8 }}
           >

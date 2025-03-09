@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useMotionValue, useTransform, LayoutGroup } from 'framer-motion';
-import { Bot, Send, CheckCircle, Calendar as CalendarIcon, Star, Clock, Mail, ArrowRight, ArrowLeft, ListChecks, User, Phone, Building2, Loader2 } from 'lucide-react';
+import { Bot, Send, CheckCircle, Calendar as CalendarIcon, Star, Clock, Mail, ArrowRight, ArrowLeft, ListChecks, User, Phone, Building2, Loader2, Check } from 'lucide-react';
 import { format } from 'date-fns';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -11,40 +11,107 @@ import 'react-day-picker/dist/style.css';
 interface Service {
   id: number;
   name: string;
-  price: number;
+  price: string | number;
   description: string;
+  monthlyFee?: string;
   icon: string;
   rating: string;
   duration: string;
+  type: 'voice' | 'chatbot';
+  features: string[];
+  popular?: boolean;
 }
 
 const services: Service[] = [
+  // AI Voice Agent Plans
   { 
     id: 1, 
-    name: 'Website Development', 
-    price: 999, 
-    description: 'Custom responsive websites built with modern technologies',
-    icon: '🌐',
-    rating: '4.9',
-    duration: '1 hour'
+    name: 'Voice Agent Starter', 
+    price: '599',
+    description: 'Setup one time fees only',
+    monthlyFee: '$49/month management fees + Operating cost',
+    icon: '🎙️',
+    rating: '4.8',
+    duration: '1-2 weeks',
+    type: 'voice',
+    features: [
+      "FAQ",
+      "Ticket Creation/Leave Note - pass any message of user to business"
+    ]
   },
   { 
     id: 2, 
-    name: 'Mobile App Development', 
-    price: 1499, 
-    description: 'Native iOS and Android apps with seamless UX',
-    icon: '📱',
-    rating: '4.8',
-    duration: '1 hour'
+    name: 'Voice Agent Pro', 
+    price: '1299',
+    description: 'Setup one time fees only',
+    monthlyFee: '$99/month management fees + Operating cost',
+    icon: '🎙️',
+    rating: '4.9',
+    duration: '2-3 weeks',
+    type: 'voice',
+    popular: true,
+    features: [
+      "Everything in Starter +",
+      "Appointment setting to calendar",
+      "Dedicated Dashboard",
+      "updates customer records in real time"
+    ]
   },
   { 
     id: 3, 
-    name: 'UI/UX Design', 
-    price: 799, 
-    description: 'User-centered design with modern aesthetics',
-    icon: '🎨',
-    rating: '4.7',
-    duration: '1 hour'
+    name: 'Voice Agent Premium', 
+    price: '2499',
+    description: 'Setup one time fees only',
+    monthlyFee: '$249/month management fees + Operating cost',
+    icon: '🎙️',
+    rating: '5.0',
+    duration: '3-4 weeks',
+    type: 'voice',
+    features: [
+      "All in Pro +",
+      "Meeting management",
+      "Multi Channel agent",
+      "outbound marketing"
+    ]
+  },
+  // Chatbot Plans
+  { 
+    id: 4, 
+    name: 'Chatbot Pro', 
+    price: '599',
+    description: 'Setup one time fees only',
+    monthlyFee: '$49/month management fees + Operating cost',
+    icon: '💬',
+    rating: '4.8',
+    duration: '1-2 weeks',
+    type: 'chatbot',
+    features: [
+      "FAQ",
+      "Ticket Creation/Leave Note",
+      "Single Channel",
+      "Pass any message of user to business"
+    ]
+  },
+  { 
+    id: 5, 
+    name: 'Chatbot Premium', 
+    price: '1299',
+    description: 'Setup one time fees only',
+    monthlyFee: '$99/month maintenance fees + Operating cost',
+    icon: '💬',
+    rating: '4.9',
+    duration: '2-3 weeks',
+    type: 'chatbot',
+    popular: true,
+    features: [
+      "All in Pro +",
+      "Appointment Setting",
+      "Multi-channel",
+      "outbound marketing",
+      "Advanced Ai Models",
+      "Multi Language Support",
+      "Human Hand-off"
+    ]
   }
 ];
 
@@ -134,29 +201,43 @@ const TypingIndicator = () => {
 };
 
 const ServiceCard = ({ service, isSelected, onSelect }: { service: Service; isSelected: boolean; onSelect: () => void }) => {
-  const scale = useMotionValue(1);
-  const boxShadow = useTransform(
-    scale,
-    [1, 1.02],
-    ['0 0 0 rgba(147, 51, 234, 0)', '0 20px 40px rgba(147, 51, 234, 0.2)']
-  );
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <motion.div
-      style={{ scale, boxShadow }}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
+      className={`relative p-6 rounded-2xl transition-all duration-300 cursor-pointer ${
+        isSelected
+          ? 'bg-gradient-to-b from-[#4D07E3]/20 to-[#7A0BC0]/20 border-2 border-[#4D07E3]'
+          : 'bg-black/50 border border-gray-800 hover:border-[#4D07E3]/50'
+      }`}
       onClick={onSelect}
-      className={`
-        relative p-6 rounded-2xl cursor-pointer
-        transition-all duration-300 group
-        ${isSelected
-          ? 'bg-gradient-to-br from-purple-600/20 to-blue-600/20 border-2 border-purple-500/50'
-          : 'bg-[#0a0a0a] border border-[#1a1a1a] hover:border-purple-500/30'
-        }
-        backdrop-blur-xl overflow-hidden
-      `}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
+      {/* Popular Badge */}
+      {service.popular && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="absolute -top-3 -right-2 z-10"
+        >
+          <div className="relative">
+            {/* Glow effect */}
+            <div className="absolute inset-0 bg-[#4D07E3] blur-md opacity-50" />
+            
+            {/* Badge */}
+            <div className="relative px-4 py-1 bg-gradient-to-r from-[#4D07E3] to-[#7A0BC0] rounded-full">
+              <div className="flex items-center gap-1">
+                <Star className="w-3 h-3 text-yellow-300" />
+                <span className="text-xs font-semibold text-white">Popular</span>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+
       {/* Selection Indicator */}
       <AnimatePresence>
         {isSelected && (
@@ -198,6 +279,7 @@ const ServiceCard = ({ service, isSelected, onSelect }: { service: Service; isSe
           {service.name}
         </h3>
         <p className="text-gray-400 mb-4 text-sm">{service.description}</p>
+        <p className="text-gray-400 mb-4 text-sm">{service.monthlyFee}</p>
         
         <div className="flex items-center justify-between text-sm">
           <div className="flex items-center gap-1 text-purple-400">
@@ -208,6 +290,19 @@ const ServiceCard = ({ service, isSelected, onSelect }: { service: Service; isSe
             <Star className="w-4 h-4" />
             <span>{service.rating}</span>
           </div>
+        </div>
+
+        {/* Features */}
+        <div className="mt-4 space-y-2">
+          {service.features.slice(0, 3).map((feature, index) => (
+            <div key={index} className="flex items-center gap-2 text-sm text-gray-400">
+              <Check className="w-4 h-4 text-green-400" />
+              <span>{feature}</span>
+            </div>
+          ))}
+          {service.features.length > 3 && (
+            <div className="text-sm text-purple-400">+{service.features.length - 3} more features</div>
+          )}
         </div>
 
         <div className="mt-4 flex items-center justify-between">
@@ -411,6 +506,24 @@ const GlowingOrbs = () => {
   );
 };
 
+const ServiceTypeTab = ({ type, isActive, onClick }: { type: string; isActive: boolean; onClick: () => void }) => (
+  <motion.button
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
+    onClick={(e) => {
+      e.preventDefault(); // Prevent default behavior
+      onClick();
+    }}
+    className={`px-6 py-3 rounded-full text-base sm:text-lg font-medium transition-all duration-300 ${
+      isActive 
+        ? 'bg-gradient-to-r from-[#4D07E3] to-[#7A0BC0] text-white shadow-lg shadow-purple-500/20' 
+        : 'bg-black/50 text-gray-400 hover:text-white border border-gray-800'
+    }`}
+  >
+    {type}
+  </motion.button>
+);
+
 const Booking = () => {
   const [selectedServices, setSelectedServices] = useState<Service[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
@@ -426,6 +539,10 @@ const Booking = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const progressBarRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
+  const [activeServiceType, setActiveServiceType] = useState<'voice' | 'chatbot'>('voice');
+
+  // Filter services by type
+  const filteredServices = services.filter(service => service.type === activeServiceType);
 
   useEffect(() => {
     if (progressBarRef.current) {
@@ -716,74 +833,37 @@ const Booking = () => {
             >
               {/* Services Selection */}
               <div className="space-y-6">
-                <label className="block text-white text-lg sm:text-xl font-medium mb-6">Select Services *</label>
+                <div className="flex flex-col items-center space-y-4">
+                  <label className="block text-white text-lg sm:text-xl font-medium">Select Services *</label>
+                  
+                  {/* Service Type Tabs */}
+                  <div className="flex gap-4 mb-8">
+                    <ServiceTypeTab 
+                      type="AI Voice Agent" 
+                      isActive={activeServiceType === 'voice'} 
+                      onClick={() => setActiveServiceType('voice')} 
+                    />
+                    <ServiceTypeTab 
+                      type="Chatbot" 
+                      isActive={activeServiceType === 'chatbot'} 
+                      onClick={() => setActiveServiceType('chatbot')} 
+                    />
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-                  {services.map((service, index) => (
+                  {filteredServices.map((service, index) => (
                     <motion.div
                       key={service.id}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.2 * index }}
-                      whileHover={{ 
-                        scale: 1.03,
-                        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)'
-                      }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => handleServiceSelect(service)}
-                      className={`
-                        relative cursor-pointer p-4 sm:p-6 rounded-2xl border-2 backdrop-blur-xl
-                        overflow-hidden group
-                        ${selectedServices.some(s => s.id === service.id)
-                          ? 'border-purple-500 bg-gradient-to-br from-purple-500/10 via-transparent to-blue-500/10'
-                          : 'border-white/10 bg-black/40 hover:bg-black/50'
-                        }
-                        transition-all duration-500 hover:shadow-2xl
-                      `}
                     >
-                      {/* Glow effect */}
-                      <div className={`
-                        absolute inset-0 opacity-0 group-hover:opacity-100
-                        transition-opacity duration-500
-                        bg-gradient-to-br from-purple-500/20 via-transparent to-blue-500/20
-                        blur-xl
-                      `} />
-
-                      {/* Content wrapper */}
-                      <div className="relative z-10">
-                        {/* Icon section */}
-                        <div className={`
-                          inline-block mb-4 p-4 rounded-xl
-                          ${selectedServices.some(s => s.id === service.id)
-                            ? 'bg-gradient-to-br from-purple-500/20 to-blue-500/20'
-                            : 'bg-white/5'
-                          }
-                          transition-all duration-300 group-hover:scale-110
-                        `}>
-                          <span className="text-4xl">{service.icon}</span>
-                        </div>
-
-                        {/* Text content */}
-                        <div className="space-y-3">
-                          <h3 className="text-xl font-semibold text-white group-hover:text-purple-400 transition-colors">
-                            {service.name}
-                          </h3>
-                          <p className="text-gray-400 text-sm leading-relaxed min-h-[60px]">
-                            {service.description}
-                          </p>
-
-                          {/* Info badges */}
-                          <div className="flex items-center gap-3 pt-2">
-                            <div className="flex items-center gap-2 bg-white/5 px-3 py-2 rounded-full">
-                              <Clock className="w-4 h-4 text-purple-400" />
-                              <span className="text-sm text-gray-300">{service.duration}</span>
-                            </div>
-                            <div className="flex items-center gap-2 bg-white/5 px-3 py-2 rounded-full">
-                              <Star className="w-4 h-4 text-yellow-400" />
-                              <span className="text-sm text-gray-300">{service.rating}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      <ServiceCard
+                        service={service}
+                        isSelected={selectedServices.some(s => s.id === service.id)}
+                        onSelect={() => handleServiceSelect(service)}
+                      />
                     </motion.div>
                   ))}
                 </div>
