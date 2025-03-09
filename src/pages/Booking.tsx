@@ -4,14 +4,14 @@ import { format } from 'date-fns';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import useSound from 'use-sound';
-import { emailService } from '../services/emailService';
+import { BookingDetails, emailService } from '../services/emailService';
 import { DayPicker, SelectSingleEventHandler } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 
 interface Service {
-  id: number;
+  id: string;
   name: string;
-  price: string | number;
+  price: string;
   description: string;
   monthlyFee?: string;
   icon: string;
@@ -25,7 +25,7 @@ interface Service {
 const services: Service[] = [
   // AI Voice Agent Plans
   { 
-    id: 1, 
+    id: '1', 
     name: 'Voice Agent Starter', 
     price: '599',
     description: 'Setup one time fees only',
@@ -40,7 +40,7 @@ const services: Service[] = [
     ]
   },
   { 
-    id: 2, 
+    id: '2', 
     name: 'Voice Agent Pro', 
     price: '1299',
     description: 'Setup one time fees only',
@@ -58,7 +58,7 @@ const services: Service[] = [
     ]
   },
   { 
-    id: 3, 
+    id: '3', 
     name: 'Voice Agent Premium', 
     price: '2499',
     description: 'Setup one time fees only',
@@ -76,7 +76,7 @@ const services: Service[] = [
   },
   // Chatbot Plans
   { 
-    id: 4, 
+    id: '4', 
     name: 'Chatbot Pro', 
     price: '599',
     description: 'Setup one time fees only',
@@ -93,7 +93,7 @@ const services: Service[] = [
     ]
   },
   { 
-    id: 5, 
+    id: '5', 
     name: 'Chatbot Premium', 
     price: '1299',
     description: 'Setup one time fees only',
@@ -589,6 +589,12 @@ const Booking = () => {
       selectedTime
     );
   };
+  function formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -597,15 +603,14 @@ const Booking = () => {
     setIsSubmitting(true);
 
     try {
-      const formData = {
+      const formData:BookingDetails = {
         name: formRef.current.user_name.value,
         email: formRef.current.user_email.value,
         phone: formRef.current.phone.value,
         services: selectedServices,
-        date: selectedDate,
+        date: formatDate(selectedDate),
         time: selectedTime,
-        duration: totalDuration,
-        notes: formRef.current.notes?.value || '',
+        additionalInfo: formRef.current.notes?.value || '',
       };
 
       // Validate required fields

@@ -24,6 +24,8 @@ export interface BookingDetails {
   additionalInfo?: string;
 }
 
+
+
 export interface ContactDetails {
   name: string;
   email: string;
