@@ -11,67 +11,67 @@ interface Message {
 const conversation: Message[] = [
   {
     text: "Hello! I'm your AI assistant. I can help you explore our services or schedule a consultation. How can I assist you today?",
-    audioFile: "./sounds/ai1.mp3",
+    audioFile: "/sounds/ai1.mp3",
     isUser: false
   },
   {
     text: "Hi! I'm interested in learning more about your services.",
-    audioFile: "./sounds/user1.mp3",
+    audioFile: "sounds/user1.mp3",
     isUser: true
   },
   {
     text: "Great! We offer a range of AI-powered solutions including chatbots, virtual assistants, and automation tools. Which area interests you the most?",
-    audioFile: "./sounds/ai2.mp3",
+    audioFile: "sounds/ai2.mp3",
     isUser: false
   },
   {
     text: "I'm particularly interested in chatbots for customer service.",
-    audioFile: "./sounds/user2.mp3",
+    audioFile: "sounds/user2.mp3",
     isUser: true
   },
   {
     text: "Excellent choice! Our chatbots use advanced natural language processing to provide 24/7 customer support. They can handle inquiries, process requests, and even learn from interactions.",
-    audioFile: "./sounds/ai3.mp3",
+    audioFile: "sounds/ai3.mp3",
     isUser: false
   },
   {
     text: "That sounds promising. What kind of setup and maintenance is required?",
-    audioFile: "./sounds/user3.mp3",
+    audioFile: "sounds/user3.mp3",
     isUser: true
   },
   {
     text: "We handle everything from setup to maintenance. The implementation is seamless, and we provide regular updates and monitoring. Would you like to schedule a demo to see it in action?",
-    audioFile: "./sounds/ai4.mp3",
+    audioFile: "sounds/ai4.mp3",
     isUser: false
   },
   {
     text: "Yes, I'd like to see a demo. What's the next step?",
-    audioFile: "./sounds/user4.mp3",
+    audioFile: "sounds/user4.mp3",
     isUser: true
   },
   {
     text: "Perfect! I can help you schedule a demo with our team. We'll show you the full capabilities and customize the presentation to your needs. What time works best for you?",
-    audioFile: "./sounds/ai5.mp3",
+    audioFile: "sounds/ai5.mp3",
     isUser: false
   },
   {
     text: "How about next Tuesday afternoon?",
-    audioFile: "./sounds/user5.mp3",
+    audioFile: "sounds/user5.mp3",
     isUser: true
   },
   {
     text: "Tuesday afternoon works great! I'll send you a calendar invite with the demo details. Is there anything specific you'd like us to focus on during the demo?",
-    audioFile: "./sounds/ai6.mp3",
+    audioFile: "sounds/ai6.mp3",
     isUser: false
   },
   {
     text: "Yes, please focus on integration capabilities and customization options.",
-    audioFile: "./sounds/user6.mp3",
+    audioFile: "sounds/user6.mp3",
     isUser: true
   },
   {
     text: "Perfect! I've noted that down. You'll receive the calendar invite shortly. We look forward to showing you how our chatbot solution can transform your customer service!",
-    audioFile: "./sounds/ai7.mp3",
+    audioFile: "sounds/ai7.mp3",
     isUser: false
   }
 ];

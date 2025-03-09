@@ -135,7 +135,7 @@ const AdvancedChatbotSection = () => {
               >
                 <div className="relative rounded-3xl overflow-hidden shadow-[0_0_15px_rgba(0,0,0,0.5)]">
                   <img 
-                    src="/whatsapp , insta/1.png" 
+                    src="whatsapp , insta/1.png" 
                     alt="WhatsApp Interface" 
                     className="w-full h-auto"
                   />
@@ -181,7 +181,7 @@ const AdvancedChatbotSection = () => {
               >
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                   <img 
-                    src="/whatsapp , insta/2.png" 
+                    src="whatsapp , insta/2.png" 
                     alt="Instagram Interface" 
                     className="w-full h-auto"
                   />

@@ -322,7 +322,7 @@ const AICallerSection = () => {
                 }}
               >
                 <img
-                  src="/public/whatsapp , insta/eev.png"
+                  src="whatsapp , insta/eev.png"
                   alt="EVE AI Assistant"
                   className="w-full h-full object-contain"
                 />

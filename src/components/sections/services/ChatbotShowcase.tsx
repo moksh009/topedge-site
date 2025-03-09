@@ -227,12 +227,12 @@ const ChatbotShowcase = () => {
       {/* Audio elements */}
       <audio 
         ref={sendAudioRef} 
-        src="/message sound/send.mp3" 
+        src="message sound/send.mp3" 
         preload="auto"
       />
       <audio 
         ref={receiveAudioRef} 
-        src="/message sound/receive.mp3" 
+        src="message sound/receive.mp3" 
         preload="auto"
       />
       

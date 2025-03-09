@@ -10,7 +10,7 @@ const testimonials = [
     content: "TopEdge's AI solutions transformed our customer service. Response times dropped by 90% while satisfaction increased by 45%. It's like having a superhuman team that never sleeps.",
     rating: 5,
     company: {
-      logo: "/public/code clinic.png",
+      logo: "code clinic.png",
       name: "TechCorp"
     }
   },
