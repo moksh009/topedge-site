@@ -117,7 +117,7 @@ const Navbar = () => {
             {/* Logo */}
             <Link to="/" className="relative group md:block hidden">
               <div className="flex items-center space-x-4">
-                <img src="/public/Logo asset 3 (2).png" alt="TopEdge Logo" className="h-14 w-auto" />
+                <img src="Logo asset 3 (2).png" alt="TopEdge Logo" className="h-14 w-auto" />
                 <div className="flex flex-col">
                   <span className="text-2xl font-bold">
                     <span className="text-white">Top</span>
