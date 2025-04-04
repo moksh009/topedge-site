@@ -56,11 +56,11 @@ export const CTASection = () => {
             transition={{ duration: 0.8, delay: 0.4 }}
           >
             <span className="inline-block bg-gradient-to-r from-purple-400 via-fuchsia-500 to-purple-400 text-transparent bg-clip-text animate-gradient">
-              Transform Your Vision
+              Transform Your Business
             </span>
             <br />
             <span className="inline-block bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 text-transparent bg-clip-text animate-gradient">
-              Into Reality
+              With TopEdge AI
             </span>
           </motion.h2>
 

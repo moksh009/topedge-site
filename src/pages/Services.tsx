@@ -470,7 +470,7 @@ const Services: React.FC = () => {
                     WebkitTextFillColor: "transparent",
                   }}
                 >
-                Experience the future with cutting-edge AI solutions built for efficiency and growth.                  {/* <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#7A0BC0] to-[#4D07E3] font-medium mx-2"> */}
+               Unlock the power of AI with innovative solutions designed for efficiency, automation, and growth.                {/* <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#7A0BC0] to-[#4D07E3] font-medium mx-2"> */}
                   
                 </motion.p>
               </motion.div>

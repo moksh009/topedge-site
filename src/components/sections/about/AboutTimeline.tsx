@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 
@@ -11,8 +11,9 @@ interface TimelineItemProps {
 
 const TimelineItem: React.FC<TimelineItemProps> = ({ year, title, description, index }) => {
   const { ref, inView } = useInView({
-    threshold: 0.2,
-    triggerOnce: false
+    threshold: 0.5,
+    triggerOnce: false,
+    rootMargin: "-100px 0px"
   });
 
   return (
@@ -21,14 +22,14 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ year, title, description, i
       initial={{ opacity: 0, y: 50 }}
       animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
       transition={{
-        duration: 1,
-        delay: index * 0.2,
+        duration: 0.8,
+        delay: index * 0.3,
         ease: [0.25, 0.1, 0.25, 1]
       }}
       className="relative group"
     >
       {/* Timeline Line */}
-      <div className="absolute left-0 top-0 bottom-0 w-[3px] overflow-hidden">
+      <div className="absolute left-0 sm:left-0 top-0 bottom-0 w-[2px] sm:w-[3px] overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#0A84FF]/50 via-[#0A84FF]/20 to-transparent" />
         
         {/* Animated Line */}
@@ -37,9 +38,9 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ year, title, description, i
           initial={{ height: "0%" }}
           animate={inView ? { height: "100%" } : { height: "0%" }}
           transition={{ 
-            duration: 1.5,
-            delay: index * 0.3,
-            ease: "easeInOut"
+            duration: 1.2,
+            delay: index * 0.2,
+            ease: "easeOut"
           }}
         >
           {/* Glowing Effect */}
@@ -52,6 +53,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ year, title, description, i
               duration: 2,
               repeat: Infinity,
               ease: "linear",
+              delay: index * 0.2
             }}
           />
         </motion.div>
@@ -68,7 +70,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ year, title, description, i
           stiffness: 200,
           damping: 20
         }}
-        className="absolute left-0 top-0 w-5 h-5 -translate-x-1/2 rounded-full bg-[#0A84FF] border-2 border-[#0A84FF]/30 group-hover:scale-150 transition-transform duration-300"
+        className="absolute left-0 sm:left-0 top-0 w-4 h-4 sm:w-5 sm:h-5 -translate-x-1/2 rounded-full bg-[#0A84FF] border-2 border-[#0A84FF]/30 group-hover:scale-150 transition-transform duration-300"
       >
         <div className="absolute inset-0 rounded-full bg-[#0A84FF] animate-ping opacity-20" />
         <motion.div
@@ -86,22 +88,22 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ year, title, description, i
       </motion.div>
 
       {/* Content */}
-      <div className="pl-12 pb-20">
+      <div className="pl-8 sm:pl-12 pb-16 sm:pb-20">
         {/* Year */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: index * 0.3 }}
-          className="inline-flex items-center space-x-2 mb-4"
+          className="inline-flex items-center space-x-2 mb-3 sm:mb-4"
         >
-          <div className="px-6 py-2 rounded-full bg-[#1C1C1E] border border-[#0A84FF]/20 backdrop-blur-xl group-hover:border-[#0A84FF]/40 transition-colors duration-300">
-            <span className="text-base text-[#0A84FF] font-medium tracking-wider"
+          <div className="px-4 sm:px-6 py-1.5 sm:py-2 rounded-full bg-[#1C1C1E] border border-[#0A84FF]/20 backdrop-blur-xl group-hover:border-[#0A84FF]/40 transition-colors duration-300">
+            <span className="text-sm sm:text-base text-[#0A84FF] font-medium tracking-wider"
               style={{ fontFamily: "SF Pro Text, system-ui, -apple-system, BlinkMacSystemFont, sans-serif" }}>
               {year}
             </span>
           </div>
-          <div className="h-px w-24 bg-gradient-to-r from-[#0A84FF]/50 to-transparent" />
+          <div className="h-px w-12 sm:w-24 bg-gradient-to-r from-[#0A84FF]/50 to-transparent" />
         </motion.div>
 
         {/* Title & Description Container */}
@@ -110,12 +112,12 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ year, title, description, i
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: index * 0.4 }}
-          className="relative bg-[#1C1C1E]/40 backdrop-blur-xl rounded-2xl p-8 border border-white/5 group-hover:border-[#0A84FF]/20 transition-all duration-300"
+          className="relative bg-[#1C1C1E]/40 backdrop-blur-xl rounded-2xl p-6 sm:p-8 border border-white/5 group-hover:border-[#0A84FF]/20 transition-all duration-300"
         >
-          <h3 className="text-2xl font-semibold text-white mb-4 group-hover:text-[#0A84FF] transition-colors duration-300">
+          <h3 className="text-xl sm:text-2xl font-semibold text-white mb-3 sm:mb-4 group-hover:text-[#0A84FF] transition-colors duration-300">
             {title}
           </h3>
-          <p className="text-lg text-[#86868B] font-light leading-relaxed group-hover:text-white/80 transition-colors duration-300"
+          <p className="text-base sm:text-lg text-[#86868B] font-light leading-relaxed group-hover:text-white/80 transition-colors duration-300"
             style={{ fontFamily: "SF Pro Text, system-ui, -apple-system, BlinkMacSystemFont, sans-serif" }}>
             {description}
           </p>
@@ -134,12 +136,27 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ year, title, description, i
 };
 
 const AboutTimeline: React.FC = () => {
-  const { scrollYProgress } = useScroll();
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
+  const containerRef = useRef<HTMLElement>(null);
+  
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
 
-  const { ref, inView } = useInView({
-    threshold: 0.1,
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.1, 0.9, 1],
+    [0.3, 1, 1, 0.3]
+  );
+
+  const y = useTransform(
+    scrollYProgress,
+    [0, 0.1, 0.9, 1],
+    [50, 0, 0, 50]
+  );
+
+  const { ref: sectionRef, inView: sectionInView } = useInView({
+    threshold: 0.2,
     triggerOnce: false
   });
 
@@ -162,7 +179,11 @@ const AboutTimeline: React.FC = () => {
   ];
 
   return (
-    <section ref={ref} className="relative py-32 bg-black overflow-hidden" id="timeline">
+    <section 
+      ref={containerRef} 
+      className="relative py-16 sm:py-32 bg-black overflow-hidden" 
+      id="timeline"
+    >
       {/* Background Effects */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(10,132,255,0.05),transparent_50%)]" />
@@ -172,7 +193,7 @@ const AboutTimeline: React.FC = () => {
             background: 'radial-gradient(circle at 70% 30%, rgba(10, 132, 255, 0.08) 0%, transparent 60%)',
             y: useTransform(scrollYProgress, [0, 1], [0, 100])
           }}
-          animate={inView ? { opacity: [0, 1] } : { opacity: 0 }}
+          animate={sectionInView ? { opacity: [0, 1] } : { opacity: 0 }}
           transition={{ duration: 1 }}
         />
         
@@ -183,9 +204,9 @@ const AboutTimeline: React.FC = () => {
               key={i}
               className="absolute h-[1px] w-full bg-gradient-to-r from-transparent via-[#0A84FF]/20 to-transparent"
               style={{ top: `${20 * (i + 1)}%` }}
-              animate={inView ? {
+              animate={sectionInView ? {
                 x: ['-100%', '100%'],
-                opacity: [0, 1, 0]
+                opacity: [0, 0.5, 0]
               } : {
                 x: '-100%',
                 opacity: 0
@@ -193,7 +214,7 @@ const AboutTimeline: React.FC = () => {
               transition={{
                 duration: 15,
                 repeat: Infinity,
-                delay: i * 3,
+                delay: i * 2,
                 ease: 'linear'
               }}
             />
@@ -202,26 +223,31 @@ const AboutTimeline: React.FC = () => {
       </div>
 
       <motion.div
-        style={{ opacity }}
+        ref={sectionRef}
+        style={{ 
+          opacity,
+          y,
+          transition: "0.8s"
+        }}
         className="relative container mx-auto px-4 sm:px-6 lg:px-8"
       >
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1 }}
-          className="text-center mb-32"
+          viewport={{ once: false, amount: 0.5 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-16 sm:mb-32"
         >
           <div className="inline-flex items-center justify-center mb-4">
-            <div className="h-px w-12 bg-[#0A84FF]/50" />
-            <p className="text-[#0A84FF] text-lg font-medium tracking-wide px-4">OUR JOURNEY</p>
-            <div className="h-px w-12 bg-[#0A84FF]/50" />
+            <div className="h-px w-8 sm:w-12 bg-[#0A84FF]/50" />
+            <p className="text-[#0A84FF] text-base sm:text-lg font-medium tracking-wide px-3 sm:px-4">OUR JOURNEY</p>
+            <div className="h-px w-8 sm:w-12 bg-[#0A84FF]/50" />
           </div>
-          <h2 className="text-5xl sm:text-6xl font-semibold tracking-tight text-white mb-6">
+          <h2 className="text-4xl sm:text-5xl sm:text-6xl font-semibold tracking-tight text-white mb-4 sm:mb-6 px-4 sm:px-0">
             Our Story So Far
           </h2>
-          <p className="text-xl text-[#86868B] max-w-3xl mx-auto font-light leading-relaxed"
+          <p className="text-lg sm:text-xl text-[#86868B] max-w-3xl mx-auto font-light leading-relaxed px-4 sm:px-0"
             style={{ fontFamily: "SF Pro Text, system-ui, -apple-system, BlinkMacSystemFont, sans-serif" }}>
             From vision to reality: Transforming the future of business automation
           </p>

@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import HeroSection from '../components/sections/HeroSection';
 import ScrollingText from '../components/sections/ScrollingText';
-import AIAgentSection from '../components/sections/AIAgentSection';
+// import AIAgentSection from '../components/sections/AIAgentSection';
 import InvisibleApproachSection from '../components/sections/InvisibleApproachSection';
 import { ComparisonSection } from '../components/sections/ComparisonSection';
 import InfiniteIconsSection from '../components/sections/InfiniteIconsSection';
@@ -97,9 +97,9 @@ const Home = () => {
           <div className="-mt-12 sm:mt-0">
             <ScrollingText />
           </div>
-          <div className="-mt-16 sm:mt-8 md:mt-16">
+          {/* <div className="-mt-16 sm:mt-8 md:mt-16">
             <AIAgentSection />
-          </div>
+          </div> */}
            {/* New Benefits Section */}
            <div className="mt-0 sm:mt-8 md:mt-16">
             <AIBenefitsShowcase />

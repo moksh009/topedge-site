@@ -11,7 +11,7 @@ const features = [
   },
   {
     icon: <Waves className="w-7 h-7 text-violet-400 group-hover:text-violet-300 transition-colors duration-300" />,
-    title: "10+ Languages",
+    title: "50+ Languages",
     description: "Break language barriers and expand your global reach"
   },
   {
@@ -131,7 +131,7 @@ const AICallerSection = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <motion.h2
-              className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6 mx-auto lg:mx-0 max-w-[15ch]"
+              className="text-4xl sm:text-5xl md:text-8xl font-bold mb-4 sm:mb-6 mx-auto lg:mx-0 max-w-[15ch]"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -144,7 +144,7 @@ const AICallerSection = () => {
                 animation: 'shine 8s linear infinite',
               }}
             >
-              Never Miss a Business Call
+              Never Miss a <br/>Single call
             </motion.h2>
             <motion.p
               className="text-gray-400 text-lg sm:text-xl mb-8 sm:mb-12 mx-auto lg:mx-0 max-w-[35ch]"

@@ -36,3 +36,6 @@ yarn-error.log*
 # Google Cloud credentials
 server/booking-meeting-445311-5a86de3aa9b7.json
 .vercel
+
+# Environment variables
+.env.*.local

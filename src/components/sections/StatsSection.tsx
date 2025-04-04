@@ -20,7 +20,7 @@ export const StatsSection = () => {
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
 
   const stats = [
-    { value: "90%", label: "Accuracy Rate", description: "In AI-powered solutions" },
+    { value: "97%", label: "Accuracy Rate", description: "In AI-powered solutions" },
     { value: "24/7", label: "Availability", description: "Round-the-clock service" },
     { value: "0.1s", label: "Response Time", description: "Lightning-fast interactions" },
     { value: "50+", label: "Languages", description: "Global communication" },

@@ -48,7 +48,7 @@ const AboutMission = () => {
   return (
     <motion.section 
       ref={containerRef} 
-      className="relative min-h-[100vh] w-full py-32 md:py-40 bg-black overflow-hidden"
+      className="relative min-h-[100vh] w-full py-16 sm:py-32 md:py-40 bg-black overflow-hidden"
       style={{ opacity, scale, y }}
       initial="hidden"
       animate="visible"
@@ -57,7 +57,7 @@ const AboutMission = () => {
     >
       {/* Subtle Background Glow */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-[#0A84FF]/5 rounded-full blur-[120px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[800px] h-[300px] sm:h-[500px] bg-[#0A84FF]/5 rounded-full blur-[80px] sm:blur-[120px]" />
       </div>
 
       {/* Content Container */}
@@ -71,7 +71,7 @@ const AboutMission = () => {
             animate={inView ? "visible" : "hidden"}
           >
             <motion.div
-              className="inline-flex items-center justify-center mb-6"
+              className="inline-flex items-center justify-center mb-4 sm:mb-6"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
               transition={{ 
@@ -81,7 +81,7 @@ const AboutMission = () => {
               }}
             >
               <motion.div 
-                className="h-px w-16 bg-gradient-to-r from-transparent via-[#0A84FF] to-transparent"
+                className="h-px w-8 sm:w-16 bg-gradient-to-r from-transparent via-[#0A84FF] to-transparent"
                 animate={{
                   scaleX: inView ? [0, 1] : 0
                 }}
@@ -91,9 +91,9 @@ const AboutMission = () => {
                   ease: [0.25, 0.1, 0.25, 1]
                 }}
               />
-              <p className="text-[#0A84FF] text-sm md:text-base font-medium tracking-[0.2em] px-6 uppercase">Our Mission</p>
+              <p className="text-[#0A84FF] text-xs sm:text-sm md:text-base font-medium tracking-[0.2em] px-3 sm:px-6 uppercase">Our Mission</p>
               <motion.div 
-                className="h-px w-16 bg-gradient-to-r from-transparent via-[#0A84FF] to-transparent"
+                className="h-px w-8 sm:w-16 bg-gradient-to-r from-transparent via-[#0A84FF] to-transparent"
                 animate={{
                   scaleX: inView ? [0, 1] : 0
                 }}
@@ -106,7 +106,7 @@ const AboutMission = () => {
             </motion.div>
 
             <motion.h2
-              className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6"
+              className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-4 sm:mb-6 px-4 sm:px-0"
               variants={{
                 hidden: { 
                   opacity: 0, 
@@ -127,7 +127,7 @@ const AboutMission = () => {
             >
               <span className="text-white relative">
                 Pioneering the Future of
-                <br />
+                <br className="hidden sm:block" />
                 <span className="relative inline-block mt-2">
                   <span className="relative z-10 bg-gradient-to-r from-[#0A84FF] via-white to-[#0A84FF] text-transparent bg-clip-text animate-gradient-x">
                     Intelligent Technology
@@ -149,7 +149,7 @@ const AboutMission = () => {
             </motion.h2>
 
             <motion.p
-              className="text-lg md:text-2xl lg:text-3xl text-[#86868B] max-w-3xl mx-auto font-light leading-relaxed"
+              className="text-base sm:text-lg md:text-2xl lg:text-3xl text-[#A1A1A6] max-w-3xl mx-auto font-light leading-relaxed px-4 sm:px-0"
               variants={{
                 hidden: { 
                   opacity: 0, 

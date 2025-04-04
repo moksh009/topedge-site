@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect, useRef } from 'react';
-import { Bot, User, Send, MessageSquare } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Bot, User, Send, MessageSquare, ChevronDown } from 'lucide-react';
 
 interface Message {
   id: string;
@@ -21,9 +21,10 @@ const ChatbotShowcase = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentPrefilled, setCurrentPrefilled] = useState(prefilledMessages[0]);
   const [isTyping, setIsTyping] = useState(false);
-  const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
   const [prefilledIndex, setPrefilledIndex] = useState(0);
+  const [shouldShowScrollButton, setShouldShowScrollButton] = useState(false);
+  const prevScrollHeightRef = useRef<number>(0);
   
   // Add audio refs
   const sendAudioRef = useRef<HTMLAudioElement>(null);
@@ -99,24 +100,64 @@ const ChatbotShowcase = () => {
     }
   };
 
-  const scrollToBottom = () => {
-    if (messagesContainerRef.current) {
-      const { scrollHeight, clientHeight } = messagesContainerRef.current;
-      messagesContainerRef.current.scrollTo({
-        top: scrollHeight - clientHeight,
-        behavior: 'smooth'
+  // Enhanced scroll behavior
+  const scrollToBottom = (behavior: ScrollBehavior = 'smooth') => {
+    if (chatContainerRef.current) {
+      const scrollHeight = chatContainerRef.current.scrollHeight;
+      const height = chatContainerRef.current.clientHeight;
+      const maxScroll = scrollHeight - height;
+      
+      chatContainerRef.current.scrollTo({
+        top: maxScroll,
+        behavior
       });
     }
   };
 
+  // Check if user is near bottom
+  const isNearBottom = () => {
+    if (chatContainerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
+      return scrollHeight - scrollTop - clientHeight < 100; // Within 100px of bottom
+    }
+    return false;
+  };
+
+  // Handle scroll event
+  const handleScroll = useCallback(() => {
+    if (chatContainerRef.current) {
+      setShouldShowScrollButton(!isNearBottom());
+    }
+  }, []);
+
+  // Add scroll listener
   useEffect(() => {
-    scrollToBottom();
+    const chatContainer = chatContainerRef.current;
+    if (chatContainer) {
+      chatContainer.addEventListener('scroll', handleScroll);
+      return () => chatContainer.removeEventListener('scroll', handleScroll);
+    }
+  }, [handleScroll]);
+
+  // Auto-scroll on new messages
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      const wasAtBottom = isNearBottom();
+      const { scrollHeight } = chatContainerRef.current;
+      
+      if (wasAtBottom || scrollHeight !== prevScrollHeightRef.current) {
+        scrollToBottom();
+      } else {
+        setShouldShowScrollButton(true);
+      }
+      
+      prevScrollHeightRef.current = scrollHeight;
+    }
   }, [messages, isTyping]);
 
+  // Initial scroll
   useEffect(() => {
-    const handleResize = () => scrollToBottom();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    scrollToBottom('auto');
   }, []);
 
   const generateBotResponse = (userMessage: string): string => {
@@ -171,10 +212,17 @@ const ChatbotShowcase = () => {
     // Play send sound and add message
     await playSendSound();
     setMessages(prev => [...prev, userMessage]);
+    scrollToBottom();
 
     // Generate and simulate bot response
     const response = generateBotResponse(currentPrefilled);
     await simulateTyping(response);
+    scrollToBottom();
+  };
+
+  // Add animation complete handler
+  const handleAnimationComplete = () => {
+    scrollToBottom('smooth');
   };
 
   return (
@@ -258,13 +306,42 @@ const ChatbotShowcase = () => {
 
       <div className="max-w-4xl mx-auto px-4">
         <motion.section
-          ref={messagesContainerRef}
           id="chatbot-showcase"
           className="relative min-h-screen bg-black py-20 overflow-hidden"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          <div className="max-w-[420px] mx-auto px-4">
+          {/* External Information Display */}
+          <motion.div
+            className="absolute left-[-360px] top-1/2 -translate-y-1/2 w-[300px]"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <div className="bg-gray-900/80 rounded-lg p-6 backdrop-blur-md border border-gray-700/50">
+              <h3 className="text-white text-xl font-medium mb-4">AI Assistant Features</h3>
+              <ul className="space-y-3">
+                <li className="flex items-center text-gray-300">
+                  <span className="w-2 h-2 bg-blue-400 rounded-full mr-2" />
+                  24/7 Availability
+                </li>
+                <li className="flex items-center text-gray-300">
+                  <span className="w-2 h-2 bg-blue-400 rounded-full mr-2" />
+                  Natural Language Processing
+                </li>
+                <li className="flex items-center text-gray-300">
+                  <span className="w-2 h-2 bg-blue-400 rounded-full mr-2" />
+                  Instant Responses
+                </li>
+                <li className="flex items-center text-gray-300">
+                  <span className="w-2 h-2 bg-blue-400 rounded-full mr-2" />
+                  Context Awareness
+                </li>
+              </ul>
+            </div>
+          </motion.div>
+
+          <div className="relative w-full sm:max-w-[360px] mx-auto px-4">
             <motion.div
               initial={{ y: 20, opacity: 0 }}
               whileInView={{ y: 0, opacity: 1 }}
@@ -272,11 +349,56 @@ const ChatbotShowcase = () => {
               transition={{ duration: 0.6 }}
               className="relative mx-auto"
             >
+              {/* Instructions Container - Added */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5, duration: 0.8 }}
+                className="absolute right-[-180px] bottom-[60px] flex items-center z-50"
+              >
+                <div className="flex flex-col items-start">
+                  {/* Text and Arrow Container */}
+                  <div className="flex items-center gap-2">
+                    {/* Combined Arrow */}
+                    <motion.div
+                      animate={{
+                        x: [-4, 4, -4],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                      className="flex items-center"
+                    >
+                      {/* Arrow head and line combined */}
+                      <div className="flex items-center">
+                        <div className="w-0 h-0 border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent border-r-[5px] border-r-[#0A84FF]" />
+                        <div className="h-[1.5px] w-12 bg-[#0A84FF]" />
+                      </div>
+                    </motion.div>
+                    {/* Text Container */}
+                    <div className="flex flex-col items-start">
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.7 }}
+                        className="bg-[#0A0A0A]/90 backdrop-blur-sm px-4 py-2 rounded-xl border border-[#0A84FF]/20 shadow-lg shadow-[#0A84FF]/10"
+                      >
+                        <span className="text-[#0A84FF] text-base font-medium whitespace-nowrap flex items-center gap-1.5">
+                          Click to send
+                        </span>
+                      </motion.div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+
               <div className="absolute inset-0 -m-1 bg-gradient-to-r from-yellow-500/20 via-pink-500/20 to-maroon-500/20 rounded-full blur-2xl animate-pulse" />
               <div className="absolute inset-0 -m-1 bg-gradient-to-b from-yellow-500/20 via-pink-500/20 to-maroon-500/20 rounded-full blur-2xl animate-pulse" />
 
               {/* iPhone Frame */}
-              <div className="relative w-full h-[860px] bg-[#0A0A0A] rounded-[45px] border-[12px] border-[#1A1A1A] shadow-2xl overflow-hidden">
+              <div className="relative w-full h-[860px] sm:h-[700px] bg-[#0A0A0A] rounded-[45px] border-[12px] border-[#1A1A1A] shadow-2xl overflow-hidden">
                 {/* Phone Notch */}
                 <div className="absolute top-0 inset-x-0 h-6 bg-[#1A1A1A] rounded-b-3xl" />
                 
@@ -307,14 +429,16 @@ const ChatbotShowcase = () => {
                     </div>
                   </div>
 
-                  {/* Messages Container */}
+                  {/* Messages Container with Enhanced Scroll */}
                   <div 
-                    ref={messagesContainerRef}
+                    ref={chatContainerRef}
                     className="h-[calc(100%-180px)] overflow-y-auto px-4 py-4 space-y-4 scroll-smooth"
                     style={{
                       overscrollBehavior: 'contain',
                       scrollbarWidth: 'thin',
-                      scrollbarColor: 'rgba(255,255,255,0.2) transparent'
+                      scrollbarColor: 'rgba(255,255,255,0.2) transparent',
+                      paddingBottom: '140px',
+                      WebkitOverflowScrolling: 'touch'
                     }}
                   >
                     <AnimatePresence mode="popLayout">
@@ -323,7 +447,8 @@ const ChatbotShowcase = () => {
                           key={message.id}
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.2 }}
+                          exit={{ opacity: 0, y: -20 }}
+                          onAnimationComplete={handleAnimationComplete}
                           className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
                         >
                           <div className={`flex items-start gap-2 max-w-[85%] ${
@@ -361,6 +486,7 @@ const ChatbotShowcase = () => {
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0 }}
+                          onAnimationComplete={handleAnimationComplete}
                           transition={{ duration: 0.2 }}
                           className="flex items-start gap-2"
                         >
@@ -389,23 +515,48 @@ const ChatbotShowcase = () => {
                         </motion.div>
                       )}
                     </AnimatePresence>
-                    <div ref={messagesEndRef} style={{ height: 1, width: 1 }} />
                   </div>
 
-                  {/* Input Area */}
-                  <div className="absolute bottom-8 inset-x-4">
-                    <div className="flex items-center gap-2">
+                  {/* Scroll to Bottom Button */}
+                  {shouldShowScrollButton && (
+                    <motion.button
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      onClick={() => scrollToBottom()}
+                      className="absolute bottom-24 right-8 p-2 bg-blue-500 rounded-full shadow-lg z-20 hover:bg-blue-600 transition-colors"
+                    >
+                      <motion.div
+                        animate={{ y: [0, 3, 0] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
+                      >
+                        <ChevronDown className="w-5 h-5 text-white" />
+                      </motion.div>
+                    </motion.button>
+                  )}
+
+                  {/* Input Area with Instructions */}
+                  <div className="absolute bottom-8 inset-x-4 bg-[#0A0A0A]/80 backdrop-blur-sm z-10">
+                    <div className="flex items-center gap-2 relative">
                       <div className="flex-1 bg-[#1C1C1E] rounded-full px-4 py-3">
                         <p className="text-[15px] text-gray-400">{currentPrefilled}</p>
                       </div>
-                      <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        onClick={handleSendMessage}
-                        className="p-3 rounded-full bg-[#0A84FF] text-white"
-                      >
-                        <Send className="w-5 h-5" />
-                      </motion.button>
+
+                      {/* Send Button with Instructions */}
+                      <div className="relative">
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          onClick={handleSendMessage}
+                          className="p-3 rounded-full bg-[#0A84FF] text-white relative group"
+                        >
+                          {/* Button Glow Effect */}
+                          <motion.div
+                            className="absolute inset-0 rounded-full bg-[#0A84FF]/30 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          />
+                          <Send className="w-5 h-5 relative z-10" />
+                        </motion.button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -425,3 +576,4 @@ const ChatbotShowcase = () => {
 };
 
 export default ChatbotShowcase;
+

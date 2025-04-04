@@ -10,68 +10,69 @@ interface Message {
 
 const conversation: Message[] = [
   {
-    text: "Hello! I'm your AI assistant. I can help you explore our services or schedule a consultation. How can I assist you today?",
+    text: "Hello. Welcome to Top Edge. I'm your virtual assistant. How can I help you today?",
     audioFile: "/sounds/ai1.mp3",
     isUser: false
   },
   {
-    text: "Hi! I'm interested in learning more about your services.",
+    text: "I wanted to ask about your services, like what exactly you build for businesses and how it helps.",
     audioFile: "sounds/user1.mp3",
     isUser: true
   },
   {
-    text: "Great! We offer a range of AI-powered solutions including chatbots, virtual assistants, and automation tools. Which area interests you the most?",
+    text: "We build conversational AI agents that can handle customer calls, respond to inquiries,",
     audioFile: "sounds/ai2.mp3",
     isUser: false
   },
   {
-    text: "I'm particularly interested in chatbots for customer service.",
-    audioFile: "sounds/user2.mp3",
-    isUser: true
-  },
-  {
-    text: "Excellent choice! Our chatbots use advanced natural language processing to provide 24/7 customer support. They can handle inquiries, process requests, and even learn from interactions.",
+    text: "book appointments, follow-up with leads, and even upsell services,",
     audioFile: "sounds/ai3.mp3",
     isUser: false
   },
   {
-    text: "That sounds promising. What kind of setup and maintenance is required?",
-    audioFile: "sounds/user3.mp3",
-    isUser: true
-  },
-  {
-    text: "We handle everything from setup to maintenance. The implementation is seamless, and we provide regular updates and monitoring. Would you like to schedule a demo to see it in action?",
+    text: "all with human like communication. You can't tell the difference if it's a human talking or AI.",
     audioFile: "sounds/ai4.mp3",
     isUser: false
   },
   {
-    text: "Yes, I'd like to see a demo. What's the next step?",
-    audioFile: "sounds/user4.mp3",
+    text: "So it basically replaces a customer support specialist or a sales representative?",
+    audioFile: "sounds/user2.mp3",
     isUser: true
   },
   {
-    text: "Perfect! I can help you schedule a demo with our team. We'll show you the full capabilities and customize the presentation to your needs. What time works best for you?",
+    text: "Exactly. But with superpowers. It never misses a call, works twenty four seven, and always gives a professional response. Whether it's a dental clinic, salon, agency, or repair service,",
     audioFile: "sounds/ai5.mp3",
     isUser: false
   },
   {
-    text: "How about next Tuesday afternoon?",
-    audioFile: "sounds/user5.mp3",
-    isUser: true
-  },
-  {
-    text: "Tuesday afternoon works great! I'll send you a calendar invite with the demo details. Is there anything specific you'd like us to focus on during the demo?",
+    text: "our assistant adapts to your business and talks like it's part of your team. We believe in adaptation, not replacement.",
     audioFile: "sounds/ai6.mp3",
     isUser: false
   },
   {
-    text: "Yes, please focus on integration capabilities and customization options.",
-    audioFile: "sounds/user6.mp3",
+    text: "Is it as good as staff? I mean, does it help my staff from managing calls and inquiries by completely managing them on autopilot?",
+    audioFile: "sounds/user3.mp3",
     isUser: true
   },
   {
-    text: "Perfect! I've noted that down. You'll receive the calendar invite shortly. We look forward to showing you how our chatbot solution can transform your customer service!",
+    text: "Yes. It speaks in a natural voice, answers customer questions, follows business logic, sets appointments, and even remembers previous calls from customers.",
     audioFile: "sounds/ai7.mp3",
+    isUser: false
+  },
+  {
+    text: "Wanna hear a quick example? You'll be amazed!",
+    audioFile: "sounds/ai8.mp3",
+    isUser: true
+  },
+  {
+    text: "It's a good idea. I would like to get a live demo to test it out.",
+    audioFile: "sounds/user4.mp3",
+    isUser: true
+  },
+   
+  {
+    text: "Perfect. Scroll down and try the demo.",
+    audioFile: "sounds/ai9.mp3",
     isUser: false
   }
 ];
@@ -83,6 +84,9 @@ export const AIAgentInteraction = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [conversationStep, setConversationStep] = useState(0);
+  const [currentTime, setCurrentTime] = useState('9:41');
+  const [currentCaption, setCurrentCaption] = useState('');
+  const [callDuration, setCallDuration] = useState(0);
 
   // Audio refs
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -113,12 +117,56 @@ export const AIAgentInteraction = () => {
     };
   }, []);
 
-  // Play audio function
+  // Update time every minute
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      setCurrentTime(`${hours}:${minutes.toString().padStart(2, '0')}`);
+    };
+
+    updateTime(); // Initial update
+    const interval = setInterval(updateTime, 60000); // Update every minute
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Add call duration timer
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout;
+    
+    if (isCallActive) {
+      setCallDuration(0);
+      intervalId = setInterval(() => {
+        setCallDuration(prev => prev + 1);
+      }, 1000);
+    }
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [isCallActive]);
+
+  // Format duration to mm:ss
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Modify playAudio function to show captions
   const playAudio = useCallback(async (audioFile: string): Promise<void> => {
     return new Promise((resolve, reject) => {
       if (!audioRef.current) {
         reject(new Error('Audio not initialized'));
         return;
+      }
+
+      // Find and set the current caption
+      const currentMessage = conversation[conversationStep];
+      if (currentMessage) {
+        setCurrentCaption(currentMessage.text);
       }
 
       // If same audio is already playing, don't restart it
@@ -135,6 +183,7 @@ export const AIAgentInteraction = () => {
           audioRef.current.removeEventListener('ended', handleEnded);
           audioRef.current.removeEventListener('error', handleError);
         }
+        setCurrentCaption(''); // Clear caption when audio ends
         resolve();
       };
 
@@ -167,7 +216,7 @@ export const AIAgentInteraction = () => {
         handleError(new Event('error'));
       }
     });
-  }, [isMuted]);
+  }, [isMuted, conversationStep]);
 
   // Progress conversation
   const progressConversation = useCallback(async () => {
@@ -185,7 +234,6 @@ export const AIAgentInteraction = () => {
       console.log('Processing message:', currentMessage.text);
 
       await playAudio(currentMessage.audioFile);
-      await new Promise(resolve => setTimeout(resolve, 1000));
       
       setConversationStep(prev => prev + 1);
     } catch (error) {
@@ -290,7 +338,7 @@ export const AIAgentInteraction = () => {
         </h2>
         <p className="mt-6 text-2xl md:text-3xl text-slate-300 max-w-2xl mx-auto">
           Experience the future of communication.<br/>
-          <span className="text-green-400">Pick up call to hear a live demo →</span>
+          <span className="text-green-400">Click on answer button to hear a AI Working →</span>
         </p>
       </div>
 
@@ -300,12 +348,65 @@ export const AIAgentInteraction = () => {
         <div className="absolute inset-0 -m-1 bg-gradient-to-r from-yellow-500/20 via-pink-500/20 to-maroon-500/20 rounded-full blur-2xl animate-pulse" />
         <div className="absolute inset-0 -m-1 bg-gradient-to-b from-yellow-500/20 via-pink-500/20 to-maroon-500/20 rounded-full blur-2xl animate-pulse" />
         
+        {/* Instructions - Adjusted position to align with green button */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: !isCallActive ? 1 : 0 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
+          className="absolute right-[-360px] bottom-[140px] flex items-center"
+        >
+          <div className="flex flex-col items-start gap-2">
+            {/* Text and Arrow Container */}
+            <div className="flex items-center gap-3">
+              {/* Arrow pointing left */}
+              <motion.div
+                animate={{
+                  x: [0, -8, 0],
+                  opacity: !isCallActive ? 1 : 0,
+                }}
+                transition={{
+                  duration: 1.2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="flex items-center"
+              >
+                <div className="w-0 h-0 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent border-r-[8px] border-r-green-400" />
+                <div className="h-[2px] w-12 bg-gradient-to-l from-green-400 to-green-400/30" />
+              </motion.div>
+
+              {/* Main Text */}
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: !isCallActive ? 1 : 0 }}
+                transition={{ delay: 0.7 }}
+                className="text-green-400 text-lg font-medium whitespace-nowrap bg-black/50 px-30 py-2 rounded-full backdrop-blur-sm border border-green-400/20"
+              >
+                Click to Experience TopEdge AI
+              </motion.span>
+            </div>
+          </div>
+
+          {/* Subtle glow effect */}
+          <motion.div
+            className="absolute -z-10 inset-0 -m-4 bg-gradient-to-r from-green-500/5 to-transparent rounded-lg blur-lg"
+            animate={{
+              opacity: [0.1, 0.2, 0.1]
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+        </motion.div>
+        
         <div className="relative aspect-[9/19.5] w-full">
           {/* Phone Border */}
           <div className="absolute inset-0 rounded-[45px] bg-black shadow-[0_0_25px_rgba(0,0,0,0.3)] overflow-hidden border border-[#3a3a3c]">
-            {/* Status Bar */}
+            {/* Status Bar with Real Time */}
             <div className="relative h-12 flex items-center justify-between px-6 bg-black">
-              <div className="text-white text-[14px] font-medium">9:41</div>
+              <div className="text-white text-[14px] font-medium">{currentTime}</div>
               <div className="absolute top-0 left-0 right-0 h-7">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120px] h-[25px] bg-black flex items-center justify-center">
                   <div className="w-16 h-[3px] rounded-full bg-[#1a1a1a]" />
@@ -323,41 +424,118 @@ export const AIAgentInteraction = () => {
                 <div className="flex-1 flex flex-col items-center">
                   {/* Title */}
                   <div className="w-full text-center mt-12 mb-20">
-                    <h2 className="text-white text-[32px] font-medium mb-2">AI Assistant</h2>
-                    <p className="text-[#86868b] text-lg">incoming FaceTime Audio</p>
+                    <h2 className="text-white text-[32px] font-medium mb-2">TopEdge AI</h2>
+                    <p className="text-[#86868b] text-lg">Incoming Call From TopEdge</p>
                   </div>
 
-                  {/* Avatar */}
+                  {/* Logo Avatar with Enhanced Green Glow Effects */}
                   <motion.div 
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.3 }}
-                    className="mb-auto"
+                    className="mb-auto relative"
                   >
-                    <div className="w-24 h-24 rounded-full bg-[#6366f1] flex items-center justify-center">
-                      <Bot className="w-12 h-12 text-white" />
+                    <div className="relative w-24 h-24">
+                      {/* Enhanced Glow Effects */}
+                      <motion.div
+                        className="absolute inset-0 rounded-full bg-green-400/20 blur-xl"
+                        animate={{
+                          opacity: [0.3, 0.6, 0.3]
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                      />
+                      
+                      {/* Ripple Effects */}
+                      <motion.div
+                        className="absolute inset-0 rounded-full border-2 border-green-400/30"
+                        animate={{
+                          scale: [1, 1.5],
+                          opacity: [0.5, 0]
+                        }}
+                        transition={{
+                          duration: 1.5,
+                          repeat: Infinity,
+                          ease: "linear"
+                        }}
+                      />
+                      <motion.div
+                        className="absolute inset-0 rounded-full border-2 border-green-400/20"
+                        animate={{
+                          scale: [1, 2],
+                          opacity: [0.3, 0]
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "linear",
+                          delay: 0.5
+                        }}
+                      />
+
+                      {/* Logo Container with Green Border */}
+                      <div className="absolute inset-0 rounded-full bg-black flex items-center justify-center overflow-hidden border-2 border-green-400">
+                        <img src="/logo.png" alt="TopEdge Logo" className="w-20 h-20 object-contain" />
+                      </div>
                     </div>
                   </motion.div>
 
-                  {/* Call Controls */}
-                  <div className="mb-32 w-full flex items-center justify-center space-x-20">
+                  {/* Call Controls with Enhanced Instructions */}
+                  <div className="mb-32 w-full flex items-center justify-center space-x-20 relative">
                     <motion.button 
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setIsCallActive(false)}
-                      className="w-[60px] h-[60px] rounded-full bg-[#ff453a] flex items-center justify-center shadow-lg"
+                      className="w-[60px] h-[60px] rounded-full bg-[#ff453a] flex items-center justify-center shadow-lg relative"
                     >
                       <X className="w-7 h-7 text-white" />
                     </motion.button>
                     
-                    <motion.button 
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={handleCallToggle}
-                      className="w-[60px] h-[60px] rounded-full bg-[#34c759] flex items-center justify-center shadow-lg"
-                    >
-                      <Phone className="w-7 h-7 text-white" />
-                    </motion.button>
+                    {/* Enhanced Green Button */}
+                    <div className="relative">
+                      <motion.button 
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleCallToggle}
+                        className="w-[60px] h-[60px] rounded-full bg-[#34c759] flex items-center justify-center shadow-lg relative group"
+                      >
+                        {/* Enhanced Glow Effect */}
+                        <div className="absolute inset-0 rounded-full bg-green-400/30 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        
+                        {/* Enhanced Ripple Effects */}
+                        <motion.div
+                          className="absolute inset-0 rounded-full border-2 border-green-400/30"
+                          animate={{
+                            scale: [1, 1.5],
+                            opacity: [0.5, 0]
+                          }}
+                          transition={{
+                            duration: 1.5,
+                            repeat: Infinity,
+                            ease: "linear"
+                          }}
+                        />
+                        
+                        <motion.div
+                          className="absolute inset-0 rounded-full border-2 border-green-400/20"
+                          animate={{
+                            scale: [1, 2],
+                            opacity: [0.3, 0]
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "linear",
+                            delay: 0.5
+                          }}
+                        />
+                        
+                        <Phone className="w-7 h-7 text-white relative z-10" />
+                      </motion.button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -365,19 +543,83 @@ export const AIAgentInteraction = () => {
               // Active Call Screen
               <div className="flex flex-col h-[calc(100%-3rem)] bg-black">
                 <div className="flex-1 flex flex-col items-center pt-8">
-                  <div className="flex items-center space-x-4 mb-12">
-                    <div className="w-16 h-16 rounded-full bg-[#6366f1] flex items-center justify-center">
-                      <Bot className="w-8 h-8 text-white" />
-                    </div>
-                    <div>
-                      <h2 className="text-white text-2xl font-medium">AI Assistant</h2>
+                  {/* Active Call Header with Enhanced Logo */}
+                  <div className="flex flex-col items-center mb-8">
+                    <div className="flex items-center space-x-4">
+                      <div className="relative w-16 h-16">
+                        {/* Enhanced Glow Effects */}
+                        <motion.div
+                          className="absolute inset-0 rounded-full bg-green-400/20 blur-lg"
+                          animate={{
+                            opacity: [0.3, 0.6, 0.3]
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                          }}
+                        />
+                        
+                        {/* Ripple Effects */}
+                        <motion.div
+                          className="absolute inset-0 rounded-full border-2 border-green-400/30"
+                          animate={{
+                            scale: [1, 1.5],
+                            opacity: [0.5, 0]
+                          }}
+                          transition={{
+                            duration: 1.5,
+                            repeat: Infinity,
+                            ease: "linear"
+                          }}
+                        />
+                        <motion.div
+                          className="absolute inset-0 rounded-full border-2 border-green-400/20"
+                          animate={{
+                            scale: [1, 2],
+                            opacity: [0.3, 0]
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "linear",
+                            delay: 0.5
+                          }}
+                        />
+                        
+                        {/* Logo Container with Green Border */}
+                        <div className="absolute inset-0 rounded-full bg-black flex items-center justify-center overflow-hidden border-2 border-green-400">
+                          <img src="/logo.png" alt="TopEdge Logo" className="w-12 h-12 object-contain" />
+                        </div>
+                      </div>
+                      <div className="flex flex-col">
+                        <h2 className="text-white text-2xl font-medium">TopEdge AI</h2>
+                        <span className="text-[#86868b] text-sm">{formatDuration(callDuration)}</span>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Call Controls */}
-                  <div className="absolute bottom-28 w-full">
+                  {/* Repositioned Caption Display */}
+                  <div className="w-full px-4 mb-6">
+                    {currentCaption && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                      >
+                        <div className="bg-gray-900/90 rounded-lg p-4 backdrop-blur-md border border-green-400/20 shadow-lg">
+                          <p className="text-white text-sm leading-relaxed">
+                            {currentCaption}
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </div>
+
+                  {/* Call Controls - Adjusted spacing */}
+                  <div className="w-full mt-auto">
                     <motion.div 
-                      className="grid grid-cols-3 gap-6 px-8 mb-12"
+                      className="grid grid-cols-3 gap-6 px-8 mb-8"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.2 }}
@@ -452,29 +694,83 @@ export const AIAgentInteraction = () => {
                       </motion.button>
                     </motion.div>
 
-                    {/* End Call Button */}
-                    <motion.div 
-                      className="flex justify-center"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.3 }}
-                    >
-                      <motion.button 
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={handleCallToggle}
-                        className="w-16 h-16 rounded-full bg-[#ff453a] flex items-center justify-center shadow-lg"
+                    {/* Enhanced End Call Button - Made Smaller */}
+                    <div className="relative px-8 mb-12">
+                      <motion.div 
+                        className="flex justify-center"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.3 }}
                       >
-                        <X className="w-8 h-8 text-white" />
-                      </motion.button>
-                    </motion.div>
+                        {/* Button Container with Enhanced Effects */}
+                        <div className="relative">
+                          <motion.button 
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={handleCallToggle}
+                            className="w-[60px] h-[60px] rounded-full bg-[#ff453a] flex items-center justify-center shadow-lg relative group"
+                          >
+                            {/* Glow Effect */}
+                            <motion.div
+                              className="absolute inset-0 rounded-full bg-red-500/30 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                            />
+                            
+                            {/* Ripple Effects */}
+                            <motion.div
+                              className="absolute inset-0 rounded-full border-2 border-red-500/30"
+                              animate={{
+                                scale: [1, 1.5],
+                                opacity: [0.5, 0]
+                              }}
+                              transition={{
+                                duration: 1.5,
+                                repeat: Infinity,
+                                ease: "linear"
+                              }}
+                            />
+                            
+                            <motion.div
+                              className="absolute inset-0 rounded-full border-2 border-red-500/20"
+                              animate={{
+                                scale: [1, 2],
+                                opacity: [0.3, 0]
+                              }}
+                              transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                ease: "linear",
+                                delay: 0.5
+                              }}
+                            />
+
+                            {/* Inner Glow */}
+                            <motion.div
+                              className="absolute inset-0 rounded-full bg-gradient-to-b from-red-400/20 to-red-600/20"
+                              animate={{
+                                opacity: [0.5, 0.8, 0.5]
+                              }}
+                              transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                ease: "easeInOut"
+                              }}
+                            />
+                            
+                            {/* Icon - Made Smaller */}
+                            <X className="w-7 h-7 text-white relative z-10" />
+                          </motion.button>
+
+                      
+                        </div>
+                      </motion.div>
+                    </div>
                   </div>
+
+                  {/* Bottom Bar */}
+                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-36 h-1 bg-[#3a3a3c] rounded-full" />
                 </div>
               </div>
             )}
-
-            {/* Bottom Bar */}
-            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-36 h-1 bg-[#3a3a3c] rounded-full" />
           </div>
         </div>
       </div>

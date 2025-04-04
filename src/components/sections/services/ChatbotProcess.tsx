@@ -1,17 +1,6 @@
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
 import { MessageSquare, Database, Bot, Code } from 'lucide-react';
 
 export const ChatbotProcess = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"]
-  });
-
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
-  const scale = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.8, 1, 1, 0.8]);
-
   const steps = [
     {
       number: "01",
@@ -40,25 +29,13 @@ export const ChatbotProcess = () => {
   ];
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative min-h-screen py-24 overflow-hidden sf-pro-display bg-black"
-    >
-      <motion.div
-        style={{ opacity, scale }}
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
-      >
+    <section className="relative min-h-screen py-24 overflow-hidden sf-pro-display bg-black">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Title */}
         <div className="text-center mb-24">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="text-6xl md:text-8xl font-bold tracking-tight gradient-text"
-          >
+          <h2 className="text-6xl md:text-8xl font-bold tracking-tight gradient-text">
             Chatbot Process
-          </motion.h2>
+          </h2>
         </div>
 
         {/* Process Steps */}
@@ -68,26 +45,13 @@ export const ChatbotProcess = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-25 sm:gap-12 relative">
             {steps.map((step, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: index * 0.2 }}
-                className="relative mt-24 sm:mt-0"
-              >
+              <div key={index} className="relative mt-24 sm:mt-0">
                 {/* Step Number */}
-                <motion.div 
-                  className="absolute -top-16 left-0 right-0"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <div className={`text-8xl font-bold bg-gradient-to-r ${step.color} bg-clip-text text-transparent`}>
+                <div className="absolute -top-16 left-0 right-0 flex justify-center sm:block sm:left-0">
+                  <div className={`text-8xl font-bold bg-gradient-to-r ${step.color} bg-clip-text text-transparent text-center sm:text-left`}>
                     {step.number}
                   </div>
-                </motion.div>
+                </div>
 
                 {/* Content */}
                 <div className="relative z-10 p-8 rounded-2xl bg-gray-900/50 backdrop-blur-xl border border-gray-800">
@@ -99,22 +63,16 @@ export const ChatbotProcess = () => {
                   </p>
 
                   {/* Interactive Elements */}
-                  <motion.div
-                    className="mt-6 flex items-center space-x-2"
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.5 + index * 0.2 }}
-                  >
+                  <div className="mt-6 flex items-center space-x-2">
                     <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500" />
                     <div className="text-sm text-gray-500">Learn more</div>
-                  </motion.div>
+                  </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 };

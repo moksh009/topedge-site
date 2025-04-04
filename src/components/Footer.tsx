@@ -13,7 +13,7 @@ const services = [
   },
   {
     icon: MessageSquare,
-    title: "Smart Chatbot",
+    title: "Advanced Chatbot",
     description: "Instant Multi-Channel Support",
     path: "/services",
     section: "chatbot-showcase"
@@ -57,10 +57,10 @@ const Footer = () => {
 
   const contactInfo = [
     { 
-      icon: Phone, 
-      text: '+91 9313045439', 
-      href: 'tel:+919313045439',
-      color: 'group-hover:text-green-400'
+      icon: Mail, 
+      text: 'team@topedgeai.com', 
+      href: 'mailto:team@topedgeai.com',
+      color: 'group-hover:text-blue-400'
     },
     { 
       icon: Mail, 
@@ -69,11 +69,17 @@ const Footer = () => {
       color: 'group-hover:text-blue-400'
     },
     { 
-      icon: MapPin, 
-      text: 'Gujarat, India', 
-      href: '#',
-      color: 'group-hover:text-red-400'
-    }
+      icon: Mail, 
+      text: 'team@topedgenetwork.com', 
+      href: 'mailto:team@topedgenetwork.com',
+      color: 'group-hover:text-blue-400'
+    },
+    { 
+      icon: Mail, 
+      text: 'team@topedge.co.in', 
+      href: 'mailto:team@topedge.co.in',
+      color: 'group-hover:text-blue-400'
+    },
   ];
 
   return (
@@ -82,11 +88,18 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Company Info */}
           <div>
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-6">
-              TopEdge
-            </h3>
+            <div className="flex items-center gap-2 mb-6">
+              <img 
+                src="/logo.png" 
+                alt="TopEdge Logo" 
+                className="w-8 h-8 object-contain"
+              />
+              <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                TopEdge
+              </h3>
+            </div>
             <p className="text-gray-400 mb-6">
-              Pioneering the future of artificial intelligence and automation solutions.
+              We tech-enable businesses and strengthen their customer acquisition game by Upleveling Customer Support
             </p>
             <div className="flex space-x-4">
               {socialLinks.map((social) => (

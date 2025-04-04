@@ -19,7 +19,7 @@ const features = [
   },
   {
     icon: <MessageSquare className="w-7 h-7 text-violet-400 group-hover:text-violet-300 transition-colors duration-300" />,
-    title: "24/7 Lead Gen",
+    title: "24/7 Lead Generation",
     description: "Convert visitors into qualified leads while you sleep"
   },
   {
@@ -244,7 +244,7 @@ const AdvancedChatbotSection = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <motion.h2
-              className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 sm:mb-6 mx-auto lg:mx-0 max-w-[15ch]"
+              className="text-5xl sm:text-5xl md:text-8xl font-bold mb-4 sm:mb-6 mx-auto lg:mx-0 max-w-[15ch]"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-100px" }}

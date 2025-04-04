@@ -142,10 +142,10 @@ const AboutStats = () => {
   });
 
   const stats = [
-    { number: 98, label: "%" },
-    { number: 2, label: "Projects Completed" },
-    { number: 2, label: "Countries Served" },
-    { number: 99.9, label: "%" }
+    { number: 20, label: "+ meetings" },
+    { number: 100, label: "% Client satisfaction" },
+    { number: 98.9, label: "% Accuracy Rate" },
+    { number: 100, label: "% customization" }
   ];
 
   return (

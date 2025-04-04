@@ -23,10 +23,10 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({
         hover: { scale: 1.05 },
         tap: { scale: 0.95 }
       }}
-      className="group relative rounded-full"
+      className="group relative rounded-full w-full sm:w-auto"
     >
       {/* Button Container */}
-      <div className="relative px-8 py-4 rounded-full">
+      <div className="relative px-4 sm:px-8 py-3 sm:py-4 rounded-full">
         {/* Outer Glow */}
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/30 via-cyan-500/30 to-blue-600/30 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full" />
         
@@ -95,10 +95,10 @@ const PremiumButton: React.FC<PremiumButtonProps> = ({
         </div>
 
         {/* Button Content */}
-        <div className="relative flex items-center gap-3">
-          <div className="relative flex items-center gap-3">
-            <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-blue-400 group-hover:text-white transition-colors duration-300" />
-            <span className="text-base sm:text-lg font-medium bg-gradient-to-r from-white via-blue-200 to-white bg-clip-text text-transparent">
+        <div className="relative flex items-center justify-center sm:justify-start gap-2 sm:gap-3">
+          <div className="relative flex items-center gap-2 sm:gap-3">
+            <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 group-hover:text-white transition-colors duration-300" />
+            <span className="text-sm sm:text-base font-medium bg-gradient-to-r from-white via-blue-200 to-white bg-clip-text text-transparent">
               {text}
             </span>
             <motion.div
@@ -228,7 +228,7 @@ const AboutHero: React.FC = () => {
   return (
     <motion.section
       ref={containerRef}
-      className="relative min-h-screen bg-black overflow-hidden flex items-center perspective-1000"
+      className="relative min-h-screen bg-black overflow-hidden flex items-center perspective-1000 py-16 sm:py-0"
       initial={{ opacity: 1, scale: 1 }}
       animate={isInView ? { 
         opacity: 1, 
@@ -379,7 +379,7 @@ const AboutHero: React.FC = () => {
       </div>
 
       {/* Content */}
-      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-32">
+      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-32">
           <motion.div 
           className="max-w-4xl mx-auto text-center"
           style={{
@@ -396,10 +396,10 @@ const AboutHero: React.FC = () => {
               hidden: { opacity: 0, y: 20 },
               visible: { opacity: 1, y: 0, transition: { duration: 0.8 } }
             }}
-            className="mb-6"
+            className="mb-4 sm:mb-6"
           >
             <motion.span
-              className="inline-block px-4 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10"
+              className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10"
               whileHover={{ 
                 scale: 1.05,
                 backgroundColor: "rgba(255,255,255,0.1)",
@@ -407,7 +407,7 @@ const AboutHero: React.FC = () => {
               }}
               whileTap={{ scale: 0.95 }}
             >
-              <span className="text-sm text-white/60 font-light tracking-wide"
+              <span className="text-xs sm:text-sm text-white/60 font-light tracking-wide"
                 style={{ fontFamily: "SF Pro Text, system-ui, -apple-system, BlinkMacSystemFont, sans-serif" }}>
                 Welcome to TopEdge
               </span>
@@ -426,7 +426,7 @@ const AboutHero: React.FC = () => {
                 }
               }
             }}
-            className="mb-8 perspective-1000"
+            className="mb-6 sm:mb-8 perspective-1000"
             style={{
               scale: useTransform(scrollYProgress, [0, 0.3], [1, 0.95]),
               opacity: useTransform(scrollYProgress, [0, 0.3], [1, 0]),
@@ -435,10 +435,10 @@ const AboutHero: React.FC = () => {
           >
             <motion.h1 
               variants={textReveal}
-              className="flex justify-center items-center text-6xl sm:text-7xl md:text-8xl font-semibold tracking-tight"
+              className="flex justify-center items-center text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold tracking-tight"
             >
               <motion.span 
-                className="whitespace-nowrap bg-clip-text text-transparent bg-gradient-to-r from-white via-[#0A84FF] to-white"
+                className="whitespace-normal sm:whitespace-nowrap bg-clip-text text-transparent bg-gradient-to-r from-white via-[#0A84FF] to-white px-4 sm:px-0"
                 style={{
                   backgroundSize: '200% auto',
                   animation: 'shine 8s linear infinite',
@@ -457,10 +457,10 @@ const AboutHero: React.FC = () => {
           {/* Description */}
           <motion.div
             variants={fadeIn}
-            className="max-w-3xl mx-auto mt-8 mb-16 text-center"
+            className="max-w-3xl mx-auto mt-6 sm:mt-8 mb-12 sm:mb-16 text-center"
           >
             <motion.p 
-              className="text-2xl md:text-3xl font-light leading-relaxed mb-16"
+              className="text-xl sm:text-2xl md:text-3xl font-light leading-relaxed px-4 sm:px-0"
               style={{
                 background: 'linear-gradient(to right, #FFFFFF, #0A84FF, #FFFFFF)',
                 backgroundSize: '200% auto',
@@ -476,7 +476,7 @@ const AboutHero: React.FC = () => {
           {/* CTA Buttons */}
             <motion.div
             variants={fadeIn}
-            className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+            className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center px-4 sm:px-0"
             >
               <PremiumButton 
                 icon={Building2} 
@@ -486,8 +486,8 @@ const AboutHero: React.FC = () => {
 
               <PremiumButton 
                 icon={Users2} 
-                text="Learn More" 
-                to="/about"
+                text="Innovate My Business" 
+                to="/booking"
               />
             </motion.div>
           </motion.div>
@@ -497,7 +497,7 @@ const AboutHero: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : { opacity: 0 }}
           transition={{ delay: 1, duration: 1 }}
-          className="absolute bottom-12 left-1/2 transform -translate-x-1/2"
+          className="absolute bottom-8 sm:bottom-12 left-1/2 transform -translate-x-1/2"
         >
           <motion.div
             animate={{
@@ -580,7 +580,7 @@ const AboutHero: React.FC = () => {
 
         {/* Floating icons */}
         <motion.div
-          className="absolute left-10 top-1/4 text-yellow-500/20"
+          className="absolute left-4 sm:left-10 top-1/4 text-yellow-500/20"
           animate={{
             y: [-20, 20, -20],
             rotate: [0, 360],
@@ -598,7 +598,7 @@ const AboutHero: React.FC = () => {
             },
           }}
         >
-          <Building2 className="w-16 h-16" />
+          <Building2 className="w-12 h-12 sm:w-16 sm:h-16" />
         </motion.div>
         <motion.div 
           className="absolute middle-10 top text-cyan-500/20"

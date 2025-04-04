@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import heroImage from '../../assets/1.png';
+import heroImage from '/wizard.png';
 
 const InvisibleApproachSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
@@ -44,7 +44,7 @@ const InvisibleApproachSection = () => {
               y: textY1
             }}
           >
-            Multi Level
+            let's save
           </motion.h2>
           <motion.h2 
             className="text-[clamp(3rem,40vw,6rem)] sm:text-[clamp(2rem,10vw,8rem)] md:text-[clamp(2.5rem,12vw,11rem)] font-bold tracking-tight leading-none"
@@ -61,7 +61,7 @@ const InvisibleApproachSection = () => {
               y: textY2
             }}
           >
-            Super Agent
+            valuable time
           </motion.h2>
         </div>
 

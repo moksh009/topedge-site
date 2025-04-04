@@ -24,8 +24,6 @@ export interface BookingDetails {
   additionalInfo?: string;
 }
 
-
-
 export interface ContactDetails {
   name: string;
   email: string;
@@ -33,6 +31,13 @@ export interface ContactDetails {
   companyName: string;
   subject: string;
   message: string;
+}
+
+export interface MaintenanceDetails {
+  name: string;
+  email: string;
+  phone: string;
+  plan: string;
 }
 
 export type EmailType = 'user' | 'admin';
@@ -134,6 +139,28 @@ export class EmailService {
     } catch (error) {
       console.error('Error sending contact form emails:', error);
       throw new Error('Failed to send contact form emails');
+    }
+  }
+
+  public async sendMaintenanceUserEmail(details: MaintenanceDetails): Promise<void> {
+    try {
+      console.log('Sending maintenance user email with details:', details);
+      await this.sendEmail('user', '/api/send-maintenance-user-email', details);
+      console.log('Maintenance user email sent successfully');
+    } catch (error) {
+      console.error('Error sending maintenance user email:', error);
+      throw new Error('Failed to send maintenance user email');
+    }
+  }
+
+  public async sendMaintenanceAdminEmail(details: MaintenanceDetails): Promise<void> {
+    try {
+      console.log('Sending maintenance admin email with details:', details);
+      await this.sendEmail('admin', '/api/send-maintenance-admin-email', details);
+      console.log('Maintenance admin email sent successfully');
+    } catch (error) {
+      console.error('Error sending maintenance admin email:', error);
+      throw new Error('Failed to send maintenance admin email');
     }
   }
 }

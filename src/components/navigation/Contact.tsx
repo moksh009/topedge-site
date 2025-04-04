@@ -82,6 +82,7 @@ const Contact = () => {
 
       await emailService.sendContactEmails(formData);
       setSubmitStatus('success');
+      formRef.current.reset();
       
     } catch (error) {
       console.error('Failed to send message:', error);

@@ -9,6 +9,9 @@ import Services from './pages/Services';
 import Contact from './pages/Contact';
 import Booking from './pages/Booking';
 import Pricing from './pages/Pricing';
+import { MaintenanceInquiries } from './components/admin/MaintenanceInquiries';
+import { ProtectedRoute } from './components/admin/ProtectedRoute';
+import { Login } from './components/admin/Login';
 import './styles/fonts.css';
 
 // ScrollToTop component to handle smooth scrolling
@@ -33,7 +36,7 @@ function App() {
       <div className="min-h-screen bg-black text-white">
         <Navbar />
         <main className="flex-grow">
-          <Toaster position="bottom-right" />
+          <Toaster />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
@@ -41,6 +44,15 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/booking" element={<Booking />} />
             <Route path="/pricing" element={<Pricing />} />
+            <Route path="/admin/login" element={<Login />} />
+            <Route 
+              path="/admin/maintenance-inquiries" 
+              element={
+                <ProtectedRoute>
+                  <MaintenanceInquiries />
+                </ProtectedRoute>
+              } 
+            />
           </Routes>
         </main>
         <Footer />

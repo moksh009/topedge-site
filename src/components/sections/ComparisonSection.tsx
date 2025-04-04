@@ -4,7 +4,7 @@ import { Bot, User, Sparkles } from 'lucide-react';
 
 interface Message {
   id: number;
-  type: 'traditional' | 'ai';
+  type: 'traditional' | 'topedge';
   content: string;
   typingDuration?: number;
 }
@@ -26,7 +26,7 @@ export const ComparisonSection = () => {
     },
     {
       id: 2,
-      type: 'ai',
+      type: 'topedge',
       content: "Pay only for what you use! no hidden charges—just pure efficiency.",
       typingDuration: 1500
     },
@@ -38,7 +38,7 @@ export const ComparisonSection = () => {
     },
     {
       id: 4,
-      type: 'ai',
+      type: 'topedge',
       content: "We operate 24/7—handling inquiries, scheduling appointments, and even forwarding calls at no extra cost!",
       typingDuration: 2500
     },
@@ -50,7 +50,7 @@ export const ComparisonSection = () => {
     },
     {
       id: 6,
-      type: 'ai',
+      type: 'topedge',
       content: "We offer full customization at zero extra cost. Need a feature? We\’ll build it for you!",
       typingDuration: 2500
     },
@@ -62,7 +62,7 @@ export const ComparisonSection = () => {
     },
     {
       id: 8,
-      type: 'ai',
+      type: 'topedge',
       content: "Our AI remembers every call, building a customer database that helps you deliver personalized experiences effortlessly.",
       typingDuration: 2500
     }
@@ -173,17 +173,17 @@ export const ComparisonSection = () => {
                 initial="hidden"
                 animate={index <= activeMessageIndex ? "visible" : "hidden"}
                 className={`flex items-start gap-4 ${
-                  message.type === 'ai' ? 'justify-end' : 'justify-start'
+                  message.type === 'topedge' ? 'justify-end' : 'justify-start'
                 }`}
               >
                 {/* Avatar */}
-                <div className={`order-${message.type === 'ai' ? '2' : '1'}`}>
+                <div className={`order-${message.type === 'topedge' ? '2' : '1'}`}>
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                      message.type === 'ai' 
+                      message.type === 'topedge' 
                       ? 'bg-gradient-to-r from-purple-600 to-blue-600' 
                       : 'bg-gradient-to-r from-gray-700 to-gray-600'
                     }`}>
-                    {message.type === 'ai' ? (
+                    {message.type === 'topedge' ? (
                       <Bot className="w-6 h-6 text-white" />
                     ) : (
                       <User className="w-6 h-6 text-white" />
@@ -194,19 +194,19 @@ export const ComparisonSection = () => {
                 {/* Message Bubble */}
                 <motion.div
                   className={`relative max-w-xl px-6 py-4 rounded-2xl ${
-                    message.type === 'ai'
+                    message.type === 'topedge'
                       ? 'bg-gradient-to-br from-purple-600/20 to-blue-600/20 border border-purple-500/20'
                       : 'bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700/50'
                   }`}
                   style={{
-                    order: message.type === 'ai' ? 1 : 2,
-                    boxShadow: message.type === 'ai' 
+                    order: message.type === 'topedge' ? 1 : 2,
+                    boxShadow: message.type === 'topedge' 
                       ? '0 4px 20px rgba(124, 58, 237, 0.1)'
                       : '0 4px 20px rgba(0, 0, 0, 0.2)'
                   }}
                 >
                   <div className={`text-lg ${
-                    message.type === 'ai' ? 'text-blue-100' : 'text-gray-300'
+                    message.type === 'topedge' ? 'text-blue-100' : 'text-gray-300'
                   }`}>
                     {index === activeMessageIndex ? typedText : message.content}
                     {index === activeMessageIndex && isTyping && (
@@ -218,11 +218,11 @@ export const ComparisonSection = () => {
                     )}
                   </div>
 
-                  {/* AI Badge */}
-                  {message.type === 'ai' && (
+                  {/* topedge Badge */}
+                  {message.type === 'topedge' && (
                     <div className="absolute -top-3 right-4 px-2 py-1 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full flex items-center gap-1">
                       <Sparkles className="w-3 h-3 text-white" />
-                      <span className="text-xs font-semibold text-white">AI</span>
+                      <span className="text-xs font-semibold text-white">TopEdge</span>
                   </div>
                   )}
                 </motion.div>

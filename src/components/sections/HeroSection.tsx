@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Rocket, Info } from 'lucide-react';
 import { TypeAnimation } from 'react-type-animation';
@@ -79,6 +79,26 @@ const HeroSection = () => {
 
   const y = useTransform(scrollYProgress, [0, 1], [0, 200]);
   const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 1, 0]);
+
+  // Add new scroll-triggered animation for wizard
+  const wizardRef = useRef<HTMLDivElement>(null);
+  const wizardScrollProgress = useScroll({
+    target: wizardRef,
+    offset: ["start end", "end end"]
+  }).scrollYProgress;
+
+  const wizardOpacity = useTransform(wizardScrollProgress, 
+    [0, 0.2], 
+    [0, 1]
+  );
+  const wizardY = useTransform(wizardScrollProgress, 
+    [0, 0.2], 
+    ["100px", "0px"]
+  );
+  const wizardX = useTransform(wizardScrollProgress, 
+    [0, 0.2], 
+    ["-50px", "0px"]
+  );
 
   return (
     <motion.section 
@@ -350,6 +370,146 @@ const HeroSection = () => {
         <Zap className="w-10 h-10" />
       </motion.div>
 
+      {/* Wizard and Message UI */}
+      <motion.div
+        ref={wizardRef}
+        className="absolute bottom-8 left-8 flex items-start gap-4 z-50"
+        initial={{ opacity: 0, y: 100, x: -50 }}
+        animate={{ opacity: 1, y: 0, x: 0 }}
+        transition={{
+          type: "spring",
+          stiffness: 100,
+          damping: 20,
+          delay: 3 // This delay matches the sound timing
+        }}
+      >
+        {/* Wizard Image with Left Tilt */}
+        <motion.div
+          className="relative w-52 h-52"
+          initial={{ rotate: 8, opacity: 0 }}
+          animate={{
+            rotate: [2, 9, 5],
+            scale: [1, 1.02, 1],
+            opacity: 1
+          }}
+          transition={{
+            rotate: {
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 4
+            },
+            scale: {
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 5
+            },
+            opacity: {
+              duration: 1,
+              delay: 4
+            }
+          }}
+        >
+          <img 
+            src="/wizard.png" 
+            alt="AI Wizard" 
+            className="w-full h-full object-contain drop-shadow-[0_0_25px_rgba(139,92,246,0.3)]"
+          />
+        </motion.div>
+
+        {/* Animated Dots and Message */}
+        <div className="relative">
+          {/* First Dot */}
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 4.5 }}
+            className="absolute -left-5 top-20 w-2 h-2 bg-purple-400 rounded-full"
+          />
+
+          {/* Second Dot */}
+          <motion.div
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 4.9 }}
+            className="absolute left-1 top-20 w-3 h-3 bg-purple-400 rounded-full"
+          />
+
+          {/* Message Container */}
+          <motion.div
+            className="relative mt-14 ml-8"
+            initial={{ opacity: 0, scale: 0.8, x: -20 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            transition={{
+              type: "spring",
+              stiffness: 200,
+              damping: 20,
+              delay: 5.5
+            }}
+          >
+            <div className="relative overflow-hidden rounded-2xl">
+              {/* Glass Background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-600/30 to-purple-800/30 backdrop-blur-md" />
+              
+              {/* Animated Gradient Background */}
+              <motion.div
+                className="absolute inset-0"
+                animate={{
+                  background: [
+                    'linear-gradient(45deg, rgba(147,51,234,0.3) 0%, rgba(79,70,229,0.3) 100%)',
+                    'linear-gradient(45deg, rgba(79,70,229,0.3) 0%, rgba(147,51,234,0.3) 100%)',
+                  ],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  ease: "linear",
+                }}
+              />
+
+              {/* Content Container */}
+              <div className="relative px-6 py-4 bg-black/20">
+                {/* Glow Effects */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
+                
+                <motion.p
+                  className="text-sm font-medium leading-relaxed"
+                  style={{
+                    background: 'linear-gradient(to right, #fff, #e0e0ff)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                  }}
+                >
+                  Are you ready to start a small journey with me on this website to explore <br/>
+                  how we can save you time, money & opportunities?<br />
+                  Let's begin this scrolling journey...
+                </motion.p>
+              </div>
+
+              {/* Shine Effect */}
+              <motion.div
+                className="absolute inset-0 pointer-events-none"
+                animate={{
+                  background: [
+                    'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%)',
+                    'linear-gradient(90deg, transparent 100%, rgba(255,255,255,0.08) 150%, transparent 200%)',
+                  ],
+                  left: ['-100%', '100%'],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+              />
+            </div>
+          </motion.div>
+        </div>
+      </motion.div>
+
       {/* Main Content */}
       <div className="relative container mx-auto px-4 flex flex-col justify-center items-center text-center min-h-screen">
         {/* Text Animation Container */}
@@ -417,7 +577,7 @@ const HeroSection = () => {
                   animation: 'shine 8s linear infinite',
                 }}
               >
-                GREAT&nbsp;TO
+                Great To&nbsp;
               </motion.span>
               <motion.span
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -452,7 +612,7 @@ const HeroSection = () => {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-base sm:text-lg md:text-xl text-white/70 max-w-3xl mx-auto leading-relaxed mb-6 sm:mb-8 md:mb-12"
+            className="text-base sm:text-lg md:text-xl text-white/70 w-[90%] sm:w-[95%] mx-auto leading-relaxed mb-6 sm:mb-8 md:mb-12"
             style={{
               textShadow: '0 0 20px rgba(255,255,255,0.2)',
             }}
@@ -461,22 +621,10 @@ const HeroSection = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1, delay: 1.5 }}
-              className="relative z-10"
+              className="relative z-10 text-white/100 text-lg sm:text-xl md:text-xl flex flex-col gap-1"
             >
-              <TypeAnimation
-                sequence={[
-                  'Stay Ahead of World',
-                  1000,
-                  'Make Your Business Futuristic',
-                  1000,
-                  'Building tomorrow\'s technology',
-                  1000,
-                ]}
-                wrapper="span"
-                speed={50}
-                style={{ color: 'rgba(255,255,255,0.8)' }}
-                repeat={Infinity}
-              />
+              <span className="whitespace-normal">Did you know that 72% of customers choose another business when their call or inquiry goes unanswered, even if the reply is late?</span>
+              <span className="whitespace-normal">You can't count how many opportunities you've lost—because you don't even know.</span>
             </motion.span>
           </motion.p>
 
@@ -608,7 +756,7 @@ const HeroSection = () => {
             </Link>
 
             {/* Second Button - Explore Services */}
-            <Link to="/services">
+            <Link to="/book-appointment">
               <motion.button
                 whileHover="hover"
                 whileTap="tap"
@@ -693,7 +841,7 @@ const HeroSection = () => {
                       <div className="flex items-center gap-2">
                         <Info className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400 group-hover:text-white transition-colors duration-300" />
                         <span className="text-base sm:text-lg font-medium bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent">
-                          Learn More
+                          I Want Save Opportunities
                         </span>
                       </div>
                       <motion.div

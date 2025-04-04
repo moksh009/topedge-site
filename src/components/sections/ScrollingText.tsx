@@ -65,7 +65,7 @@ const ScrollingText = () => {
                 letterSpacing: '-0.02em'
               }}
             >
-              With Artificial Intelligence
+              With AI Receptionist 
             </h2>
           </motion.div>
         </div>

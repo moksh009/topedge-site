@@ -78,13 +78,13 @@ export const ServiceProcess = () => {
               >
                 {/* Step Number */}
                 <motion.div 
-                  className="absolute -top-16 left-0 right-0"
+                  className="absolute -top-16 left-0 right-0 flex justify-center sm:block sm:left-0"
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5 }}
                 >
-                  <div className={`text-8xl font-bold bg-gradient-to-r ${step.color} bg-clip-text text-transparent`}>
+                  <div className={`text-8xl font-bold bg-gradient-to-r ${step.color} bg-clip-text text-transparent text-center sm:text-left`}>
                     {step.number}
                   </div>
                 </motion.div>

@@ -38,9 +38,9 @@ const ValueCard: React.FC<ValueCardProps> = ({ title, description, index }) => {
       animate={isInView ? "visible" : "hidden"}
       className="relative"
     >
-      <div className="relative p-1">
+      <div className="relative p-0.5 sm:p-1">
         {/* Card */}
-        <div className="relative backdrop-blur-xl bg-gradient-to-br from-black/40 to-black/20 rounded-3xl p-8 border border-white/[0.08] overflow-hidden group">
+        <div className="relative backdrop-blur-xl bg-gradient-to-br from-black/40 to-black/20 rounded-2xl sm:rounded-3xl p-6 sm:p-8 border border-white/[0.08] overflow-hidden group">
           {/* Animated Background */}
           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
             <div className="absolute inset-0 bg-gradient-to-br from-white/[0.07] to-transparent" />
@@ -61,20 +61,20 @@ const ValueCard: React.FC<ValueCardProps> = ({ title, description, index }) => {
               initial={{ opacity: 0, scale: 0.5 }}
               animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
               transition={{ duration: 0.5, delay: index * 0.3 }}
-              className="mb-6"
+              className="mb-4 sm:mb-6"
             >
-              <h3 className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-600">
+              <h3 className="text-xl sm:text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-600">
                 {title}
               </h3>
-              <div className="h-0.5 w-16 bg-gradient-to-r from-white/40 to-transparent rounded-full mt-3 
-                transform origin-left transition-all duration-300 group-hover:w-24 group-hover:from-white/60" />
+              <div className="h-0.5 w-12 sm:w-16 bg-gradient-to-r from-white/40 to-transparent rounded-full mt-2 sm:mt-3 
+                transform origin-left transition-all duration-300 group-hover:w-20 sm:group-hover:w-24 group-hover:from-white/60" />
             </motion.div>
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.5, delay: index * 0.4 }}
-              className="text-lg text-white/60 font-light leading-relaxed"
+              className="text-base sm:text-lg text-[#A1A1A6] font-light leading-relaxed group-hover:text-white/90 transition-colors duration-300"
               style={{ fontFamily: "SF Pro Text, system-ui, -apple-system, BlinkMacSystemFont, sans-serif" }}
             >
               {description}
@@ -83,7 +83,7 @@ const ValueCard: React.FC<ValueCardProps> = ({ title, description, index }) => {
 
           {/* Decorative Elements */}
           <motion.div
-            className="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-white/[0.05] to-transparent rounded-full blur-2xl"
+            className="absolute -top-8 -right-8 sm:-top-10 sm:-right-10 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-white/[0.05] to-transparent rounded-full blur-xl sm:blur-2xl"
             animate={{
               scale: [1, 1.2, 1],
               opacity: [0.3, 0.5, 0.3],
@@ -95,7 +95,7 @@ const ValueCard: React.FC<ValueCardProps> = ({ title, description, index }) => {
             }}
           />
           <motion.div
-            className="absolute -bottom-10 -left-10 w-32 h-32 bg-gradient-to-br from-white/[0.05] to-transparent rounded-full blur-2xl"
+            className="absolute -bottom-8 -left-8 sm:-bottom-10 sm:-left-10 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-white/[0.05] to-transparent rounded-full blur-xl sm:blur-2xl"
             animate={{
               scale: [1, 1.2, 1],
               opacity: [0.3, 0.5, 0.3],
@@ -123,24 +123,24 @@ const AboutValues: React.FC = () => {
   const values = [
     {
       title: "Innovation First",
-      description: "Constantly pushing boundaries and exploring new frontiers in AI technology to deliver groundbreaking solutions.",
+      description: "We pioneer cutting-edge AI solutions by relentlessly exploring new technological frontiers and challenging conventional boundaries.",
     },
     {
       title: "Ethical Excellence",
-      description: "Upholding the highest standards of ethics and transparency in every aspect of our AI development process.",
+      description: "Our commitment to ethical AI development ensures transparency, fairness, and responsible innovation in every solution we create.",
     },
     {
-      title: "Client Success",
-      description: "Dedicated to delivering exceptional value and ensuring our clients achieve their business objectives through our solutions.",
+      title: "Client Priority",
+      description: "Your success is our priority. We deliver tailored AI solutions that drive measurable business outcomes and exceed expectations.",
     },
     {
-      title: "Continuous Learning",
-      description: "Embracing a culture of perpetual learning and adaptation to stay at the forefront of AI advancement.",
+      title: "Continuous Improvement",
+      description: "Through constant learning and adaptation, we evolve our AI capabilities to maintain industry leadership and deliver superior results.",
     }
   ];
 
   return (
-    <section ref={containerRef} className="relative py-32 bg-black overflow-hidden">
+    <section ref={containerRef} className="relative py-16 sm:py-32 bg-black overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0">
         <motion.div
@@ -168,24 +168,24 @@ const AboutValues: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: false, margin: "-100px" }}
           transition={{ duration: 1 }}
-          className="text-center mb-20"
+          className="text-center mb-12 sm:mb-20"
         >
           <div className="inline-flex items-center justify-center mb-4">
-            <div className="h-px w-12 bg-[#0A84FF]/50" />
-            <p className="text-[#0A84FF] text-lg font-medium tracking-wide px-4">OUR VALUES</p>
-            <div className="h-px w-12 bg-[#0A84FF]/50" />
+            <div className="h-px w-8 sm:w-12 bg-[#0A84FF]/50" />
+            <p className="text-[#0A84FF] text-base sm:text-lg font-medium tracking-wide px-3 sm:px-4">OUR VALUES</p>
+            <div className="h-px w-8 sm:w-12 bg-[#0A84FF]/50" />
           </div>
-          <h2 className="text-5xl sm:text-6xl font-semibold tracking-tight text-white mb-6">
+          <h2 className="text-4xl sm:text-5xl sm:text-6xl font-semibold tracking-tight text-white mb-4 sm:mb-6 px-4 sm:px-0">
             Principles That Drive Us
           </h2>
-          <p className="text-xl text-[#86868B] max-w-3xl mx-auto font-light leading-relaxed"
+          <p className="text-lg sm:text-xl text-[#A1A1A6] max-w-3xl mx-auto font-light leading-relaxed px-4 sm:px-0"
             style={{ fontFamily: "SF Pro Text, system-ui, -apple-system, BlinkMacSystemFont, sans-serif" }}>
             The core values that shape our approach to innovation and excellence in AI technology
           </p>
         </motion.div>
 
         {/* Values Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8">
           {values.map((value, index) => (
             <ValueCard
               key={value.title}
