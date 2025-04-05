@@ -7,6 +7,7 @@ interface MaintenanceInquiry {
   email: string;
   phone: string;
   plan: string;
+  emailTemplate?: string;
 }
 
 export const maintenanceService = {
@@ -28,7 +29,8 @@ export const maintenanceService = {
           name: data.name,
           email: data.email,
           phone: data.phone,
-          plan: data.plan
+          plan: data.plan,
+          emailTemplate: data.emailTemplate
         });
 
         // Send admin notification email
@@ -36,7 +38,8 @@ export const maintenanceService = {
           name: data.name,
           email: data.email,
           phone: data.phone,
-          plan: data.plan
+          plan: data.plan,
+          emailTemplate: data.emailTemplate
         });
       } catch (emailError) {
         console.error('Error sending emails:', emailError);

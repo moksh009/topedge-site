@@ -124,6 +124,7 @@ interface MaintenanceFormData {
   phone: string;
   plan: string;
   section: 'voice' | 'chatbot';
+  emailTemplate?: string;
 }
 
 interface CalculatorState {
@@ -416,21 +417,88 @@ const PricingPlans = () => {
     setIsSubmitting(true);
 
     try {
+      // Get the selected plan details
+      const selectedPlanDetails = formData.section === 'voice' 
+        ? plans.find(p => p.name === formData.plan)
+        : chatbotPlans.find(p => p.name === formData.plan);
+
+      // Enhanced email template with all plans
+      const emailTemplate = `
+Your Selected ${formData.section === 'voice' ? 'AI Voice Agent' : 'Chatbot'} Plan:
+
+Plan Name: ${selectedPlanDetails?.name}
+Monthly Management Fee: ${selectedPlanDetails?.monthlyFee}
+Setup Cost: FREE SETUP + DEVELOPMENT
+
+Selected Plan Features:
+${selectedPlanDetails?.features.map(f => `• ${f}`).join('\n')}
+${selectedPlanDetails?.addOns ? `\nAvailable Add-ons:\n• ${selectedPlanDetails.addOns}` : ''}
+
+=== AI Voice Agent Plans ===
+
+1. Starter Plan ($249/month)
+Features:
+${plans[0].features.map(f => `• ${f}`).join('\n')}
+${plans[0].addOns ? `\nAdd-ons:\n• ${plans[0].addOns}` : ''}
+
+2. Pro Plan ($529/month)
+Features:
+${plans[1].features.map(f => `• ${f}`).join('\n')}
+${plans[1].addOns ? `\nAdd-ons:\n• ${plans[1].addOns}` : ''}
+
+3. Premium Plan ($987/month)
+Features:
+${plans[2].features.map(f => `• ${f}`).join('\n')}
+${plans[2].addOns ? `\nAdd-ons:\n• ${plans[2].addOns}` : ''}
+
+===Advanced Chatbot Plans ===
+
+1. Starter Plan ($249/month)
+Features:
+${chatbotPlans[0].features.map(f => `• ${f}`).join('\n')}
+${chatbotPlans[0].addOns ? `\nAdd-ons:\n• ${chatbotPlans[0].addOns}` : ''}
+
+2. Advanced Plan ($549/month)
+Features:
+${chatbotPlans[1].features.map(f => `• ${f}`).join('\n')}
+${chatbotPlans[1].addOns ? `\nAdd-ons:\n• ${chatbotPlans[1].addOns}` : ''}
+
+Important Notes:
+• All operational costs are direct platform and API fees
+• TopEdge does not markup these operational costs
+• Management fees are separate from operational costs
+• Final quotation will be provided after usage analysis
+• Custom features can be added based on requirements
+
+Next Steps:
+1. Send Your Requirements to Our team & We will review your requirements
+2. We will analyze your usage needs
+3. You'll receive a detailed quotation
+4. We'll contact you within 24-48 business hours
+
+For any immediate questions, please:
+• Reply to this email
+• Contact us at team@topedgeai.com
+• Schedule a consultation call
+
+Thank you for choosing TopEdge AI!`;
+
       await maintenanceService.submitInquiry({
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
-        plan: formData.plan
+        plan: formData.plan,
+        emailTemplate: emailTemplate
       });
       
       // Reset form and show success message
       setFormData({ name: "", email: "", phone: "", plan: "", section: 'voice' });
       setSubmitStatus('success');
-      setShowPricing(true); // Show the pricing after successful submission
+      setShowPricing(true);
       
       // Show success toast with specific plan type
       const planType = formData.plan.toLowerCase().includes('chatbot') ? 'chatbot' : 'voice agent';
-      toast.success(`Thank you! Here are your ${planType} maintenance pricing details.`, {
+      toast.success(`Thank you! We've sent detailed ${planType} pricing information to your email.`, {
         duration: 5000,
         position: 'bottom-right',
         style: {

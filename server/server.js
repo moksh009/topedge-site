@@ -48,7 +48,7 @@ const sendEmail = async (mailOptions) => {
 // Maintenance Form - User Email
 app.post('/api/send-maintenance-user-email', async (req, res) => {
   try {
-    const { name, email, plan } = req.body;
+    const { name, email, plan, emailTemplate } = req.body;
 
     const isChatbot = plan.toLowerCase().includes('chatbot');
     const planType = isChatbot ? 'Chatbot' : 'AI Voice Agent';
@@ -56,46 +56,6 @@ app.post('/api/send-maintenance-user-email', async (req, res) => {
     const planGradient = isChatbot 
       ? 'linear-gradient(135deg, #4D07E3 0%, #7A0BC0 100%)'
       : 'linear-gradient(135deg, #0A84FF 0%, #3B82F6 100%)';
-
-    const planBenefits = isChatbot ? [
-      '24/7 Customer Support',
-      'Multi-language Support',
-      'Advanced AI Models',
-      'Human Hand-off Capability',
-      'Multi-channel Integration',
-      'Real-time Analytics'
-    ] : [
-      'Natural Voice Interactions',
-      '24/7 Availability',
-      'Multi-language Support',
-      'Advanced Speech Recognition',
-      'Real-time Call Analytics',
-      'Seamless Integration'
-    ];
-
-    const planDetails = isChatbot ? {
-      starter: {
-        price: '$249/month',
-        features: ['FAQ', 'Ticket Creation', 'Single Channel Support']
-      },
-      advanced: {
-        price: '$549/month',
-        features: ['Multi-channel Support', 'Appointment Setting', 'Advanced AI Models', 'Human Hand-off']
-      }
-    } : {
-      starter: {
-        price: '$249/month',
-        features: ['FAQ', 'Ticket Creation', 'Basic Voice Support']
-      },
-      pro: {
-        price: '$529/month',
-        features: ['Appointment Setting', 'Dedicated Dashboard', 'Real-time Updates']
-      },
-      premium: {
-        price: '$987/month',
-        features: ['Meeting Management', 'Multi-channel Support', 'Outbound Marketing']
-      }
-    };
 
     await sendEmail({
       from: process.env.EMAIL_USER,
@@ -108,6 +68,38 @@ app.post('/api/send-maintenance-user-email', async (req, res) => {
             <meta charset="utf-8">
             <title>${planType} Maintenance Inquiry - TopEdge</title>
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+              .plan-details {
+                white-space: pre-wrap;
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+              }
+              .feature-list {
+                margin: 0;
+                padding-left: 20px;
+              }
+              .feature-item {
+                margin-bottom: 8px;
+              }
+              .section-title {
+                color: ${planColor};
+                font-size: 20px;
+                margin: 0 0 15px 0;
+                font-weight: 600;
+              }
+              .section-content {
+                background-color: #fff;
+                border-radius: 8px;
+                padding: 20px;
+                border: 1px solid #E5E7EB;
+              }
+              .section-container {
+                background-color: #F9FAFB;
+                border-radius: 12px;
+                padding: 25px;
+                margin-bottom: 30px;
+              }
+            </style>
           </head>
           <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f4f4f4; margin: 0; padding: 20px;">
             <div style="max-width: 600px; margin: 0 auto; background-color: #fff; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow: hidden;">
@@ -123,81 +115,76 @@ app.post('/api/send-maintenance-user-email', async (req, res) => {
                   <h2 style="color: #1F2937; font-size: 24px; margin: 0 0 15px 0;">Hello ${name},</h2>
                   <p style="color: #4B5563; font-size: 16px; margin: 0;">Thank you for your interest in our ${plan} plan maintenance services. We're excited to help you enhance your business with our ${planType} solution.</p>
                 </div>
-                
-                <!-- Plan Details -->
-                <div style="background-color: #F9FAFB; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
-                  <h3 style="color: ${planColor}; font-size: 20px; margin: 0 0 20px 0;">Your Selected Plan</h3>
-                  <div style="background-color: #fff; border-radius: 8px; padding: 20px; border: 1px solid #E5E7EB;">
-                    <h4 style="color: ${planColor}; font-size: 18px; margin: 0 0 15px 0;">${plan}</h4>
-                    <div style="margin-bottom: 20px;">
-                      <p style="margin: 0; color: #6B7280; font-size: 14px;">Monthly Fee</p>
-                      <p style="margin: 5px 0 0 0; color: #1F2937; font-size: 24px; font-weight: 600;">${planDetails[plan.toLowerCase()].price}</p>
-                    </div>
-                    <div>
-                      <p style="margin: 0 0 10px 0; color: #6B7280; font-size: 14px;">Included Features:</p>
-                      <ul style="margin: 0; padding-left: 20px; color: #4B5563;">
-                        ${planDetails[plan.toLowerCase()].features.map(feature => `
-                          <li style="margin-bottom: 8px;">${feature}</li>
-                        `).join('')}
-                      </ul>
-                    </div>
-                  </div>
-                </div>
 
-                <!-- Benefits -->
-                <div style="background-color: #F9FAFB; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
-                  <h3 style="color: ${planColor}; font-size: 20px; margin: 0 0 20px 0;">${planType} Benefits</h3>
-                  <div style="background-color: #fff; border-radius: 8px; padding: 20px; border: 1px solid #E5E7EB;">
-                    <ul style="margin: 0; padding-left: 20px; color: #4B5563;">
-                      ${planBenefits.map(benefit => `
-                        <li style="margin-bottom: 10px;">${benefit}</li>
-                      `).join('')}
-                    </ul>
+                <!-- Plan Details Section -->
+                <div class="section-container">
+                  <h3 class="section-title">Plan Details</h3>
+                  <div class="section-content">
+                    <div class="plan-details" style="color: #4B5563; font-size: 14px;">
+                      ${emailTemplate.split('\n').map(line => {
+                        const trimmedLine = line.trim();
+                        if (trimmedLine.startsWith('===')) {
+                          return `<h3 style="color: ${planColor}; font-size: 18px; margin: 20px 0 10px 0; font-weight: 600;">${trimmedLine.replace(/=/g, '').trim()}</h3>`;
+                        } else if (trimmedLine.startsWith('•')) {
+                          return `<div class="feature-item" style="margin-bottom: 8px; padding-left: 20px; position: relative;">
+                            <span style="position: absolute; left: 0;">&bull;</span>
+                            ${trimmedLine.substring(1).trim()}
+                          </div>`;
+                        } else if (trimmedLine.match(/^\d+\./)) {
+                          return `<h4 style="color: #1F2937; font-size: 16px; margin: 15px 0 10px 0; font-weight: 600;">${trimmedLine}</h4>`;
+                        } else if (trimmedLine.length === 0) {
+                          return '<div style="height: 10px;"></div>';
+                        } else {
+                          return `<p style="margin: 0 0 10px 0;">${trimmedLine}</p>`;
+                        }
+                      }).join('')}
+                    </div>
                   </div>
                 </div>
 
                 <!-- Next Steps -->
-                <div style="background-color: #F0FDF4; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
-                  <h3 style="color: ${planColor}; font-size: 20px; margin: 0 0 15px 0;">What's Next?</h3>
-                  <p style="margin: 0; color: #4B5563;">
-                    Our team will review your inquiry and send you a detailed quote within 24-48 business hours. The quote will include:
-                  </p>
-                  <ul style="margin: 15px 0 0 0; padding-left: 20px; color: #4B5563;">
-                    <li style="margin-bottom: 8px;">Detailed pricing breakdown</li>
-                    <li style="margin-bottom: 8px;">Implementation timeline</li>
-                    <li style="margin-bottom: 8px;">Customization options</li>
-                    <li>Support and maintenance details</li>
-                  </ul>
+                <div class="section-container">
+                  <h3 class="section-title">Next Steps</h3>
+                  <div class="section-content">
+                    <p style="color: #4B5563; font-size: 16px; margin: 0 0 15px 0;">Our team will:</p>
+                    <ul style="margin: 0; padding-left: 20px; color: #4B5563;">
+                      <li style="margin-bottom: 8px;">Review your requirements</li>
+                      <li style="margin-bottom: 8px;">Analyze your usage needs</li>
+                      <li style="margin-bottom: 8px;">Prepare a detailed quotation</li>
+                      <li>Contact you within 24-48 business hours</li>
+                    </ul>
+                  </div>
                 </div>
 
                 <!-- Contact -->
-                <div style="background-color: #F0FDF4; border-radius: 12px; padding: 25px;">
-                  <h3 style="color: ${planColor}; font-size: 20px; margin: 0 0 15px 0;">Need Help?</h3>
-                  <p style="margin: 0; color: #4B5563;">
-                    If you have any questions, please contact us at:
-                    <a href="mailto:support@topedge.ai" style="color: ${planColor}; text-decoration: none; font-weight: 500;">support@topedge.ai</a>
-                  </p>
-                </div>
-                
-                <!-- Footer -->
-                <div style="text-align: center; color: #6B7280; font-size: 14px; margin-top: 40px;">
-                  <p style="margin: 0;">Best regards,</p>
-                  <p style="margin: 5px 0 0 0; font-weight: 500; color: #4B5563;">The TopEdge AI Team</p>
-                  <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #E5E7EB;">
-                    <p style="margin: 0;">© 2024 TopEdge AI. All rights reserved.</p>
+                <div class="section-container" style="background-color: #F0FDF4;">
+                  <h3 class="section-title">Need Help?</h3>
+                  <div class="section-content">
+                    <p style="margin: 0; color: #4B5563;">
+                      If you have any questions, feel free to:
+                    </p>
+                    <ul style="margin: 15px 0 0 0; padding-left: 20px; color: #4B5563;">
+                      <li style="margin-bottom: 8px;">Reply to this email</li>
+                      <li>Contact us at <a href="mailto:support@topedge.ai" style="color: ${planColor}; text-decoration: none;">support@topedge.ai</a></li>
+                    </ul>
                   </div>
+                </div>
+
+                <!-- Footer -->
+                <div style="text-align: center; padding-top: 30px; border-top: 1px solid #E5E7EB; margin-top: 30px;">
+                  <p style="color: #6B7280; font-size: 14px; margin: 0;">Best regards,<br>The TopEdge Team</p>
                 </div>
               </div>
             </div>
           </body>
         </html>
-      `,
+      `
     });
 
-    res.status(200).json({ message: 'Email sent successfully' });
+    res.status(200).json({ success: true });
   } catch (error) {
-    console.error('Error sending email:', error);
-    res.status(500).json({ message: 'Failed to send email', error: error.message });
+    console.error('Error sending maintenance user email:', error);
+    res.status(500).json({ success: false, error: 'Failed to send email' });
   }
 });
 

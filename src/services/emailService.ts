@@ -38,6 +38,7 @@ export interface MaintenanceDetails {
   email: string;
   phone: string;
   plan: string;
+  emailTemplate?: string;
 }
 
 export type EmailType = 'user' | 'admin';
@@ -145,7 +146,13 @@ export class EmailService {
   public async sendMaintenanceUserEmail(details: MaintenanceDetails): Promise<void> {
     try {
       console.log('Sending maintenance user email with details:', details);
-      await this.sendEmail('user', '/api/send-maintenance-user-email', details);
+      const response = await this.sendEmail('user', '/api/send-maintenance-user-email', {
+        name: details.name,
+        email: details.email,
+        phone: details.phone,
+        plan: details.plan,
+        emailTemplate: details.emailTemplate
+      });
       console.log('Maintenance user email sent successfully');
     } catch (error) {
       console.error('Error sending maintenance user email:', error);
@@ -156,7 +163,13 @@ export class EmailService {
   public async sendMaintenanceAdminEmail(details: MaintenanceDetails): Promise<void> {
     try {
       console.log('Sending maintenance admin email with details:', details);
-      await this.sendEmail('admin', '/api/send-maintenance-admin-email', details);
+      const response = await this.sendEmail('admin', '/api/send-maintenance-admin-email', {
+        name: details.name,
+        email: details.email,
+        phone: details.phone,
+        plan: details.plan,
+        emailTemplate: details.emailTemplate
+      });
       console.log('Maintenance admin email sent successfully');
     } catch (error) {
       console.error('Error sending maintenance admin email:', error);
