@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { Star, Quote, Play, Pause } from 'lucide-react';
 
@@ -6,35 +6,34 @@ const testimonial = {
   name: "Steven Mugabe",
   role: "Doctor at Code Clinic",
   image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTP5IqbmloRw1URDMMdIkaWrhKwXN6lMKfFQ&s",
-  content: "TopEdge's AI solutions transformed our customer service. Response times dropped by 90% while satisfaction increased by 45%. It's like having a superhuman team that never sleeps.",
+  content: "TopEdge's AI solutions transformed our customer service. Response times dropped by 90% while satisfaction increased by 55%. It's like having a superhuman team that never sleeps.",
   rating: 5,
   company: {
     logo: "code clinic.png",
     name: "Code Clinic"
   },
   video: {
-    thumbnailUrl: "https://drive.google.com/uc?export=view&id=1m8UeYAM9Ql9MtIe5ib7SmIex8RXesv6d",
-    videoUrl: "https://drive.google.com/uc?export=view&id=1m8UeYAM9Ql9MtIe5ib7SmIex8RXesv6d",
+    vimeoId: "1074178390",
     duration: "2:15"
   }
 };
 
 const TestimonialCard = () => {
   const cardRef = useRef(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const isInView = useInView(cardRef, { once: false, margin: "-100px" });
+  
+  // Load Vimeo script
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = "https://player.vimeo.com/api/player.js";
+    script.async = true;
+    document.body.appendChild(script);
 
-  const toggleVideo = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   return (
     <motion.div
@@ -42,58 +41,56 @@ const TestimonialCard = () => {
       initial={{ opacity: 0, y: 50 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
       transition={{ duration: 0.8 }}
-      className="relative group max-w-4xl mx-auto"
+      className="relative group max-w-3xl mx-auto"
     >
-      {/* Premium card design */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl border border-white/10">
-        {/* Video Section */}
-        <div className="relative aspect-video w-full overflow-hidden rounded-t-3xl">
-          <video
-            ref={videoRef}
-            className="w-full h-full object-cover"
-            poster={testimonial.video.thumbnailUrl}
-            src={testimonial.video.videoUrl}
-            onEnded={() => setIsPlaying(false)}
-          />
+        {/* Video Section - Adjusted for vertical video */}
+        <div className="relative w-full max-w-[400px] mx-auto overflow-hidden">
+          <div style={{ padding: "177.78% 0 0 0", position: "relative" }}>
+            <iframe
+              src="https://player.vimeo.com/video/1074178390?badge=0&autopause=0&player_id=0&app_id=58479&controls=true&title=0&byline=0&portrait=0&quality=1080p&dnt=1"
+              frameBorder="0"
+              allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+              style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
+              title="Dr.Steven Mugabe (Code Clinic)"
+              className="rounded-t-3xl"
+            />
+          </div>
           
           {/* Video Overlay */}
-          <div className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${isPlaying ? 'opacity-0' : 'opacity-100'}`}>
-            <motion.button
-              onClick={toggleVideo}
-              className="absolute inset-0 w-full h-full flex items-center justify-center group/play"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <motion.div
-                className="relative w-20 h-20 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center"
-                whileHover={{ scale: 1.1 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          {!isPlaying && (
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm z-10">
+              <motion.button
+                onClick={() => setIsPlaying(true)}
+                className="absolute inset-0 w-full h-full flex items-center justify-center group/play"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
-                {isPlaying ? (
-                  <Pause className="w-8 h-8 text-white" />
-                ) : (
-                  <Play className="w-8 h-8 text-white ml-1" />
-                )}
-              </motion.div>
-              {!isPlaying && (
-                <div className="absolute bottom-6 right-6 px-4 py-2 rounded-full bg-white/10 backdrop-blur-xl border border-white/20">
-                  <span className="text-white/90 text-sm font-medium">{testimonial.video.duration}</span>
+                <motion.div
+                  className="relative w-16 h-16 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center"
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                >
+                  <Play className="w-6 h-6 text-white ml-1" />
+                </motion.div>
+                <div className="absolute bottom-4 right-4 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-xl border border-white/20">
+                  <span className="text-white/90 text-xs font-medium">{testimonial.video.duration}</span>
                 </div>
-              )}
-            </motion.button>
-          </div>
+              </motion.button>
+            </div>
+          )}
         </div>
 
-        <div className="p-10">
+        <div className="p-8">
           {/* Quote icon with premium styling */}
           <div className="absolute top-6 right-8 text-purple-500/20 transform rotate-180">
-            <Quote size={120} />
+            <Quote size={80} />
           </div>
 
           {/* Content with enhanced typography */}
           <div className="relative z-10 max-w-3xl mx-auto">
             {/* Rating with animated stars */}
-            <div className="flex items-center justify-center gap-2 mb-8">
+            <div className="flex items-center justify-center gap-1.5 mb-6">
               {[...Array(testimonial.rating)].map((_, i) => (
                 <motion.div
                   key={i}
@@ -101,14 +98,14 @@ const TestimonialCard = () => {
                   animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
                   transition={{ delay: i * 0.1 }}
                 >
-                  <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
+                  <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
                 </motion.div>
               ))}
             </div>
 
-            {/* Testimonial text with gradient */}
+            {/* Testimonial text */}
             <motion.p 
-              className="text-2xl text-center text-gray-200 font-light leading-relaxed mb-10"
+              className="text-xl text-center text-gray-200 font-light leading-relaxed mb-8"
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : { opacity: 0 }}
               transition={{ delay: 0.3 }}
@@ -116,14 +113,14 @@ const TestimonialCard = () => {
               "{testimonial.content}"
             </motion.p>
 
-            {/* Author info with enhanced layout */}
+            {/* Author info */}
             <motion.div 
-              className="flex items-center justify-center gap-6"
+              className="flex items-center justify-center gap-4"
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ delay: 0.4 }}
             >
-              <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-purple-500/20">
+              <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-purple-500/20">
                 <img 
                   src={testimonial.image} 
                   alt={testimonial.name}
@@ -131,32 +128,21 @@ const TestimonialCard = () => {
                 />
               </div>
               <div className="text-center">
-                <h4 className="text-xl text-white font-semibold mb-1">{testimonial.name}</h4>
-                <p className="text-purple-400 text-sm font-medium">{testimonial.role}</p>
+                <h4 className="text-lg text-white font-semibold mb-0.5">{testimonial.name}</h4>
+                <p className="text-sm text-purple-400 font-medium">{testimonial.role}</p>
               </div>
               {testimonial.company.logo && (
-                <div className="ml-6 border-l border-white/10 pl-6">
+                <div className="ml-4 border-l border-white/10 pl-4">
                   <img 
                     src={testimonial.company.logo} 
                     alt={testimonial.company.name}
-                    className="h-12 opacity-70 group-hover:opacity-100 transition-opacity"
+                    className="h-10 opacity-70 group-hover:opacity-100 transition-opacity"
                   />
                 </div>
               )}
             </motion.div>
           </div>
         </div>
-
-        {/* Premium decorative elements */}
-        <motion.div
-          className="absolute bottom-0 left-0 right-0 h-[2px]"
-          style={{
-            background: 'linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent)'
-          }}
-          initial={{ scaleX: 0, opacity: 0 }}
-          animate={isInView ? { scaleX: 1, opacity: 1 } : { scaleX: 0, opacity: 0 }}
-          transition={{ duration: 1, delay: 0.5 }}
-        />
       </div>
     </motion.div>
   );

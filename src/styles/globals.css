@@ -452,3 +452,146 @@ html {
 .hover-scale:hover {
   transform: scale(1.05);
 }
+
+/* Performance optimizations */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Hardware acceleration for animations */
+.hardware-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
+  will-change: transform, opacity;
+}
+
+/* Optimized animations */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Optimized glass effect */
+.glass-effect {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Optimized scroll behavior */
+.smooth-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Optimized gradient animations */
+.gradient-text {
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  will-change: background-position;
+  background-size: 200% auto;
+}
+
+/* Optimized hover transitions */
+.hover-transition {
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0.15, 1);
+  will-change: transform;
+}
+
+/* Optimized scroll animations */
+.scroll-animate {
+  will-change: transform, opacity;
+  transition: transform 0.4s cubic-bezier(0.2, 0, 0.15, 1),
+              opacity 0.4s cubic-bezier(0.2, 0, 0.15, 1);
+}
+
+/* Reduced animation durations */
+.animate-fast {
+  animation-duration: 0.4s;
+}
+
+.animate-medium {
+  animation-duration: 0.6s;
+}
+
+/* Optimized stagger delays */
+.stagger-1 { animation-delay: 0.05s; }
+.stagger-2 { animation-delay: 0.1s; }
+.stagger-3 { animation-delay: 0.15s; }
+
+/* Optimized glass effect */
+.enhanced-glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Optimized gradient animations */
+@keyframes gradientFlow {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.gradient-flow {
+  background: linear-gradient(90deg, #4f46e5, #9333ea, #4f46e5);
+  background-size: 200% auto;
+  animation: gradientFlow 4s ease infinite;
+  will-change: background-position;
+}
+
+/* Smooth scroll with reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Optimize paint operations */
+* {
+  transform: translateZ(0);
+}
+
+/* Smooth animations with reduced properties */
+.animate-smooth {
+  transition-timing-function: cubic-bezier(0.2, 0, 0.15, 1);
+  transition-duration: 0.3s;
+  will-change: transform, opacity;
+}

@@ -1,5 +1,5 @@
-import { useRef, useEffect } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef, useEffect, useMemo } from 'react';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ArrowRight, Rocket, Info } from 'lucide-react';
 import { TypeAnimation } from 'react-type-animation';
 import { Link } from 'react-router-dom';
@@ -11,68 +11,61 @@ const HeroSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
 
+  // Optimize scroll handling
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end start"]
   });
 
-  // Section animations
-  const sectionScale = useTransform(scrollYProgress,
-    [0, 0.5],
-    [1, 0.85]
-  );
+  // Use lighter spring physics
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 30,
+    damping: 15,
+    restDelta: 0.001
+  });
 
-  const sectionOpacity = useTransform(scrollYProgress,
-    [0, 0.5],
-    [1, 0]
-  );
+  // Reduce transform calculations
+  const sectionScale = useTransform(smoothProgress, [0, 0.5], [1, 0.98]);
+  const sectionOpacity = useTransform(smoothProgress, [0, 0.5], [1, 0.5]);
 
-  const sectionY = useTransform(scrollYProgress,
-    [0, 0.5],
-    ["0%", "5%"]
-  );
+  // Optimize floating orbs by reducing count and animation complexity
+  const floatingOrbs = useMemo(() => {
+    return [...Array(8)].map((_, i) => ({
+      id: i,
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      scale: Math.random() * 0.5 + 0.5,
+      duration: Math.random() * 5 + 15
+    }));
+  }, []);
 
-  // Text animations
-  const x1 = useTransform(scrollYProgress, 
-    [0, 0.2, 0.4], 
-    ["0%", "-10%", "-25%"]
-  );
-  const x2 = useTransform(scrollYProgress, 
-    [0, 0.2, 0.4], 
-    ["0%", "10%", "25%"]
-  );
+  // Reduced transform range
+  const x1 = useTransform(smoothProgress, [0, 0.4], ["0%", "-15%"]);
+  const x2 = useTransform(smoothProgress, [0, 0.4], ["0%", "15%"]);
 
-  // Background animations
-  const bgScale = useTransform(scrollYProgress,
-    [0, 0.5],
-    [1, 1.1]
-  );
+  // Optimize background animations
+  const bgOpacity = useTransform(smoothProgress, [0, 0.5], [1, 0.5]);
 
-  const bgOpacity = useTransform(scrollYProgress,
-    [0, 0.5],
-    [1, 0.3]
-  );
-
-  // Initial animation variants
+  // Simplified variants with reduced animation properties
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.3
+        staggerChildren: 0.1,
+        delayChildren: 0.2
       }
     }
   };
 
   const itemVariants = {
-    hidden: { y: 30, opacity: 0 },
+    hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
       transition: {
-        duration: 0.8,
-        ease: [0.215, 0.61, 0.355, 1]
+        duration: 0.5,
+        ease: "easeOut"
       }
     }
   };
@@ -103,79 +96,59 @@ const HeroSection = () => {
   return (
     <motion.section 
       ref={sectionRef} 
-      className="relative min-h-[100vh] flex items-center justify-center overflow-hidden font-sf-pro-display"
+      className="relative min-h-[100vh] flex items-center justify-center overflow-hidden font-sf-pro-display will-change-transform"
       style={{
         scale: sectionScale,
-        opacity: sectionOpacity,
-        y: sectionY
+        opacity: sectionOpacity
       }}
     >
-      {/* Enhanced Background Effects */}
+      {/* Optimized Background Effects */}
       <motion.div 
         className="absolute inset-0 overflow-hidden"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
+        transition={{ duration: 0.8 }}
         style={{
-          background: 'linear-gradient(to bottom, rgba(0,0,0,0.95), rgba(0,0,0,0.98))'
+          background: 'linear-gradient(to bottom, rgba(0,0,0,0.95), rgba(0,0,0,0.98))',
+          willChange: 'transform'
         }}
       >
-        {/* Breathing circle background */}
+        {/* Optimized breathing circle */}
         <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px]"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] will-change-transform"
           animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.15, 0.25, 0.15],
+            scale: [1, 1.05, 1],
+            opacity: [0.15, 0.18, 0.15],
           }}
           transition={{
-            duration: 4,
+            duration: 6,
             repeat: Infinity,
             ease: "easeInOut",
           }}
         >
           <div className="absolute inset-0 rounded-full bg-gradient-to-r from-white/10 to-white/2"
-            style={{ filter: 'blur(80px)' }}
-          />
-          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-white/5 to-white/2"
-            style={{ filter: 'blur(60px)', transform: 'rotate(45deg)' }}
+            style={{ filter: 'blur(50px)' }}
           />
         </motion.div>
 
-        {/* Glowing gradient background */}
-        <div 
-          className="absolute inset-0"
-          style={{
-            background: 'radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.08) 0%, transparent 70%)',
-            filter: 'blur(60px)'
-          }}
-        />
-
-        {/* Floating orbs with reduced opacity */}
+        {/* Optimized floating orbs */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(15)].map((_, i) => (
+          {floatingOrbs.map((orb) => (
             <motion.div
-              key={i}
-              className="absolute w-2 h-2 bg-purple-500 rounded-full"
+              key={orb.id}
+              className="absolute w-2 h-2 bg-purple-500/30 rounded-full"
               initial={{
                 opacity: 0.1,
-                scale: Math.random() * 0.5 + 0.5,
-                x: Math.random() * window.innerWidth,
-                y: Math.random() * window.innerHeight,
+                scale: orb.scale,
+                x: orb.x,
+                y: orb.y,
               }}
               animate={{
-                y: [
-                  Math.random() * window.innerHeight,
-                  Math.random() * window.innerHeight,
-                ],
-                x: [
-                  Math.random() * window.innerWidth,
-                  Math.random() * window.innerWidth,
-                ],
+                y: [orb.y, orb.y + 50, orb.y],
                 opacity: [0.1, 0.15, 0.1],
-                scale: [0.5, 0.8, 0.5],
               }}
               transition={{
-                duration: Math.random() * 10 + 20,
+                duration: orb.duration,
                 repeat: Infinity,
                 ease: "linear",
               }}
@@ -186,26 +159,24 @@ const HeroSection = () => {
           ))}
         </div>
 
-        {/* Animated particles */}
-        {[...Array(15)].map((_, i) => (
+        {/* Optimized particles - reduced count */}
+        {[...Array(10)].map((_, i) => (
           <motion.div
             key={`particle-${i}`}
-            className="absolute w-1 h-1 rounded-full bg-white/30"
+            className="absolute w-1 h-1 rounded-full bg-white/20"
             style={{
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
-              boxShadow: '0 0 8px 1px rgba(255,255,255,0.2)',
+              filter: 'blur(0.5px)',
             }}
             animate={{
-              y: [0, -80, 0],
-              x: [0, Math.random() * 80 - 40, 0],
-              scale: [1, 1.3, 1],
-              opacity: [0.2, 0.5, 0.2],
+              y: [0, -60],
+              opacity: [0.2, 0],
             }}
             transition={{
-              duration: 4 + Math.random() * 4,
+              duration: 3 + Math.random() * 2,
               repeat: Infinity,
-              ease: "easeInOut",
+              ease: "linear",
               delay: Math.random() * 2,
             }}
           />
@@ -383,7 +354,7 @@ const HeroSection = () => {
           delay: 3 // This delay matches the sound timing
         }}
       >
-        {/* Wizard Image with Left Tilt */}
+        {/* Wizard Image with Subtle Glow */}
         <motion.div
           className="relative w-52 h-52"
           initial={{ rotate: 8, opacity: 0 }}
@@ -411,21 +382,81 @@ const HeroSection = () => {
             }
           }}
         >
+          {/* Refined glow effect */}
+          <div className="absolute inset-[10%] -z-10">
+            {/* Main glow */}
+            <motion.div
+              className="absolute inset-0 rounded-full bg-purple-500/15"
+              animate={{
+                scale: [0.95, 1.05, 0.95],
+                opacity: [0.2, 0.3, 0.2],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              style={{
+                filter: 'blur(20px)',
+              }}
+            />
+            
+            {/* Subtle accent glow */}
+            <motion.div
+              className="absolute inset-0 rounded-full"
+              style={{
+                background: 'radial-gradient(circle at 30% 30%, rgba(167, 139, 250, 0.25), transparent 70%)',
+                filter: 'blur(15px)',
+              }}
+              animate={{
+                opacity: [0.2, 0.4, 0.2],
+              }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+
+            {/* Subtle moving highlight */}
+            <motion.div
+              className="absolute inset-0"
+              animate={{
+                background: [
+                  'radial-gradient(circle at 0% 0%, rgba(167, 139, 250, 0.2) 0%, transparent 50%)',
+                  'radial-gradient(circle at 60% 60%, rgba(167, 139, 250, 0.2) 0%, transparent 50%)',
+                  'radial-gradient(circle at 0% 0%, rgba(167, 139, 250, 0.2) 0%, transparent 50%)',
+                ],
+              }}
+              transition={{
+                duration: 8,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+              style={{
+                filter: 'blur(15px)',
+              }}
+            />
+          </div>
+
           <img 
             src="/wizard.png" 
             alt="AI Wizard" 
-            className="w-full h-full object-contain drop-shadow-[0_0_25px_rgba(139,92,246,0.3)]"
+            className="w-full h-full object-contain relative z-10"
+            style={{
+              filter: 'drop-shadow(0 0 8px rgba(139,92,246,0.2))',
+            }}
           />
         </motion.div>
 
         {/* Animated Dots and Message */}
-        <div className="relative">
+        <div className="relative -ml-2">
           {/* First Dot */}
           <motion.div
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5, delay: 4.5 }}
-            className="absolute -left-5 top-20 w-2 h-2 bg-purple-400 rounded-full"
+            className="absolute -left-5 top-24 w-2 h-2 bg-purple-400 rounded-full"
           />
 
           {/* Second Dot */}
@@ -433,12 +464,12 @@ const HeroSection = () => {
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5, delay: 4.9 }}
-            className="absolute left-1 top-20 w-3 h-3 bg-purple-400 rounded-full"
+            className="absolute left-0 top-28 w-3 h-3 bg-purple-400 rounded-full"
           />
 
           {/* Message Container */}
           <motion.div
-            className="relative mt-14 ml-8"
+            className="relative mt-20 ml-6"
             initial={{ opacity: 0, scale: 0.8, x: -20 }}
             animate={{ opacity: 1, scale: 1, x: 0 }}
             transition={{
@@ -483,7 +514,7 @@ const HeroSection = () => {
                     WebkitTextFillColor: 'transparent',
                   }}
                 >
-                  Are you ready to start a small journey with me on this website to explore <br/>
+                  Are you ready to start a small journey with me to explore <br/>
                   how we can save you time, money & opportunities?<br />
                   Let's begin this scrolling journey...
                 </motion.p>
@@ -623,7 +654,7 @@ const HeroSection = () => {
               transition={{ duration: 1, delay: 1.5 }}
               className="relative z-10 text-white/100 text-lg sm:text-xl md:text-xl flex flex-col gap-1"
             >
-              <span className="whitespace-normal">Did you know that 72% of customers choose another business when their call or inquiry goes unanswered, even if the reply is late?</span>
+              <span className="whitespace-normal">72% of customers choose another business if their call or inquiry goes unanswered</span>
               <span className="whitespace-normal">You can't count how many opportunities you've lost—because you don't even know.</span>
             </motion.span>
           </motion.p>

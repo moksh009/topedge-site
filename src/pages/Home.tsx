@@ -6,7 +6,7 @@ import ScrollingText from '../components/sections/ScrollingText';
 import InvisibleApproachSection from '../components/sections/InvisibleApproachSection';
 import { ComparisonSection } from '../components/sections/ComparisonSection';
 import InfiniteIconsSection from '../components/sections/InfiniteIconsSection';
-// import ProductShowcase from '../components/sections/ProductShowcase';
+import ProductShowcase from '../components/sections/ProductShowcase';
 import DevelopmentProcess from '../components/sections/DevelopmentProcess';
 import { StatsSection } from '../components/sections/StatsSection';
 import { CTASection } from '../components/sections/CTASection';
@@ -130,7 +130,7 @@ const Home = () => {
             <InfiniteIconsSection />
           </div>
           <div className="mt-0 sm:mt-8 md:mt-16">
-            {/* <ProductShowcase /> */}
+            <ProductShowcase />
           </div>
           <div className="mt-0 sm:mt-8 md:mt-16">
             <DevelopmentProcess />
@@ -139,8 +139,8 @@ const Home = () => {
             <StatsSection />
           </div>
           
-          {/* Testimonials before CTA */}
-          <div className="mt-0 sm:mt-8 md:mt-16">
+          {/* Testimonials strategically placed before CTA */}
+          <div className="mt-8 sm:mt-16 md:mt-24 mb-16 sm:mb-24">
             <TestimonialsSection />
           </div>
           
