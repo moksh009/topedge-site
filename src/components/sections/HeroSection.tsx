@@ -514,9 +514,8 @@ const HeroSection = () => {
                     WebkitTextFillColor: 'transparent',
                   }}
                 >
-                  Are you ready to start a small journey with me to explore <br/>
-                  how we can save you time, money & opportunities?<br />
-                  Let's begin this scrolling journey...
+                  72% of customers choose another business <br/>if their call or inquiry goes unanswered <br/>
+                  You can't count how many opportunities <br/>you've lost—because you don't even know.
                 </motion.p>
               </div>
 
@@ -558,7 +557,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1, ease: "easeOut" }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 relative"
+              className="flex flex-col items-center justify-center gap-2 sm:gap-4 relative"
             >
               {/* Breathing glowing ball behind text */}
               <motion.div
@@ -568,7 +567,7 @@ const HeroSection = () => {
                 transition={{ duration: 1 }}
               >
                 <motion.div
-                  className="w-[200px] sm:w-[500px] md:w-[600px] h-[60px] sm:h-[100px] md:h-[120px] rounded-full"
+                  className="w-[200px] sm:w-[500px] md:w-[600px] h-[120px] sm:h-[160px] md:h-[200px] rounded-full"
                   animate={{
                     scale: [1, 1.2, 1],
                     opacity: [0.3, 0.5, 0.3],
@@ -585,57 +584,61 @@ const HeroSection = () => {
                 />
               </motion.div>
 
-              <motion.span
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ 
-                  opacity: 1, 
-                  scale: [1, 1.03, 1],
-                }}
-                transition={{ 
-                  opacity: { duration: 0.8, delay: 0.3 },
-                  scale: {
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }
-                }}
-                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light relative z-10 whitespace-nowrap"
-                style={{
-                  background: 'linear-gradient(to right, #FFFFFF 20%, #8B5CF6 50%, #FFFFFF 80%)',
-                  backgroundSize: '200% auto',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  animation: 'shine 8s linear infinite',
-                }}
-              >
-                Great To&nbsp;
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ 
-                  opacity: 1, 
-                  scale: [1, 1.03, 1],
-                }}
-                transition={{ 
-                  opacity: { duration: 0.8, delay: 0.6 },
-                  scale: {
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 0.2
-                  }
-                }}
-                className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold"
-                style={{
-                  background: 'linear-gradient(to right, #FFFFFF 20%, #8B5CF6 50%, #FFFFFF 80%)',
-                  backgroundSize: '200% auto',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  animation: 'shine 8s linear infinite',
-                }}
-              >
-                GREATEST
-              </motion.span>
+              <div className="flex flex-col items-center gap-2 sm:gap-3">
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ 
+                    opacity: 1, 
+                    scale: [1, 1.03, 1],
+                  }}
+                  transition={{ 
+                    opacity: { duration: 0.8, delay: 0.3 },
+                    scale: {
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }
+                  }}
+                  className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-center"
+                  style={{
+                    background: 'linear-gradient(to right, #FFFFFF 20%, #8B5CF6 50%, #FFFFFF 80%)',
+                    backgroundSize: '200% auto',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    animation: 'shine 8s linear infinite',
+                  }}
+                >
+                  Within 45 Days
+                </motion.span>
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ 
+                    opacity: 1, 
+                    scale: [1, 1.03, 1],
+                  }}
+                  transition={{ 
+                    opacity: { duration: 0.8, delay: 0.6 },
+                    scale: {
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: 0.2
+                    }
+                  }}
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-center"
+                  style={{
+                    background: 'linear-gradient(to right, #FFFFFF 20%, #8B5CF6 50%, #FFFFFF 80%)',
+                    backgroundSize: '200% auto',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    animation: 'shine 8s linear infinite',
+                  }}
+                >
+                    <span>Recover upto $10k in Lost Revenue</span>
+                    <span style={{ WebkitTextFillColor: 'initial' }}>💰</span>
+                    
+                </motion.span>
+              </div>
             </motion.div>
           </motion.h1>
 
@@ -643,7 +646,7 @@ const HeroSection = () => {
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="text-base sm:text-lg md:text-xl text-white/70 w-[90%] sm:w-[95%] mx-auto leading-relaxed mb-6 sm:mb-8 md:mb-12"
+            className="text-lg sm:text-xl md:text-2xl text-white/90 max-w-[1200px] mx-auto leading-relaxed mb-6 sm:mb-8 md:mb-12 whitespace-nowrap overflow-x-auto hide-scrollbar"
             style={{
               textShadow: '0 0 20px rgba(255,255,255,0.2)',
             }}
@@ -652,10 +655,9 @@ const HeroSection = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1, delay: 1.5 }}
-              className="relative z-10 text-white/100 text-lg sm:text-xl md:text-xl flex flex-col gap-1"
+              className="relative z-10 text-white/100 flex items-center justify-center"
             >
-              <span className="whitespace-normal">72% of customers choose another business if their call or inquiry goes unanswered</span>
-              <span className="whitespace-normal">You can't count how many opportunities you've lost—because you don't even know.</span>
+              Just by Fixing Missed Calls, Late Customer Response, No-Shows, & Slow Follow-Ups.
             </motion.span>
           </motion.p>
 
@@ -908,6 +910,17 @@ const HeroSection = () => {
           </motion.div>
         </motion.div>
       </div>
+
+      {/* Add this CSS to your global styles or component styles */}
+      <style jsx>{`
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </motion.section>
   );
 };

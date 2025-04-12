@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import HeroSection from '../components/sections/HeroSection';
 import ScrollingText from '../components/sections/ScrollingText';
 // import AIAgentSection from '../components/sections/AIAgentSection';
-import InvisibleApproachSection from '../components/sections/InvisibleApproachSection';
+// import InvisibleApproachSection from '../components/sections/InvisibleApproachSection';    
 import { ComparisonSection } from '../components/sections/ComparisonSection';
 import InfiniteIconsSection from '../components/sections/InfiniteIconsSection';
 import ProductShowcase from '../components/sections/ProductShowcase';
@@ -105,9 +105,9 @@ const Home = () => {
             <AIBenefitsShowcase />
           </div>
           
-          <div className="-mt-16 sm:mt-0">
+          {/* <div className="-mt-16 sm:mt-0">
             <InvisibleApproachSection />
-          </div>
+          </div> */}
           
          
           

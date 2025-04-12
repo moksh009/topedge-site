@@ -50,7 +50,7 @@ const comparisonData = {
       {
         icon: Scale,
         title: "Scalability",
-        value: "∞",
+        value: "Well Trained",
         description: "Unlimited potential"
       }
     ],
@@ -68,7 +68,7 @@ const comparisonData = {
       {
         icon: Clock,
         title: "Response Time",
-        value: "30s",
+        value: "6min",
         description: "Average wait time"
       },
       {
@@ -100,8 +100,8 @@ const comparisonData = {
       {
         icon: Scale,
         title: "Scale",
-        value: "Linear",
-        description: "Limited by headcount"
+        value: "Biases & Human Error",
+        description: "Not Experienced"
       }
     ],
     cta: "Compare Now",
@@ -194,21 +194,21 @@ const ProductShowcase = () => {
         style={{ opacity, y }}
       >
         {/* Premium Header */}
-        <div className="text-center mb-20">
+        <div className="text-center mb-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 mb-8"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 mb-6"
           >
-            <Sparkles className="w-5 h-5 text-purple-400" />
+            <Sparkles className="w-4 h-4 text-purple-400" />
             <span className="text-sm font-medium bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
               Future of Customer Service
             </span>
           </motion.div>
 
-          <h2 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight mb-8">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-6">
             <motion.span
               className="block bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent"
               animate={{
@@ -219,14 +219,14 @@ const ProductShowcase = () => {
             >
               AI vs Human
             </motion.span>
-            <span className="block text-2xl sm:text-3xl md:text-4xl mt-4 text-gray-400 font-light">
+            <span className="block text-xl sm:text-2xl md:text-3xl mt-3 text-gray-400 font-light">
               The Evolution of Customer Experience
             </span>
           </h2>
         </div>
 
         {/* Premium Comparison Cards */}
-        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8">
+        <div className="grid lg:grid-cols-2 gap-4 lg:gap-6 max-w-[1000px] mx-auto">
           {Object.entries(comparisonData).map(([key, data], index) => (
             <motion.div
               key={key}
@@ -255,7 +255,7 @@ const ProductShowcase = () => {
                 transition: { duration: 0.3 }
               }}
             >
-              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl border border-white/10 h-full transition-all duration-500 group-hover:border-purple-500/30 group-hover:shadow-2xl group-hover:shadow-purple-500/20">
+              <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-white/[0.08] to-white/[0.02] backdrop-blur-xl border border-white/10 h-full transition-all duration-500 group-hover:border-purple-500/30 group-hover:shadow-2xl group-hover:shadow-purple-500/20">
                 {/* Visual Section */}
                 <div className="relative aspect-[16/9] overflow-hidden">
                   <motion.img
@@ -275,27 +275,27 @@ const ProductShowcase = () => {
                   
                   {/* Floating Title on Image */}
                   <motion.div 
-                    className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500"
+                    className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-6 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500"
                     initial={{ y: 50, opacity: 0 }}
                     whileInView={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.7, duration: 0.5 }}
                   >
-                    <div className="flex items-center gap-4">
-                      <div className={`p-3 rounded-2xl bg-gradient-to-r ${data.gradient} bg-opacity-20 backdrop-blur-xl border border-white/20`}>
-                        <data.icon className="w-8 h-8 text-white" />
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2 rounded-xl bg-gradient-to-r ${data.gradient} bg-opacity-20 backdrop-blur-xl border border-white/20`}>
+                        <data.icon className="w-6 h-6 text-white" />
                       </div>
                       <div>
-                        <h3 className="text-2xl font-bold text-white">{data.title}</h3>
-                        <p className="text-purple-400">{data.subtitle}</p>
+                        <h3 className="text-xl font-bold text-white">{data.title}</h3>
+                        <p className="text-sm text-purple-400">{data.subtitle}</p>
                       </div>
                     </div>
                   </motion.div>
                 </div>
 
                 {/* Content Section */}
-                <div className="relative p-6 sm:p-8">
+                <div className="relative p-4 sm:p-6">
                   <motion.p 
-                    className="text-gray-400 mb-8"
+                    className="text-sm text-gray-400 mb-6"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.9, duration: 0.5 }}
@@ -304,7 +304,7 @@ const ProductShowcase = () => {
                   </motion.p>
 
                   {/* Features Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-8">
+                  <div className="grid grid-cols-2 gap-3 mb-6">
                     {data.features.map((feature, idx) => (
                       <motion.div
                         key={idx}
@@ -314,18 +314,18 @@ const ProductShowcase = () => {
                         transition={{ duration: 0.5, delay: 1 + idx * 0.1 }}
                         className="group/item relative"
                       >
-                        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-transparent rounded-xl opacity-0 group-hover/item:opacity-100 transition-opacity duration-300" />
-                        <div className="relative p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors duration-300 border border-white/5">
-                          <feature.icon className="w-6 h-6 text-purple-400 mb-2" />
-                          <div className="text-xl sm:text-2xl font-bold text-white mb-1">{feature.value}</div>
-                          <div className="text-sm text-gray-400">{feature.description}</div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-transparent rounded-lg opacity-0 group-hover/item:opacity-100 transition-opacity duration-300" />
+                        <div className="relative p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors duration-300 border border-white/5">
+                          <feature.icon className="w-5 h-5 text-purple-400 mb-1.5" />
+                          <div className="text-lg font-bold text-white mb-0.5">{feature.value}</div>
+                          <div className="text-xs text-gray-400">{feature.description}</div>
                         </div>
                       </motion.div>
                     ))}
                   </div>
 
                   {/* Stats Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                  <div className="grid grid-cols-2 gap-3">
                     {data.stats.map((stat, idx) => (
                       <motion.div
                         key={idx}
@@ -335,11 +335,11 @@ const ProductShowcase = () => {
                         transition={{ duration: 0.5, delay: 1.4 + idx * 0.1 }}
                         className="group/item relative"
                       >
-                        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-transparent rounded-xl opacity-0 group-hover/item:opacity-100 transition-opacity duration-300" />
-                        <div className="relative p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors duration-300 border border-white/5">
-                          <stat.icon className="w-6 h-6 text-purple-400 mb-2" />
-                          <div className="text-xl sm:text-2xl font-bold text-white mb-1">{stat.value}</div>
-                          <div className="text-sm text-gray-400">{stat.description}</div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-transparent rounded-lg opacity-0 group-hover/item:opacity-100 transition-opacity duration-300" />
+                        <div className="relative p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors duration-300 border border-white/5">
+                          <stat.icon className="w-5 h-5 text-purple-400 mb-1.5" />
+                          <div className="text-lg font-bold text-white mb-0.5">{stat.value}</div>
+                          <div className="text-xs text-gray-400">{stat.description}</div>
                         </div>
                       </motion.div>
                     ))}
